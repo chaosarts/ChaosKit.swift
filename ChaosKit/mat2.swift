@@ -9,9 +9,9 @@
 import Foundation
 
 public struct mat2 {
-	private var mat : [CGFloat] = [0, 0, 0 ,0]
+	private var mat : [GLfloat] = [0, 0, 0 ,0]
 	
-	public var determinant : CGFloat {
+	public var determinant : GLfloat {
 		return mat[0] * mat[3] - mat[1] * mat[2]
 	}
 	
@@ -48,7 +48,7 @@ public struct mat2 {
 	}
 	
 	
-	subscript (row: Int, col: Int) -> CGFloat {
+	subscript (row: Int, col: Int) -> GLfloat {
 		get {
 			assert(valid(row) && valid(col), "Bad index access for mat2")
 			return mat[row * 2 + col]
@@ -78,7 +78,7 @@ extension mat2 {
 
 
 extension mat2 : ArrayLiteralConvertible {
-	public init(arrayLiteral elements: CGFloat...) {
+	public init(arrayLiteral elements: GLfloat...) {
 		for index in 0...3 {
 			mat[index] = elements.count > index ? elements[index] : 0
 		}
@@ -122,11 +122,11 @@ public func *(l: vec2, r: mat2) -> vec2 {
 }
 
 
-public func *(l: mat2, r: CGFloat) -> mat2 {
+public func *(l: mat2, r: GLfloat) -> mat2 {
 	return [r * l[0, 0], r * l[0, 1], r * l[1, 0], r * l[1, 1]]
 }
 
 
-public func *(l: CGFloat, r: mat2) -> mat2 {
+public func *(l: GLfloat, r: mat2) -> mat2 {
 	return r * l
 }

@@ -15,7 +15,6 @@
 		C46FCB0B1A6EA105008645B5 /* vec2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46FCB0A1A6EA105008645B5 /* vec2.swift */; };
 		C48368F41A76EC7900E14D66 /* CKOpenGLMathTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48368F31A76EC7900E14D66 /* CKOpenGLMathTestCase.swift */; };
 		C48368F61A76ECA200E14D66 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C48368F51A76ECA200E14D66 /* Cocoa.framework */; };
-		C4A8DBFF1A7F022B007790DC /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A8DBFE1A7F022B007790DC /* Math.swift */; };
 		C4CAEF7D1A706980004DBED5 /* CKOpenGLBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CAEF7C1A706980004DBED5 /* CKOpenGLBase.swift */; };
 		C4CAEF7F1A70699E004DBED5 /* CKOpenGLProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CAEF7E1A70699E004DBED5 /* CKOpenGLProgram.swift */; };
 		C4CAEF811A7069B8004DBED5 /* CKOpenGLShader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CAEF801A7069B8004DBED5 /* CKOpenGLShader.swift */; };
@@ -60,7 +59,6 @@
 		C46FCB0A1A6EA105008645B5 /* vec2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = vec2.swift; sourceTree = "<group>"; };
 		C48368F31A76EC7900E14D66 /* CKOpenGLMathTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLMathTestCase.swift; sourceTree = "<group>"; };
 		C48368F51A76ECA200E14D66 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		C4A8DBFE1A7F022B007790DC /* Math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		C4CAEF7C1A706980004DBED5 /* CKOpenGLBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLBase.swift; sourceTree = "<group>"; };
 		C4CAEF7E1A70699E004DBED5 /* CKOpenGLProgram.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLProgram.swift; sourceTree = "<group>"; };
 		C4CAEF801A7069B8004DBED5 /* CKOpenGLShader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLShader.swift; sourceTree = "<group>"; };
@@ -188,7 +186,6 @@
 		C46FCB091A6EA0E9008645B5 /* Math */ = {
 			isa = PBXGroup;
 			children = (
-				C4A8DBFE1A7F022B007790DC /* Math.swift */,
 				C4CDC5AD1A6EB00900AC1F0F /* mat2.swift */,
 				C4CDC5B41A6EB1C300AC1F0F /* mat3.swift */,
 				C4CDC5B61A6EB1CA00AC1F0F /* mat4.swift */,
@@ -340,7 +337,6 @@
 				C4FF72D71A7AA57600DB4F2F /* CKOpenGL.swift in Sources */,
 				C43D8AEC1A7AF6F700DCE13F /* CKOpenGLAttribute.swift in Sources */,
 				C4CDC5B51A6EB1C300AC1F0F /* mat3.swift in Sources */,
-				C4A8DBFF1A7F022B007790DC /* Math.swift in Sources */,
 				C4CDC5E71A6F2C9D00AC1F0F /* core.swift in Sources */,
 				C4CDC5AC1A6EAF0C00AC1F0F /* vec3.swift in Sources */,
 				C4CAEF7D1A706980004DBED5 /* CKOpenGLBase.swift in Sources */,

@@ -14,20 +14,20 @@ public struct mat4 {
 	Provides a list of matrix components in major-row
 	represenstation 
 	*/
-	private var mat : [CGFloat] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	private var mat : [GLfloat] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	
 	/**
 	Provides the determinant of the matrix
 	*/
-	public var determinant : CGFloat {
+	public var determinant : GLfloat {
 		let m : mat4 = self
 		
 		let row : vec4 = m[row: 0]
 		
-		let a : CGFloat = row.x * submatrix(row: 0, col: 0).determinant
-		let b : CGFloat = row.y * submatrix(row: 0, col: 1).determinant
-		let c : CGFloat = row.z * submatrix(row: 0, col: 2).determinant
-		let d : CGFloat = row.w * submatrix(row: 0, col: 3).determinant
+		let a : GLfloat = row.x * submatrix(row: 0, col: 0).determinant
+		let b : GLfloat = row.y * submatrix(row: 0, col: 1).determinant
+		let c : GLfloat = row.z * submatrix(row: 0, col: 2).determinant
+		let d : GLfloat = row.w * submatrix(row: 0, col: 3).determinant
 		
 		return a - b + c - d
 	}
@@ -43,6 +43,11 @@ public struct mat4 {
 			m[0, 2], m[1, 2], m[2, 2], m[3, 2],
 			m[0, 3], m[1, 3], m[2, 3], m[3, 3]
 		]
+	}
+	
+	
+	public var array : [GLfloat] {
+		get {return mat}
 	}
 	
 	
@@ -85,7 +90,7 @@ public struct mat4 {
 	/**
 	Array access for single components
 	*/
-	subscript(row: Int, col: Int) -> CGFloat {
+	subscript(row: Int, col: Int) -> GLfloat {
 		get {
 			assert(valid(row) && valid(col), "Invalid mat4 index access.")
 			return mat[row * 4 + col]
@@ -109,7 +114,7 @@ public struct mat4 {
 	public func submatrix(row rowIndex: Int, col colIndex: Int) -> mat3 {
 		assert(valid(rowIndex) && valid(colIndex), "Bad index access for mat4")
 		
-		var m : [CGFloat] = mat
+		var m : [GLfloat] = mat
 		for var r : Int = 3; r >= 0; r-- {
 			for var c : Int = 3; c >= 0; c-- {
 				if r == rowIndex || c == colIndex {
@@ -128,7 +133,7 @@ public struct mat4 {
 	:param: alpha The angle to rotate about
 	:param: vec The axis to rotate around
 	*/
-	mutating public func rotate (alpha a: CGFloat, vec: vec3) {
+	mutating public func rotate (alpha a: GLfloat, vec: vec3) {
 		rotate(alpha: a, x: vec.x, y: vec.y, z: vec.z)
 	}
 	
@@ -139,7 +144,7 @@ public struct mat4 {
 	:param: alpha The angle to rotate about
 	:param: vec The axis to rotate around
 	*/
-	mutating public func rotate (alpha a: CGFloat, x dx: CGFloat, y dy: CGFloat, z dz: CGFloat) {
+	mutating public func rotate (alpha a: GLfloat, x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) {
 		let m = self
 		
 		let cosAngle = cos(a)
@@ -192,15 +197,15 @@ public struct mat4 {
 	
 	:param: alpha The angle
 	*/
-	mutating public func rotateX (alpha a: CGFloat) {
-		let m01 : CGFloat = mat[1], m11 : CGFloat = mat[5]
-		let m21 : CGFloat = mat[9], m31 : CGFloat = mat[13]
+	mutating public func rotateX (alpha a: GLfloat) {
+		let m01 : GLfloat = mat[1], m11 : GLfloat = mat[5]
+		let m21 : GLfloat = mat[9], m31 : GLfloat = mat[13]
 		
-		let m02 : CGFloat = mat[2], m12 : CGFloat = mat[6]
-		let m22 : CGFloat = mat[10], m32 : CGFloat = mat[14]
+		let m02 : GLfloat = mat[2], m12 : GLfloat = mat[6]
+		let m22 : GLfloat = mat[10], m32 : GLfloat = mat[14]
 		
-		let c : CGFloat = cos(a)
-		let s : CGFloat = sin(a)
+		let c : GLfloat = cos(a)
+		let s : GLfloat = sin(a)
 		
 		mat[1] = m01 * c + m02 * s
 		mat[5] = m11 * c + m12 * s
@@ -221,7 +226,7 @@ public struct mat4 {
 	:param: y Component of the rotation vector
 	:param: z Component of the rotation vector
 	*/
-	mutating public func rotateY (alpha a: CGFloat) {
+	mutating public func rotateY (alpha a: GLfloat) {
 		let m00 = mat[0], m10 = mat[4], m20 = mat[8], m30 = mat[12]
 		let m02 = mat[2], m12 = mat[6], m22 = mat[10], m32 = mat[14]
 		
@@ -244,7 +249,7 @@ public struct mat4 {
 	
 	:param: alpha The angle
 	*/
-	mutating public func rotateZ (alpha a: CGFloat) {
+	mutating public func rotateZ (alpha a: GLfloat) {
 		let m00 = mat[0], m10 = mat[4], m20 = mat[8], m30 = mat[12];
 		let m01 = mat[1], m11 = mat[5], m21 = mat[7], m31 = mat[13];
 		
@@ -279,7 +284,7 @@ public struct mat4 {
 	:param: y The y component of the translation vector
 	:param: z The z component of the translation vector
 	*/
-	mutating public func translate (x dx: CGFloat, y dy: CGFloat, z dz: CGFloat) {
+	mutating public func translate (x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) {
 		mat[3] = mat[3] + dx
 		mat[7] = mat[7] + dy
 		mat[11] = mat[11] + dz
@@ -303,8 +308,8 @@ public struct mat4 {
 // **********
 
 extension mat4 : ArrayLiteralConvertible {
-	public init(arrayLiteral elements: CGFloat...) {
-		mat = [CGFloat]()
+	public init(arrayLiteral elements: GLfloat...) {
+		mat = [GLfloat]()
 		for index in 0...15 {
 			mat.append(elements.count > index ? elements[index] : 0)
 		}
@@ -372,7 +377,7 @@ extension mat4 {
 	:param: alpha The rotation angle
 	:returns: The rotation matrix
 	*/
-	public static func makeRotationX (alpha: CGFloat) -> mat4 {
+	public static func makeRotationX (alpha: GLfloat) -> mat4 {
 		let cosine = cos(alpha)
 		let sinus = sin(alpha)
 		
@@ -392,7 +397,7 @@ extension mat4 {
 	:param: alpha The rotation angle
 	:returns: The rotation matrix
 	*/
-	public static func makeRotationY (alpha: CGFloat) -> mat4 {
+	public static func makeRotationY (alpha: GLfloat) -> mat4 {
 		let cosine = cos(alpha)
 		let sinus = sin(alpha)
 		return [
@@ -410,7 +415,7 @@ extension mat4 {
 	:param: alpha The rotation angle
 	:returns: The rotation matrix
 	*/
-	public static func makeRotationZ (alpha: CGFloat) -> mat4 {
+	public static func makeRotationZ (alpha: GLfloat) -> mat4 {
 		let cosine = cos(alpha)
 		let sinus = sin(alpha)
 		return [
@@ -429,7 +434,7 @@ extension mat4 {
 	:param: axis The vector to rotate around
 	:returns: The rotation matrix
 	*/
-	public static func makeRotation (alpha a: CGFloat, axis: vec3) -> mat4 {
+	public static func makeRotation (alpha a: GLfloat, axis: vec3) -> mat4 {
 		return mat4.makeRotation(alpha: a, x: axis.x, y: axis.y, z: axis.z)
 	}
 	
@@ -443,23 +448,23 @@ extension mat4 {
 	:param: z The z component of the translation vector
 	:returns: The rotation matrix
 	*/
-	public static func makeRotation (alpha a: CGFloat, x ax: CGFloat, y ay: CGFloat, z az: CGFloat) -> mat4 {
+	public static func makeRotation (alpha a: GLfloat, x ax: GLfloat, y ay: GLfloat, z az: GLfloat) -> mat4 {
 		
 		let c = cos(a)
 		let d = 1 - c
 		let s = sin(a)
 		
-		let m00 : CGFloat = ax * ax * d + c
-		let m01 : CGFloat = ax * ay * d - az * s
-		let m02 : CGFloat = ax * az * d + ay * s
+		let m00 : GLfloat = ax * ax * d + c
+		let m01 : GLfloat = ax * ay * d - az * s
+		let m02 : GLfloat = ax * az * d + ay * s
 		
-		let m10 : CGFloat = ax * ay * d + az * s
-		let m12 : CGFloat = ay * ay * d + c
-		let m13 : CGFloat = ay * az * d - ax * s
+		let m10 : GLfloat = ax * ay * d + az * s
+		let m12 : GLfloat = ay * ay * d + c
+		let m13 : GLfloat = ay * az * d - ax * s
 		
-		let m20 : CGFloat = ax * az * d - ay * s
-		let m21 : CGFloat = ay * az * d + ax * s
-		let m23 : CGFloat = az * az * d + c
+		let m20 : GLfloat = ax * az * d - ay * s
+		let m21 : GLfloat = ay * az * d + ax * s
+		let m23 : GLfloat = az * az * d + c
 		
 		return [
 			m00, m01, m02, 0,
@@ -475,7 +480,7 @@ extension mat4 {
 	}
 	
 	
-	public static func makeTranslate (x dx: CGFloat, y dy: CGFloat, z dz: CGFloat) -> mat4 {
+	public static func makeTranslate (x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) -> mat4 {
 		return [
 			1.0, 0.0, 0.0, dx,
 			0.0, 1.0, 0.0, dy,
@@ -485,8 +490,8 @@ extension mat4 {
 	}
 	
 	
-	public static func makeOrtho (left l: CGFloat, right: CGFloat, bottom: CGFloat,
-		top: CGFloat, near: CGFloat, far: CGFloat) -> mat4 {
+	public static func makeOrtho (left l: GLfloat, right: GLfloat, bottom: GLfloat,
+		top: GLfloat, near: GLfloat, far: GLfloat) -> mat4 {
 			
 			let x = 2 / (right - l)
 			let y = 2 / (top - bottom)
@@ -514,7 +519,7 @@ extension mat4 {
 	:param: near The near boundary
 	:param: far The far boundary
 	*/
-	public static func makePerspective (left: CGFloat, right: CGFloat, top: CGFloat, bottom: CGFloat, near: CGFloat, far: CGFloat) -> mat4 {
+	public static func makePerspective (left: GLfloat, right: GLfloat, top: GLfloat, bottom: GLfloat, near: GLfloat, far: GLfloat) -> mat4 {
 		
 		let n = 2 * near
 		let rl = right - left
@@ -536,7 +541,7 @@ extension mat4 {
 	}
 	
 	
-	public static func makePerspective (fovy f: CGFloat, aspect: CGFloat, near: CGFloat, far: CGFloat) -> mat4 {
+	public static func makePerspective (fovy f: GLfloat, aspect: GLfloat, near: GLfloat, far: GLfloat) -> mat4 {
 		
 		var angle = f / 2
 		var dz = far - near
@@ -604,7 +609,7 @@ public func *(l: vec4, r: mat4) -> vec4 {
 }
 
 
-public func *(l: CGFloat, r: mat4) -> mat4 {
+public func *(l: GLfloat, r: mat4) -> mat4 {
 	return [
 		l * r[0, 0], l * r[0, 1], l * r[0, 2], l * r[0, 3],
 		l * r[1, 0], l * r[1, 1], l * r[1, 2], l * r[1, 3],
@@ -614,6 +619,6 @@ public func *(l: CGFloat, r: mat4) -> mat4 {
 }
 
 
-public func *(l: mat4, r: CGFloat) -> mat4 {
+public func *(l: mat4, r: GLfloat) -> mat4 {
 	return r * l
 }

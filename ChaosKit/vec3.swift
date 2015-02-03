@@ -9,25 +9,25 @@
 import Foundation
 
 public struct vec3 {
-	private var vec : (x: CGFloat, y: CGFloat, z: CGFloat) = (0, 0, 0)
+	private var vec : (x: GLfloat, y: GLfloat, z: GLfloat) = (0, 0, 0)
 	
-	public var x : CGFloat {
+	public var x : GLfloat {
 		get {return vec.x} set {vec.x = newValue}
 	}
 	
-	public var y : CGFloat {
+	public var y : GLfloat {
 		get {return vec.y} set {vec.y = newValue}
 	}
 	
-	public var z : CGFloat {
+	public var z : GLfloat {
 		get {return vec.z} set {vec.z = newValue}
 	}
 	
-	public var array : [CGFloat] {
+	public var array : [GLfloat] {
 		return [x, y, z]
 	}
 	
-	public var magnitude : CGFloat {
+	public var magnitude : GLfloat {
 		return sqrt(self * self)
 	}
 	
@@ -40,7 +40,7 @@ public struct vec3 {
 		
 	}
 	
-	public init (x: CGFloat, y: CGFloat, z: CGFloat) {
+	public init (x: GLfloat, y: GLfloat, z: GLfloat) {
 		vec = (x, y, z)
 	}
 	
@@ -51,7 +51,7 @@ public struct vec3 {
 
 
 extension vec3 : ArrayLiteralConvertible {
-	public init(arrayLiteral elements: CGFloat...) {
+	public init(arrayLiteral elements: GLfloat...) {
 		x = elements.count > 0 ? elements[0] : 0
 		y = elements.count > 1 ? elements[1] : 0
 		z = elements.count > 2 ? elements[2] : 0
@@ -81,17 +81,17 @@ public func -(l: vec3, r: vec3) -> vec3 {
 }
 
 
-public func *(l: vec3, r: vec3) -> CGFloat {
+public func *(l: vec3, r: vec3) -> GLfloat {
 	return l.x * r.x + l.y * r.y + l.z * r.z
 }
 
 
-public func *(l: vec3, r: CGFloat) -> vec3 {
+public func *(l: vec3, r: GLfloat) -> vec3 {
 	return vec3(x: l.x * r, y: l.y * r, z: l.z * r)
 }
 
 
-public func *(l: CGFloat, r: vec3) -> vec3 {
+public func *(l: GLfloat, r: vec3) -> vec3 {
 	return r * l
 }
 

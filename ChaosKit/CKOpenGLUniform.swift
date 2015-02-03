@@ -24,7 +24,7 @@ class CKOpenGLUniform: CKOpenGLBase {
 		var type : UnsafeMutablePointer<GLenum> = UnsafeMutablePointer<GLenum>()
 		var name : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>()
 		
-		glGetActiveUniform(program.id, id, program.iv(GL_ACTIVE_UNIFORM_MAX_LENGTH).memory, length, size, type, name)
+		glGetActiveUniform(program.id, id, program.iv(GL_ACTIVE_UNIFORM_MAX_LENGTH), length, size, type, name)
 		
 		self.length = length
 		self.size = size

@@ -12,15 +12,15 @@ public struct mat3 {
 	
 	/** Provides the list of components of this matrix in 
 	row-major representation */
-	private var mat : [CGFloat] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+	private var mat : [GLfloat] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 	
 	/** Provides the mdterminant of the matrix */
-	public var determinant : CGFloat {
+	public var determinant : GLfloat {
 		let m : mat3 = self
 		
-		let a : CGFloat = m[0, 0] * m[1, 1] * m[2, 2] - m[0, 2] * m[1, 1] * m[2, 0]
-		let b : CGFloat = m[0, 1] * m[1, 2] * m[2, 0] - m[0, 0] * m[1, 2] * m[2, 1]
-		let c : CGFloat = m[0, 2] * m[1, 0] * m[2, 1] - m[0, 1] * m[1, 0] * m[2, 2]
+		let a : GLfloat = m[0, 0] * m[1, 1] * m[2, 2] - m[0, 2] * m[1, 1] * m[2, 0]
+		let b : GLfloat = m[0, 1] * m[1, 2] * m[2, 0] - m[0, 0] * m[1, 2] * m[2, 1]
+		let c : GLfloat = m[0, 2] * m[1, 0] * m[2, 1] - m[0, 1] * m[1, 0] * m[2, 2]
 		
 		return a + b + c
 	}
@@ -65,7 +65,7 @@ public struct mat3 {
 	}
 	
 	/** Array access to a single component */
-	subscript (row: Int, col: Int) -> CGFloat {
+	subscript (row: Int, col: Int) -> GLfloat {
 		get {
 			assert(valid(row) && valid(col), "Bad index access for mat3")
 			return mat[row * 3 + col]
@@ -95,7 +95,7 @@ extension mat3 {
 
 
 extension mat3 : ArrayLiteralConvertible {
-	public init(arrayLiteral elements: CGFloat...) {
+	public init(arrayLiteral elements: GLfloat...) {
 		for index in 0...8 {
 			mat[index] = elements.count > index ? elements[index] : 0
 		}
@@ -173,7 +173,7 @@ public func *(l: vec3, r: mat3) -> vec3 {
 }
 
 
-public func *(l: CGFloat, r: mat3) -> mat3 {
+public func *(l: GLfloat, r: mat3) -> mat3 {
 	return [
 		l * r[0, 0], l * r[0, 1], l * r[0, 2],
 		l * r[1, 0], l * r[1, 1], l * r[1, 2],
@@ -182,6 +182,6 @@ public func *(l: CGFloat, r: mat3) -> mat3 {
 }
 
 
-public func *(l: mat3, r: CGFloat) -> mat3 {
+public func *(l: mat3, r: GLfloat) -> mat3 {
 	return r * l
 }

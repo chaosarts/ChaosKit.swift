@@ -59,7 +59,7 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	:params: near The near value of the frustum
 	:params: far The far value of the frustum
 	*/
-	public func setPerspective(fovy f: CGFloat, aspect a: CGFloat, near n: CGFloat, far fa: CGFloat) -> CKOpenGLRenderer {
+	public func setPerspective(fovy f: GLfloat, aspect a: GLfloat, near n: GLfloat, far fa: GLfloat) -> CKOpenGLRenderer {
 		_projection = mat4.makePerspective(fovy: f, aspect: a, near: n, far: fa)
 		return self
 	}
@@ -75,7 +75,7 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	:param: near The near boundary of the view box
 	:param: far The far boundary of the view box
 	*/
-	public func setOrthographic (left l: CGFloat, right r: CGFloat, bottom b: CGFloat, top t: CGFloat, near n: CGFloat, far f: CGFloat) -> CKOpenGLRenderer {
+	public func setOrthographic (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) -> CKOpenGLRenderer {
 		_projection = mat4.makeOrtho(left: l, right: r, bottom: b, top: t, near: n, far: f)
 		return self
 	}

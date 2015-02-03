@@ -8,3 +8,4 @@
 
 import Foundation
 
+infix operator • {}

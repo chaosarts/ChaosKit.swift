@@ -10,21 +10,21 @@ import Foundation
 
 
 public struct vec2 {
-	private var vec : (x: CGFloat, y: CGFloat) = (0, 0)
+	private var vec : (x: GLfloat, y: GLfloat) = (0, 0)
 	
-	public var x: CGFloat {
+	public var x: GLfloat {
 		get {return vec.x} set {vec.x = newValue}
 	}
 	
-	public var y: CGFloat {
+	public var y: GLfloat {
 		get {return vec.y} set {vec.y = newValue}
 	}
 	
-	public var array : [CGFloat] {
+	public var array : [GLfloat] {
 		get {return [x, y]}
 	}
 	
-	public var magnitude : CGFloat {
+	public var magnitude : GLfloat {
 		return sqrt(self * self)
 	}
 	
@@ -33,17 +33,17 @@ public struct vec2 {
 	}
 	
 	public var normalized : vec2 {
-		var m : CGFloat = magnitude
+		var m : GLfloat = magnitude
 		return vec2(x: x / m, y: y / m)
 	}
 	
 	public init () {}
 	
-	public init (x: CGFloat, y: CGFloat) {
+	public init (x: GLfloat, y: GLfloat) {
 		vec = (x, y)
 	}
 	
-	subscript (index: Int) -> CGFloat {
+	subscript (index: Int) -> GLfloat {
 		get {
 			assert(valid(index), "Bad index access for vec2")
 			return index == 0 ? x : y
@@ -64,7 +64,7 @@ public struct vec2 {
 }
 
 extension vec2 : ArrayLiteralConvertible {
-	public init(arrayLiteral elements: CGFloat...) {
+	public init(arrayLiteral elements: GLfloat...) {
 		x = elements.count > 0 ? elements[0] : 0
 		y = elements.count > 1 ? elements[1] : 0
 	}
@@ -98,16 +98,16 @@ public func -(l: vec2, r: vec2) -> vec2 {
 }
 
 
-public func *(l: vec2, r: vec2) -> CGFloat {
+public func *(l: vec2, r: vec2) -> GLfloat {
 	return l.x * r.x + l.y * r.y
 }
 
 
-public func *(l: CGFloat, r: vec2) -> vec2 {
+public func *(l: GLfloat, r: vec2) -> vec2 {
 	return vec2(x: l * r.x, y: l * r.y)
 }
 
 
-public func *(l: vec2, r: CGFloat) -> vec2 {
+public func *(l: vec2, r: GLfloat) -> vec2 {
 	return r * l
 }

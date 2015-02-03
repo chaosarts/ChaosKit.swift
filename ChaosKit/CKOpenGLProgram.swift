@@ -20,12 +20,12 @@ final public class CKOpenGLProgram: CKOpenGLBase {
 	
 	/** Determines whether the program is valid or not */
 	public var valid : Bool {
-		get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS).memory == GL_TRUE}
+		get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS) == GL_TRUE}
 	}
 	
 	/** Determines if the program is linked or not */
 	public var linked : Bool {
-		get {return iv(GL_LINK_STATUS).memory == GL_TRUE}
+		get {return iv(GL_LINK_STATUS) == GL_TRUE}
 	}
 	
 	
@@ -42,9 +42,9 @@ final public class CKOpenGLProgram: CKOpenGLBase {
 	
 	:param: pname The paramater name to fetch the value
 	*/
-	public func iv (pname : Int32) -> UnsafeMutablePointer<GLint> {
-		var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
-		glGetProgramiv(id, GLenum(pname), param)
+	public func iv (pname : Int32) -> GLint {
+		var param : GLint = GLint()
+		glGetProgramiv(id, GLenum(pname), &param)
 		return param
 	}
 	
@@ -54,9 +54,9 @@ final public class CKOpenGLProgram: CKOpenGLBase {
 	
 	:returns: The info log
 	*/
-	public func infoLog () -> UnsafeMutablePointer<GLchar> {
-		var log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(Int(iv(GL_INFO_LOG_LENGTH).memory))
-		glGetProgramInfoLog(id, iv(GL_INFO_LOG_LENGTH).memory, nil, log)
+	public func infoLog () -> [GLchar] {
+		var log : [GLchar] = []
+		glGetProgramInfoLog(id, iv(GL_INFO_LOG_LENGTH), nil, &log)
 		return log
 	}
 	
@@ -116,7 +116,7 @@ final public class CKOpenGLProgram: CKOpenGLBase {
 			return false
 		}
 		
-		var maxAttribIndex : Int = Int(iv(GL_ACTIVE_ATTRIBUTES).memory)
+		var maxAttribIndex : Int = Int(iv(GL_ACTIVE_ATTRIBUTES))
 		
 		for i in 0...maxAttribIndex {
 			var attribute : CKOpenGLAttribute = getActiveAttrib(GLuint(i))
@@ -128,19 +128,15 @@ final public class CKOpenGLProgram: CKOpenGLBase {
 	
 	
 	private func getActiveAttrib (index: GLuint) -> CKOpenGLAttribute {
-		var maxAttribLen : GLint = iv(GL_ACTIVE_ATTRIBUTE_MAX_LENGTH).memory
+		var maxAttribLen : GLint = iv(GL_ACTIVE_ATTRIBUTE_MAX_LENGTH)
 		
-		var lengthPtr : UnsafeMutablePointer<GLsizei> = UnsafeMutablePointer<GLsizei>.alloc(1)
-		var sizePtr : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
-		var typePtr : UnsafeMutablePointer<GLenum> = UnsafeMutablePointer<GLenum>.alloc(1)
-		var namePtr : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
-		glGetActiveAttrib(id, index, maxAttribLen, lengthPtr, sizePtr, typePtr, namePtr)
+		var length : GLsizei = GLsizei()
+		var size : GLint = GLint()
+		var type : GLenum = GLenum()
+		var name : GLchar = GLchar()
+		glGetActiveAttrib(id, index, maxAttribLen, &length, &size, &type, &name)
 		
-		var name : String = NSString(CString: namePtr, encoding: NSUTF8StringEncoding)!
-		var type : GLenum = typePtr.memory
-		var size : GLint = sizePtr.memory
-		var length : GLsizei = lengthPtr.memory
-		var attribute : CKOpenGLAttribute = CKOpenGLAttribute(index: index, name: name, type: type, size: size, length: length)
+		var attribute : CKOpenGLAttribute = CKOpenGLAttribute(index: index, name: String.fromCString(&name)!, type: type, size: size, length: length)
 		
 		return attribute
 	}

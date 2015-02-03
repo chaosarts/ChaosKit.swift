@@ -20,7 +20,7 @@ public class CKOpenGLView : NSResponder  {
 	final internal var subviews : [CKOpenGLView] = []
 	
 	/** Provides a list of buffers */
-	public var buffers : UnsafeMutablePointer<GLuint>?
+	public var buffers : [GLuint]?
 	
 	/** Contains the renderer */
 	public var renderer : CKOpenGLRenderer?
