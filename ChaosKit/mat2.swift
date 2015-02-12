@@ -19,6 +19,14 @@ public struct mat2 {
 		return [mat[0], mat[2], mat[1], mat[3]]
 	}
 	
+	public var ptr : UnsafeMutablePointer<GLfloat> {
+		get {
+			var pointer : UnsafeMutablePointer<GLfloat> = UnsafeMutablePointer<GLfloat>.alloc(mat.count)
+			pointer.initializeFrom(mat)
+			return pointer
+		}
+	}
+	
 	
 	subscript (row index: Int) -> vec2 {
 		get {

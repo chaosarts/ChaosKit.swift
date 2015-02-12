@@ -46,38 +46,40 @@ public class CKOpenGLShader: CKOpenGLBase {
 	}
 	
 	
-	public func iv (pname : Int32) -> GLint {
-		var param : GLint = GLint()
-		glGetShaderiv(id, GLenum(pname), &param)
+	public func iv (pname : Int32) -> UnsafeMutablePointer<GLint> {
+		var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		glGetShaderiv(id, GLenum(pname), param)
 		return param
 	}
 	
 	
-	public func infolog () -> [GLchar] {
-		var bufSize : GLint = iv(GL_INFO_LOG_LENGTH)
-		var log : [GLchar] = [GLchar]()
-		glGetShaderInfoLog(id, bufSize, nil, &log)
+	public func infolog () -> UnsafeMutablePointer<GLchar> {
+		var bufSize : GLint = iv(GL_INFO_LOG_LENGTH).memory
+		var log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
+		glGetShaderInfoLog(id, bufSize, nil, log)
 		return log
 	}
 	
 	
 	private func setSources (sources: [String]) {
 		var sourceCount : Int = sources.count
-		var length : [GLint] = []
-		var sourcePtrs : [UnsafePointer<GLchar>] = []
+		var cstrings : UnsafeMutablePointer<UnsafePointer<GLchar>> =
+		UnsafeMutablePointer<UnsafePointer<GLchar>>.alloc(sourceCount)
+		var length : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(sourceCount)
+		
+		var sourceStartPointer = cstrings
+		var lengthStartPointer = length
 		
 		for source in sources {
-			var cString : [GLchar] = source.cStringUsingEncoding(NSUTF8StringEncoding)!
-			var cStringPtr : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(cString.count)
-			cStringPtr.initializeFrom(cString)
-			sourcePtrs.append(cStringPtr)
-			length.append(GLint(source.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)))
+			var cstring : [GLchar] = source.cStringUsingEncoding(NSUTF8StringEncoding)!
+			cstrings.put(toUnsafePointer(cstring))
+			length.put(GLint(cstring.count))
 		}
 		
-		glShaderSource(id, GLsizei(sourceCount), &sourcePtrs, &length)
+		glShaderSource(id, GLsizei(sourceCount), sourceStartPointer, lengthStartPointer)
 		glCompileShader(id)
 		
-		if (iv(GL_COMPILE_STATUS) != GL_TRUE) {
+		if (iv(GL_COMPILE_STATUS).memory != GL_TRUE) {
 			print(String.fromCString(infolog())!)
 		}
 	}

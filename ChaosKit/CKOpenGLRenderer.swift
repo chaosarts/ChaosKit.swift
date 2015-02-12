@@ -21,10 +21,13 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	/** Contains the rotation matrix */
 	private var _rotation : mat4 = mat4.identity
 	
+	public var cameraModel : CKOpenGLCamera?
+	
 	/** Contains the scene to display by the renderer */
 	public var scene : CKOpenGLSceneView? {
-		didSet {if self != scene!.renderer {scene!.renderer = self}}
+		didSet {if self != scene!.renderer {scene!.renderer = self; display()}}
 	}
+	
 	
 	/** Provides the projection matrix */
 	public var projectionMatrix : mat4 {
@@ -39,15 +42,16 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	
     override public func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)
-		
-		openGLContext.makeCurrentContext()
-		scene?.display()
-		glFlush()
+		if cameraModel?.aspect != GLfloat(frame.width) / GLfloat(frame.height) {
+			setViewport(0, y: 0, width: GLfloat(frame.width), height: GLfloat(frame.height))
+		}
     }
 	
 	
 	public func render () {
-		display()
+		openGLContext.makeCurrentContext()
+		scene?.display()
+		glFlush()
 	}
 	
 	
@@ -61,6 +65,12 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	*/
 	public func setPerspective(fovy f: GLfloat, aspect a: GLfloat, near n: GLfloat, far fa: GLfloat) -> CKOpenGLRenderer {
 		_projection = mat4.makePerspective(fovy: f, aspect: a, near: n, far: fa)
+		return self
+	}
+	
+	
+	public func setFrustum (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) -> CKOpenGLRenderer {
+		_projection = mat4.makeFrustum(left: l, right: r, bottom: b, top: t, near: n, far: f)
 		return self
 	}
 	
@@ -101,5 +111,68 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	*/
 	public func setTranslation (vec v: vec3) {
 		_translation = mat4.makeTranslate(v)
+	}
+	
+	
+	public func setViewport (x: GLint, y: GLint, width: GLfloat, height: GLfloat) {
+		glViewport(x, y, GLint(width), GLint(height))
+		
+		if cameraModel == nil {
+			render()
+			return
+		}
+		
+		var model : CKOpenGLCamera = cameraModel!
+		var aspect : GLfloat = GLfloat(width) / GLfloat(height)
+		
+		if aspect == model.aspect {
+			updateProjection(
+				left: model.left, right: model.right,
+				bottom: model.bottom, top: model.top,
+				near: model.near, far: model.far
+			)
+			render()
+			return
+		}
+		
+		var left : GLfloat
+		var right: GLfloat
+		var bottom : GLfloat
+		var top : GLfloat
+		
+		if aspect > model.aspect {
+			var halfWidth : GLfloat = model.height * aspect / 2
+			
+			left = model.center.x - halfWidth
+			right = model.center.x + halfWidth
+			
+			bottom = model.bottom
+			top = model.top
+		}
+		else {
+			var halfHeight : GLfloat = model.width / aspect / 2
+			
+			left = model.left
+			right = model.right
+			
+			bottom = model.center.y - halfHeight
+			top = model.center.y + halfHeight
+		}
+		
+		updateProjection(left: left, right: right, bottom: bottom, top: top, near: model.near, far: model.far)
+		render()
+	}
+	
+	
+	private func updateProjection (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) {
+		
+		if nil == cameraModel {return}
+		
+		var model = cameraModel!
+		
+		if model.type == CKOpenGLCameraType.Orthographic
+		{setOrthographic(left: l, right: r, bottom: b, top: t, near: n, far: f)}
+		else {setFrustum(left: l, right: r, bottom: b, top: t, near: n, far: f)}
+
 	}
 }

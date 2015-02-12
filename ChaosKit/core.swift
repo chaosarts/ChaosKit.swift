@@ -10,13 +10,16 @@ import Foundation
 
 prefix operator * {}
 
+
 public prefix func *<T>(ptr : UnsafePointer<T>) -> T{
 	return ptr.memory
 }
 
+
 public prefix func *<T>(ptr : UnsafeMutablePointer<T>) -> T{
 	return ptr.memory
 }
+
 
 public func *<T: UnsignedIntegerType>(l: String, r: T) -> String {
 	var output = l

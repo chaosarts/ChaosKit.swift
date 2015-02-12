@@ -68,6 +68,26 @@ extension vec4 : ArrayLiteralConvertible {
 }
 
 
+extension vec4 : Printable {
+	public var description : String {
+		get {
+			var maxlength = max(countElements(x.description), countElements(y.description), countElements(z.description), countElements(w.description))
+			
+			var output : String = ""
+			var vec : [GLfloat] = self.array
+			
+			for i in 0...3 {
+				output += "|"
+				output += ((maxlength - countElements(vec[i].description)) * " ") + vec[i].description
+				output += "|\n"
+			}
+		
+			return output
+		}
+	}
+}
+
+
 extension vec4 : Equatable {}
 
 public func ==(l: vec4, r: vec4) -> Bool {

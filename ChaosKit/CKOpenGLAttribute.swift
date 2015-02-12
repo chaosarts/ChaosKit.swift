@@ -10,12 +10,21 @@ import Cocoa
 
 public struct CKOpenGLAttribute {
 	
-	public let name : String
+	public var name : String
 	
-	public let index : GLuint
+	public var type : GLenum
 	
-	public init(index: GLuint, name: String, type: GLenum, size: GLint, length: GLsizei) {
+	public var location : GLint = -1
+	
+	
+	public init(name: String, type: GLenum) {
 		self.name = name
-		self.index = index
+		self.type = type
+	}
+	
+	
+	public init(name: String, type: Int32) {
+		self.name = name
+		self.type = GLenum(type)
 	}
 }

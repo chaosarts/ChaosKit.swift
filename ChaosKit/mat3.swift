@@ -38,22 +38,7 @@ public struct mat3 {
 	subscript (row index: Int) -> vec3 {
 		get {
 			assert(valid(index), "Bad index access for mat3")
-			return vec3(x: mat[index * 4], y: mat[index * 4 + 1], z: mat[index * 4 + 2])
-		}
-		
-		set {
-			assert(valid(index), "Bad index access for mat3")
-			mat[index * 4] = newValue.x
-			mat[index * 4 + 1] = newValue.y
-			mat[index * 4 + 2] = newValue.z
-		}
-	}
-	
-	/** Array access to col vector */
-	subscript (col index: Int) -> vec3 {
-		get {
-			assert(valid(index), "Bad index access for mat3")
-			return vec3(x: mat[index], y: mat[index + 3], z: mat[index + 6])
+			return vec3(x: mat[index], y: mat[3 + index], z: mat[6 + index])
 		}
 		
 		set {
@@ -64,16 +49,31 @@ public struct mat3 {
 		}
 	}
 	
+	/** Array access to col vector */
+	subscript (col index: Int) -> vec3 {
+		get {
+			assert(valid(index), "Bad index access for mat3")
+			return vec3(x: mat[index * 3], y: mat[index * 3 + 1], z: mat[index * 3 + 2])
+		}
+		
+		set {
+			assert(valid(index), "Bad index access for mat3")
+			mat[index * 3] = newValue.x
+			mat[index * 3 + 1] = newValue.y
+			mat[index * 3 + 2] = newValue.z
+		}
+	}
+	
 	/** Array access to a single component */
 	subscript (row: Int, col: Int) -> GLfloat {
 		get {
 			assert(valid(row) && valid(col), "Bad index access for mat3")
-			return mat[row * 3 + col]
+			return mat[col * 3 + row]
 		}
 		
 		set {
 			assert(valid(row) && valid(col), "Bad index access for mat3")
-			mat[row * 3 + col] = newValue
+			mat[col * 3 + row] = newValue
 		}
 	}
 	

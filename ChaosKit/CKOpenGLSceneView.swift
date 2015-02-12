@@ -12,6 +12,8 @@ public class CKOpenGLSceneView: CKOpenGLView {
 	
 	public var clearColor : RGBAColor = (0, 0, 0, 1)
 	
+	public var lightSources : [CKOpenGLLight] = []
+	
 	/** Contains the modelViewMatrix */
 	override public var modelViewMatrix : mat4 {
 		get {
@@ -31,6 +33,7 @@ public class CKOpenGLSceneView: CKOpenGLView {
 	
 	public override func clear () {
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+		glClearDepth(1)
 		glClear(GLbitfield(GL_COLOR_BUFFER_BIT))
 	}
 }

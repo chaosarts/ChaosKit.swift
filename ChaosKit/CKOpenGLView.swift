@@ -17,24 +17,38 @@ public class CKOpenGLView : NSResponder  {
 	private var _rotation : mat4 = mat4.identity
 	
 	/** Contains a list of subviews */
-	final internal var subviews : [CKOpenGLView] = []
+	public var subviews : [CKOpenGLView] = []
 	
 	/** Provides a list of buffers */
-	public var buffers : [GLuint]?
+	public var buffers : UnsafeMutablePointer<GLuint>?
 	
 	/** Contains the renderer */
 	public var renderer : CKOpenGLRenderer?
 	
 	/** Contains the base program */
-	public var baseProgram : CKOpenGLProgram?
+	public var programs : [CKOpenGLProgram] = []
+	
+	/** Contains the vertice of the view */
+	public var vertice : [CKvertex] = []
 	
 	/** Contains the modelViewMatrix */
 	public var modelViewMatrix : mat4 {
 		get {
-			if nil == superview {_translation * _rotation}
+			if nil == superview {return _translation * _rotation}
 			return superview!.modelViewMatrix * _translation * _rotation
 		}
 	}
+	
+	/** 
+	 Returns the projection matrix
+	 */
+	public var projectionViewMatrix : mat4 {
+		get {
+			if nil == renderer {return mat4.identity}
+			return renderer!.projectionMatrix
+		}
+	}
+	
 	
 	/** Provides the parant view of this view */
 	public var superview : CKOpenGLView?
