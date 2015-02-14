@@ -16,23 +16,37 @@ public class CKOpenGLView : NSResponder  {
 	/** Contains the rotation matrix */
 	private var _rotation : mat4 = mat4.identity
 	
-	/** Contains a list of subviews */
-	public var subviews : [CKOpenGLView] = []
-	
 	/** Provides a list of buffers */
-	public var buffers : UnsafeMutablePointer<GLuint>?
+	private final var _buffers : UnsafeMutablePointer<GLuint>?
 	
-	/** Contains the renderer */
-	public var renderer : CKOpenGLRenderer?
+	/** Contains the size of the buffer */
+	private final var _bufferSize : Int = 0
+	
+	/** Contains a list of subviews */
+	public final var subviews : [CKOpenGLView] = []
+	
+	/** Provides the parant view of this view */
+	public final var superview : CKOpenGLView?
+	
+	
+	/** Readonly buffer property*/
+	public final var buffers : UnsafeMutablePointer<GLuint>? {
+		get {return _buffers}
+	}
 	
 	/** Contains the base program */
 	public var programs : [CKOpenGLProgram] = []
 	
 	/** Contains the vertice of the view */
-	public var vertice : [CKvertex] = []
+	public final var vertice : [CKvertex] = []
+	
+	/** Contains the renderer */
+	public var renderer : CKOpenGLRenderer? {
+		didSet {for subview in subviews {subview.renderer = renderer}}
+	}
 	
 	/** Contains the modelViewMatrix */
-	public var modelViewMatrix : mat4 {
+	public final var modelViewMatrix : mat4 {
 		get {
 			if nil == superview {return _translation * _rotation}
 			return superview!.modelViewMatrix * _translation * _rotation
@@ -42,16 +56,12 @@ public class CKOpenGLView : NSResponder  {
 	/** 
 	 Returns the projection matrix
 	 */
-	public var projectionViewMatrix : mat4 {
+	public final var projectionViewMatrix : mat4 {
 		get {
 			if nil == renderer {return mat4.identity}
 			return renderer!.projectionMatrix
 		}
 	}
-	
-	
-	/** Provides the parant view of this view */
-	public var superview : CKOpenGLView?
 	
 	
 	/** 
@@ -60,25 +70,42 @@ public class CKOpenGLView : NSResponder  {
 	public override init() {
 		super.init()
 	}
-
+	
+	
+	/** 
+	Initializes the view
+	*/
 	required public init?(coder: NSCoder) {
 	    super.init(coder: coder)
 	}
 	
 	
 	/** 
+	Allocates the according memory size
+	
+	:param: num
+	*/
+	public func allocateBufferMemory (num: Int) {
+		if _buffers != nil && _bufferSize > 0 {
+			_buffers!.destroy()
+			_buffers!.dealloc(_bufferSize)
+		}
+		
+		_buffers = UnsafeMutablePointer<GLuint>.alloc(num)
+		_bufferSize = num
+	}
+	
+	
+	/** 
 	This method is called by display and draws the view itself
 	*/
-	public func draw () {
-		fatalError("Subclass needs own implementation. Do not call draw on base class.")
-	}
+	public func draw () {}
+	
 	
 	/** 
 	This is where to call clear buffer functions
 	*/
-	public func clear () {
-		fatalError("Subclass needs own implementation. Do not call clear on base class.")
-	}
+	public func clear () {}
 	
 	
 	/** 
@@ -102,24 +129,37 @@ public class CKOpenGLView : NSResponder  {
 	}
 	
 	
-	public func add(subview child: CKOpenGLView) {
+	/** 
+	Adds a new subview to this view
+	
+	:param: subview The subview to add
+	:returns: The view itself for chaining
+	*/
+	public func add(subview child: CKOpenGLView) -> CKOpenGLView {
 		child.superview?.remove(subview: child)
 		child.superview = self
 		child.renderer = self.renderer
 		self.subviews.append(child)
+		
+		return self
 	}
 	
 	
-	public func remove(subview child: CKOpenGLView) {
+	/** 
+	Removes a subview from this view
+	
+	:param: subview The subview to remove
+	:returns: The view itself for chaining
+	*/
+	public func remove(subview child: CKOpenGLView) -> CKOpenGLView {
 		var index : Int? = find(subviews, child)
 		
-		if nil == index {
-			return
-		}
+		if nil == index {return self}
 		
 		child.superview = nil
 		child.renderer = nil
 		subviews.removeAtIndex(index!)
+		return self
 	}
 }
 

@@ -12,24 +12,21 @@ public class CKOpenGLSceneView: CKOpenGLView {
 	
 	public var clearColor : RGBAColor = (0, 0, 0, 1)
 	
+	/** Provides a list of light sources */
 	public var lightSources : [CKOpenGLLight] = []
 	
-	/** Contains the modelViewMatrix */
-	override public var modelViewMatrix : mat4 {
-		get {
-			if nil == renderer {super.modelViewMatrix}
-			return renderer!.modelViewMatrix * super.modelViewMatrix
-		}
+	
+	public func setupLight () {
+		
 	}
 	
+	/** Provides the opengl renderer */
 	override public var renderer : CKOpenGLRenderer? {
 		didSet {
 			if self != self.renderer!.scene {self.renderer!.scene = self}
 			for subview in subviews {subview.renderer = self.renderer}
 		}
 	}
-	
-	public override func draw() {}
 	
 	public override func clear () {
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);

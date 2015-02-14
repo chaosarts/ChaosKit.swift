@@ -13,14 +13,9 @@ import GLKit
 public class CKOpenGLRenderer: NSOpenGLView {
 	
 	/** Contains the projection matrix */
-	private var _projection : mat4 = mat4.identity
+	private var _projectionMatrix : mat4 = mat4.identity
 	
-	/** Contains the translation matrix */
-	private var _translation : mat4 = mat4.identity
-	
-	/** Contains the rotation matrix */
-	private var _rotation : mat4 = mat4.identity
-	
+	/** Provides the model for the camera model */
 	public var cameraModel : CKOpenGLCamera?
 	
 	/** Contains the scene to display by the renderer */
@@ -28,18 +23,14 @@ public class CKOpenGLRenderer: NSOpenGLView {
 		didSet {if self != scene!.renderer {scene!.renderer = self; display()}}
 	}
 	
-	
 	/** Provides the projection matrix */
 	public var projectionMatrix : mat4 {
-		get {return _projection}
+		get {return _projectionMatrix}
 	}
 	
-	/** Provides the model view matrix */
-	public var modelViewMatrix : mat4 {
-		get {return _translation * _rotation}
-	}
-	
-	
+	/** 
+	NSView native draw action
+	*/
     override public func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)
 		if cameraModel?.aspect != GLfloat(frame.width) / GLfloat(frame.height) {
@@ -48,6 +39,9 @@ public class CKOpenGLRenderer: NSOpenGLView {
     }
 	
 	
+	/** 
+	Renders the scene
+	*/
 	public func render () {
 		openGLContext.makeCurrentContext()
 		scene?.display()
@@ -64,13 +58,23 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	:params: far The far value of the frustum
 	*/
 	public func setPerspective(fovy f: GLfloat, aspect a: GLfloat, near n: GLfloat, far fa: GLfloat) -> CKOpenGLRenderer {
-		_projection = mat4.makePerspective(fovy: f, aspect: a, near: n, far: fa)
+		_projectionMatrix = mat4.makePerspective(fovy: f, aspect: a, near: n, far: fa)
 		return self
 	}
 	
 	
+	/**
+	Sets the projection to perspective view according to passed parameters
+	
+	:param: left The left boundary of the view box
+	:param: right The right boundary of the view box
+	:param: bottom The bottom boundary of the view box
+	:param: top The top boundary of the view box
+	:param: near The near boundary of the view box
+	:param: far The far boundary of the view box
+	*/
 	public func setFrustum (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) -> CKOpenGLRenderer {
-		_projection = mat4.makeFrustum(left: l, right: r, bottom: b, top: t, near: n, far: f)
+		_projectionMatrix = mat4.makeFrustum(left: l, right: r, bottom: b, top: t, near: n, far: f)
 		return self
 	}
 	
@@ -86,34 +90,19 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	:param: far The far boundary of the view box
 	*/
 	public func setOrthographic (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) -> CKOpenGLRenderer {
-		_projection = mat4.makeOrtho(left: l, right: r, bottom: b, top: t, near: n, far: f)
+		_projectionMatrix = mat4.makeOrtho(left: l, right: r, bottom: b, top: t, near: n, far: f)
 		return self
 	}
 	
 	
 	/**
-	Sets the rotation of the screen
+	Sets the OpenGL viewport
 	
-	:param: vec The vector containing the rotation around x, y and z axis
+	:param: x The x origin of the viewport
+	:param: y The y origin of the viewport
+	:param: width The width of the viewport
+	:param: height The height of the viewport
 	*/
-	public func setRotation (vec v: vec3) {
-		_rotation = mat4.identity
-		_rotation.rotateX(alpha: v.x)
-		_rotation.rotateY(alpha: v.y)
-		_rotation.rotateZ(alpha: v.z)
-	}
-	
-	
-	/**
-	Sets the translation
-	
-	:param: vec The translation vector
-	*/
-	public func setTranslation (vec v: vec3) {
-		_translation = mat4.makeTranslate(v)
-	}
-	
-	
 	public func setViewport (x: GLint, y: GLint, width: GLfloat, height: GLfloat) {
 		glViewport(x, y, GLint(width), GLint(height))
 		
@@ -164,15 +153,28 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	}
 	
 	
+	/** 
+	Updates the projection matrix if a camera model is given
+	
+	:param: left The left boundary of the view box
+	:param: right The right boundary of the view box
+	:param: bottom The bottom boundary of the view box
+	:param: top The top boundary of the view box
+	:param: near The near boundary of the view box
+	:param: far The far boundary of the view box
+	*/
 	private func updateProjection (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) {
 		
 		if nil == cameraModel {return}
 		
 		var model = cameraModel!
 		
-		if model.type == CKOpenGLCameraType.Orthographic
-		{setOrthographic(left: l, right: r, bottom: b, top: t, near: n, far: f)}
-		else {setFrustum(left: l, right: r, bottom: b, top: t, near: n, far: f)}
+		if model.type == CKOpenGLCameraType.Orthographic {
+			setOrthographic(left: l, right: r, bottom: b, top: t, near: n, far: f)
+		}
+		else {
+			setFrustum(left: l, right: r, bottom: b, top: t, near: n, far: f)
+		}
 
 	}
 }

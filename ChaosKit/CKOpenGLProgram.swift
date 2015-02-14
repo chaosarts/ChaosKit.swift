@@ -11,56 +11,116 @@ import Cocoa
 public class CKOpenGLProgram: CKOpenGLBase {
 	
 	/** Provides a list of uniforms */
-	public var baseUniforms : [CKOpenGLBaseUniformType : CKOpenGLUniform] = [CKOpenGLBaseUniformType : CKOpenGLUniform]()
+	public final var uniforms : [CKOpenGLBaseUniformType : CKOpenGLUniform] = [CKOpenGLBaseUniformType : CKOpenGLUniform]()
+	
+	/** Provides the vertex attributes */
+	public final var attributes : [CKOpenGLBaseAttributeType : CKOpenGLAttribute] = [CKOpenGLBaseAttributeType : CKOpenGLAttribute]()
+	
+	// UNIFORM SHORTCUTS 
+	// *****************
 	
 	/** Shortcut for modelview matrix */
-	public var uniformModelMatrix : CKOpenGLUniform {
-		get {return baseUniforms[CKOpenGLBaseUniformType.ModelViewMatrix]!}
-		set {baseUniforms[CKOpenGLBaseUniformType.ModelViewMatrix] = newValue}
+	public final var uniformModelMatrix : CKOpenGLUniform {
+		get {return uniforms[CKOpenGLBaseUniformType.ModelViewMatrix]!}
+		set {uniforms[CKOpenGLBaseUniformType.ModelViewMatrix] = newValue}
 	}
 	
 	/** Shortcut for projection matrix */
-	public var uniformProjectionMatrix : CKOpenGLUniform {
-		get {return baseUniforms[CKOpenGLBaseUniformType.ProjectionViewMatrix]!}
-		set {baseUniforms[CKOpenGLBaseUniformType.ProjectionViewMatrix] = newValue}
+	public final var uniformProjectionMatrix : CKOpenGLUniform {
+		get {return uniforms[CKOpenGLBaseUniformType.ProjectionViewMatrix]!}
+		set {uniforms[CKOpenGLBaseUniformType.ProjectionViewMatrix] = newValue}
 	}
 	
-	/** Provides the vertex attributes */
-	public var baseAttributes : [CKOpenGLBaseAttributeType : CKOpenGLAttribute] = [CKOpenGLBaseAttributeType : CKOpenGLAttribute]()
+	/** Shortcut for ambient light color uniform */
+	public final var uniformAmbientLightColor : CKOpenGLUniform {
+		get {return uniforms[CKOpenGLBaseUniformType.AmbientLightColor]!}
+		set {uniforms[CKOpenGLBaseUniformType.AmbientLightColor] = newValue}
+	}
+	
+	/** Shortcut for ambient light intensity uniform */
+	public final var uniformAmbientLightIntensity : CKOpenGLUniform {
+		get {return uniforms[CKOpenGLBaseUniformType.AmbientLightIntensity]!}
+		set {uniforms[CKOpenGLBaseUniformType.AmbientLightIntensity] = newValue}
+	}
+	
+	/** Shortcut for diffuse light color uniform */
+	public final var uniformDiffuseLightColor : CKOpenGLUniform {
+		get {return uniforms[CKOpenGLBaseUniformType.DiffuseLightColor]!}
+		set {uniforms[CKOpenGLBaseUniformType.DiffuseLightColor] = newValue}
+	}
+	
+	/** Shortcut for diffuse light intensity uniform */
+	public final var uniformDiffuseLightIntensity : CKOpenGLUniform {
+		get {return uniforms[CKOpenGLBaseUniformType.DiffuseLightIntensity]!}
+		set {uniforms[CKOpenGLBaseUniformType.DiffuseLightIntensity] = newValue}
+	}
+	
+	/** Shortcut for diffuse light position uniform */
+	public final var uniformDiffuseLightPosition : CKOpenGLUniform {
+		get {return uniforms[CKOpenGLBaseUniformType.DiffuseLightPosition]!}
+		set {uniforms[CKOpenGLBaseUniformType.DiffuseLightPosition] = newValue}
+	}
+	
+	/** Shortcut for specular light color uniform */
+	public final var uniformSpecularLightColor : CKOpenGLUniform {
+		get {return uniforms[CKOpenGLBaseUniformType.SpecularLightColor]!}
+		set {uniforms[CKOpenGLBaseUniformType.SpecularLightColor] = newValue}
+	}
+	
+	/** Shortcut for specular light intensity uniform */
+	public final var uniformSpecularLightIntensity : CKOpenGLUniform {
+		get {return uniforms[CKOpenGLBaseUniformType.SpecularLightIntensity]!}
+		set {uniforms[CKOpenGLBaseUniformType.SpecularLightIntensity] = newValue}
+	}
+	
+	/** Shortcut for specular light position uniform */
+	public final var uniformSpecularLightPosition : CKOpenGLUniform {
+		get {return uniforms[CKOpenGLBaseUniformType.SpecularLightPosition]!}
+		set {uniforms[CKOpenGLBaseUniformType.SpecularLightPosition] = newValue}
+	}
+	
+	
+	// ATTRIBUTE SHORTCUTS
+	// *******************
 	
 	/** Shortcut to access position attriubute */
-	public var vertexAttributePosition : CKOpenGLAttribute {
-		get {return baseAttributes[CKOpenGLBaseAttributeType.Position]!}
-		set {baseAttributes[CKOpenGLBaseAttributeType.Position] = newValue}
+	public final var attributeVertexPosition : CKOpenGLAttribute {
+		get {return attributes[CKOpenGLBaseAttributeType.Position]!}
+		set {attributes[CKOpenGLBaseAttributeType.Position] = newValue}
 	}
 	
 	/** Shortcut to access normal attriubute */
-	public var vertexAttributeNormal : CKOpenGLAttribute {
-		get {return baseAttributes[CKOpenGLBaseAttributeType.Normal]!}
-		set {baseAttributes[CKOpenGLBaseAttributeType.Normal] = newValue}
+	public final var attributeVertexNormal : CKOpenGLAttribute {
+		get {return attributes[CKOpenGLBaseAttributeType.Normal]!}
+		set {attributes[CKOpenGLBaseAttributeType.Normal] = newValue}
 	}
 	
 	/** Shortcut to access color attriubute */
-	public var vertexAttributeColor : CKOpenGLAttribute {
-		get {return baseAttributes[CKOpenGLBaseAttributeType.Color]!}
-		set {baseAttributes[CKOpenGLBaseAttributeType.Color] = newValue}
+	public final var attributeVertexColor : CKOpenGLAttribute {
+		get {return attributes[CKOpenGLBaseAttributeType.Color]!}
+		set {attributes[CKOpenGLBaseAttributeType.Color] = newValue}
 	}
 	
 	/** Shortcut to access tex coord attriubute */
-	public var vertexAttributeTexCoord : CKOpenGLAttribute {
-		get {return baseAttributes[CKOpenGLBaseAttributeType.TexCoord]!}
-		set {baseAttributes[CKOpenGLBaseAttributeType.TexCoord] = newValue}
+	public final var attributeVertexTexCoord : CKOpenGLAttribute {
+		get {return attributes[CKOpenGLBaseAttributeType.TexCoord]!}
+		set {attributes[CKOpenGLBaseAttributeType.TexCoord] = newValue}
 	}
 	
+	
+	// PROGRAM STATUS
+	// **************
+	
 	/** Determines whether the program is valid or not */
-	public var valid : Bool {
+	public final var valid : Bool {
 		get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS).memory == GL_TRUE}
 	}
 	
 	/** Determines if the program is linked or not */
-	public var linked : Bool {
+	public final var linked : Bool {
 		get {return iv(GL_LINK_STATUS).memory == GL_TRUE}
 	}
+	
 	
 	/**
 	Initializes the object
@@ -69,13 +129,24 @@ public class CKOpenGLProgram: CKOpenGLBase {
 		var id = glCreateProgram()
 		super.init(id: id)
 		
-		uniformModelMatrix = CKOpenGLUniform(name: "uModelViewMatrix", type: GL_FLOAT_MAT4)
-		uniformProjectionMatrix = CKOpenGLUniform(name: "uProjectionMatrix", type: GL_FLOAT_MAT4)
+		uniformModelMatrix = CKOpenGLUniform(name: "uModelViewMatrix")
+		uniformProjectionMatrix = CKOpenGLUniform(name: "uProjectionMatrix")
 		
-		vertexAttributePosition = CKOpenGLAttribute(name: "aVertexPosition", type: GL_FLOAT_VEC3)
-		vertexAttributeNormal = CKOpenGLAttribute(name: "aVertexNormal", type: GL_FLOAT_VEC3)
-		vertexAttributeColor = CKOpenGLAttribute(name: "aVertexColor", type: GL_FLOAT_VEC3)
-		vertexAttributeTexCoord = CKOpenGLAttribute(name: "aVertexTexCoord", type: GL_FLOAT_VEC3)
+		uniformAmbientLightColor = CKOpenGLUniform(name: "uAmbientLightColor")
+		uniformAmbientLightIntensity = CKOpenGLUniform(name: "uAmbientLightIntensity")
+		
+		uniformDiffuseLightColor = CKOpenGLUniform(name: "uDiffuseLightColor")
+		uniformDiffuseLightIntensity = CKOpenGLUniform(name: "uDiffuseLightIntensity")
+		uniformDiffuseLightPosition = CKOpenGLUniform(name: "uDiffuseLightPosition")
+		
+		uniformSpecularLightColor = CKOpenGLUniform(name: "uSpecularLightColor")
+		uniformSpecularLightIntensity = CKOpenGLUniform(name: "uSpecularLightIntensity")
+		uniformSpecularLightPosition = CKOpenGLUniform(name: "uSpecularLightPosition")
+		
+		attributeVertexPosition = CKOpenGLAttribute(name: "aVertexPosition")
+		attributeVertexNormal = CKOpenGLAttribute(name: "aVertexNormal")
+		attributeVertexColor = CKOpenGLAttribute(name: "aVertexColor")
+		attributeVertexTexCoord = CKOpenGLAttribute(name: "aVertexTexCoord")
 	}
 	
 	
@@ -119,37 +190,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	*/
 	final public func link () -> Bool {
 		glLinkProgram(id)
-		
-		uniformProjectionMatrix.location = glGetUniformLocation(id, uniformProjectionMatrix.name)
-		if uniformProjectionMatrix.location < 0 {
-			println("Uniform location \(uniformProjectionMatrix.name) not found")
-		}
-		
-		uniformModelMatrix.location = glGetUniformLocation(id, uniformModelMatrix.name)
-		if uniformModelMatrix.location < 0 {
-			println("Uniform location \(uniformModelMatrix.name) not found")
-		}
-		
-		vertexAttributePosition.location = glGetAttribLocation(id, vertexAttributePosition.name)
-		if vertexAttributePosition.location < 0 {
-			println("Attribute location \(vertexAttributePosition.name) not found")
-		}
-		
-		vertexAttributeNormal.location = glGetAttribLocation(id, vertexAttributeNormal.name)
-		if vertexAttributeNormal.location < 0 {
-			println("Attribute location \(vertexAttributeNormal.name) not found")
-		}
-		
-		vertexAttributeColor.location = glGetAttribLocation(id, vertexAttributeColor.name)
-		if vertexAttributeColor.location < 0 {
-			println("Attribute location \(vertexAttributeColor.name) not found")
-		}
-		
-		vertexAttributeTexCoord.location = glGetAttribLocation(id, vertexAttributeTexCoord.name)
-		if vertexAttributeTexCoord.location < 0 {
-			println("Attribute location \(vertexAttributeTexCoord.name) not found")
-		}
-		
+		getActiveLocations()
 		if !linked {
 			print(String.fromCString(infoLog())!)
 			return false
@@ -161,6 +202,8 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	
 	/**
 	Makes the program active
+	
+	:returns:
 	*/
 	final public func use () -> Bool {
 		if !linked && !link() {return false}
@@ -169,18 +212,89 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	}
 	
 	
+	public func getActiveLocations () {
+		getActiveUniform(&uniformProjectionMatrix)
+		getActiveUniform(&uniformModelMatrix)
+		
+		getActiveUniform(&uniformAmbientLightColor)
+		getActiveUniform(&uniformAmbientLightIntensity)
+		
+		getActiveUniform(&uniformDiffuseLightColor)
+		getActiveUniform(&uniformDiffuseLightIntensity)
+		getActiveUniform(&uniformDiffuseLightPosition)
+		
+		getActiveUniform(&uniformSpecularLightColor)
+		getActiveUniform(&uniformSpecularLightIntensity)
+		getActiveUniform(&uniformSpecularLightPosition)
+		
+		getActiveAttribute(&attributeVertexPosition)
+		getActiveAttribute(&attributeVertexColor)
+		getActiveAttribute(&attributeVertexNormal)
+		getActiveAttribute(&attributeVertexTexCoord)
+	}
+	
+	/** 
+	Fills the passed uniform with information about type size etc 
+	
+	:param: uniform
+	:returns: True when the unform has been located in the program, otherwise false
+	*/
+	func getActiveUniform (inout uniform: CKOpenGLUniform) -> Bool {
+		var location : GLint = glGetUniformLocation(id, uniform.name)
+		if location < 0 {println("Uniform \(uniform.name) not found in program."); return false}
+		
+		var length : UnsafeMutablePointer<GLsizei> = UnsafeMutablePointer<GLsizei>.alloc(1)
+		var size : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		var type : UnsafeMutablePointer<GLenum> = UnsafeMutablePointer<GLenum>.alloc(1)
+		var name : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
+		
+		glGetActiveUniform(id, GLuint(location), iv(GL_ACTIVE_UNIFORM_MAX_LENGTH).memory, length, size, type, name)
+		
+		uniform.location = location
+		uniform.type = type.memory
+		uniform.size = size.memory
+		
+		return true
+	}
+	
+	
+	/**
+	Fills the attribute object with the information about the attribute in the sahder program
+	
+	:param: attribute
+	:returns: True when attribute has been located in the program, false otherwise
+	*/
+	func getActiveAttribute (inout attribute: CKOpenGLAttribute) -> Bool {
+		var location : GLint = glGetAttribLocation(id, attribute.name)
+		if location < 0 {println("Attribute \(attribute.name) not found"); return false}
+		
+		var length : UnsafeMutablePointer<GLsizei> = UnsafeMutablePointer<GLsizei>.alloc(1)
+		var size : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		var type : UnsafeMutablePointer<GLenum> = UnsafeMutablePointer<GLenum>.alloc(1)
+		var name : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
+		
+		glGetActiveAttrib(id, GLuint(location), iv(GL_ACTIVE_ATTRIBUTE_MAX_LENGTH).memory, length, size, type, name)
+		
+		attribute.location = location
+		attribute.type = type.memory
+		attribute.size = size.memory
+		
+		return true
+	}
+	
+	
 	public func getUniform (type: CKOpenGLBaseUniformType) -> CKOpenGLUniform {
-		return baseUniforms[type]!
+		return uniforms[type]!
 	}
 	
 	
 	public func getVertexAttribute (type: CKOpenGLBaseAttributeType) -> CKOpenGLAttribute {
-		return baseAttributes[type]!
+		return attributes[type]!
 	}
 	
 	
 	public func bindVertexAttribute (type: CKOpenGLBaseAttributeType, vecsize: Int = 3, stride: Int = 0) {
-		var attribute : CKOpenGLAttribute? = baseAttributes[type]
+		var attribute : CKOpenGLAttribute? = attributes[type]
 		if nil == attribute || attribute!.location < 0 {return}
 		
 		var location : GLuint = GLuint(attribute!.location)
@@ -193,15 +307,26 @@ public class CKOpenGLProgram: CKOpenGLBase {
 }
 
 
-public enum CKOpenGLBaseAttributeType {
-	case Position
-	case Normal
-	case Color
-	case TexCoord
+public enum CKOpenGLBaseAttributeType : String {
+	case Position = "Position"
+	case Normal = "Normal"
+	case Color = "Color"
+	case TexCoord = "TexCoord"
 }
 
 
-public enum CKOpenGLBaseUniformType {
-	case ModelViewMatrix
-	case ProjectionViewMatrix
+public enum CKOpenGLBaseUniformType : String {
+	case ModelViewMatrix = "ModelViewMatrix"
+	case ProjectionViewMatrix = "ProjectionViewMatrix"
+	
+	case AmbientLightColor = "AmbientLightColor"
+	case AmbientLightIntensity = "AmbientLightIntensity"
+	
+	case DiffuseLightColor = "DiffuseLightColor"
+	case DiffuseLightPosition = "DiffuseLightPosition"
+	case DiffuseLightIntensity = "DiffuseLightIntensity"
+	
+	case SpecularLightColor = "SpecularLightColor"
+	case SpecularLightPosition = "SpecularLightPosition"
+	case SpecularLightIntensity = "SpecularLightIntensity"
 }

@@ -8,35 +8,58 @@
 
 import Cocoa
 
-public class CKOpenGLCamera: CKOpenGLModel {
-	internal var _left : GLfloat = -1
+/** 
+Model class to represent a camera for a opengl scene. The viewport
+parameters are readonly outside the model, to prevent setting these
+values, to keep observers synchronized to this model. One might
+send notification for every single viewport parameter. But mostly you 
+won't just change one parameter at a time. So notify observer for every
+single parameter would have been a overhead.
+*/
+public class CKOpenGLCamera : CKOpenGLModel {
 	
-	internal var _right : GLfloat = 1
+	/** Internal left bound of the viewport */
+	private var _left : GLfloat = -1
 	
-	internal var _bottom : GLfloat = -1
+	/** Internal right bound of the viewport */
+	private var _right : GLfloat = 1
 	
-	internal var _top : GLfloat = 1
+	/** Internal bottom bound of the viewport */
+	private var _bottom : GLfloat = -1
 	
-	internal var _near : GLfloat = -1
+	/** Internal top bound of the viewport */
+	private var _top : GLfloat = 1
 	
-	internal var _far : GLfloat = 1
+	/** Internal near bound of the viewport */
+	private var _near : GLfloat = -1
 	
+	/** Internal far bound of the viewport */
+	private var _far : GLfloat = 1
+	
+	/** Describes the camera type. Either orthographic or perspective */
 	public var type : CKOpenGLCameraType = CKOpenGLCameraType.Orthographic {
 		didSet {notify(CKOpenGLCameraEvent.Change)}
 	}
 	
+	/** Readonly left bound of the viewport */
 	public var left : GLfloat {get {return _left}}
 	
+	/** Readonly right bound of the viewport */
 	public var right : GLfloat {get {return _right}}
 	
+	/** Readonly bottom bound of the viewport */
 	public var bottom : GLfloat {get {return _bottom}}
 	
+	/** Readonly top bound of the viewport */
 	public var top : GLfloat {get {return _top}}
 	
+	/** Readonly near bound of the viewport */
 	public var near : GLfloat {get {return _near}}
 	
+	/** Readonly far bound of the viewport */
 	public var far : GLfloat {get {return _far}}
 	
+	/** Contains the centerpoint of the viewport in x, y and z direction*/
 	public var center : vec3 {
 		get {return vec3(x: (_right + _left) / 2, y: (_top + _bottom) / 2, z: (_far + _near) / 2)}
 		set {
@@ -52,6 +75,7 @@ public class CKOpenGLCamera: CKOpenGLModel {
 		}
 	}
 	
+	/** Contains the distance between left and right parameter of the viewport*/
 	public var width : GLfloat {
 		get {return abs(_right - _left)}
 		set {
@@ -62,6 +86,7 @@ public class CKOpenGLCamera: CKOpenGLModel {
 		}
 	}
 	
+	/** Contains the distance between bottom and top parameter of the viewport*/
 	public var height : GLfloat {
 		get {return abs(_top - _bottom)}
 		set {
@@ -72,6 +97,7 @@ public class CKOpenGLCamera: CKOpenGLModel {
 		}
 	}
 	
+	/** Contains the distance between near and far parameter of the viewport*/
 	public var depth : GLfloat {
 		get {return abs(_far - _near)}
 		set {
@@ -82,21 +108,46 @@ public class CKOpenGLCamera: CKOpenGLModel {
 		}
 	}
 	
+	/** Contains the aspect of the viewport */
 	public var aspect : GLfloat {
 		get {return width / height}
 	}
 	
+	
+	/**
+	Initializes the camera with default viewport parameters
+ 	*/
 	convenience public override init () {
 		self.init(left: -1, right: 1, bottom: -1, top: 1, near: -1, far: 1)
 	}
 	
 	
+	/**
+	Initializes the camera with a according viewport parameters
+	
+	:param: left The left bound of the viewport
+	:param: right The right bound of the viewport
+	:param: bottom The bottom bound of the viewport
+	:param: top The top bound of the viewport
+	:param: near The near bound of the viewport
+	:param: far The far bound of the viewport
+	*/
 	public init (left: GLfloat, right: GLfloat, bottom: GLfloat, top: GLfloat, near: GLfloat, far: GLfloat) {
 		super.init()
 		setViewport(left: left, right: right, bottom: bottom, top: top, near: near, far: far)
 	}
 	
 	
+	/**
+	Sets the viewport of the camera
+	
+	:param: left The left bound of the viewport
+	:param: right The right bound of the viewport
+	:param: bottom The bottom bound of the viewport
+	:param: top The top bound of the viewport
+	:param: near The near bound of the viewport
+	:param: far The far bound of the viewport
+	*/
 	public func setViewport (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) {
 		_left = l
 		_right = r
@@ -108,12 +159,26 @@ public class CKOpenGLCamera: CKOpenGLModel {
 	}
 	
 	
+	/**
+	Adds a new observer for the camera
+	
+	:param: observer The observer to add
+ 	*/
 	public func add(observer o: CKOpenGLCameraObserver) {
 		super.add(observer: o)
-		notificationCenter.addObserver(o, selector: "viewportDidChange:", name: CKOpenGLCameraEvent.Change.rawValue, object: self)
+		var selector : Selector = Selector("viewportDidChange:")
+		if o.respondsToSelector(selector) {
+			notificationCenter.addObserver(o, selector: selector,
+				name: CKOpenGLCameraEvent.Change.rawValue, object: self)
+		}
 	}
 	
 	
+	/** 
+	Notifies all observers about a camera event
+	
+	:param: type An enum value from CKOpenGLCamerEvent
+	*/
 	public func notify(type: CKOpenGLCameraEvent) {
 		var notification : NSNotification = NSNotification(name: type.rawValue, object: self)
 		notificationCenter.postNotification(notification)
@@ -121,17 +186,27 @@ public class CKOpenGLCamera: CKOpenGLModel {
 }
 
 
-public protocol CKOpenGLCameraObserver : CKOpenGLModelObserver {
-	func viewportDidChange (notification: NSNotification)
+/**
+Defines a protocol for camera observers
+*/
+@objc
+public protocol CKOpenGLCameraObserver : CKOpenGLModelObserver, NSObjectProtocol {
+	optional func viewportDidChange (notification: NSNotification)
 }
 
 
+/**
+Enumerates the type of event names, the camera can dispatch
+*/
 public enum CKOpenGLCameraEvent : String {
 	case Change = "CKOpenGLCameraEvent.Change"
 }
 
 
-public enum CKOpenGLCameraType {
-	case Orthographic
-	case Perspective
+/** 
+Enumerates the types of cameras
+*/
+public enum CKOpenGLCameraType : String {
+	case Orthographic = "CKOpenGLCameraType.Orthographic"
+	case Perspective = "CKOpenGLCameraType.Perspective"
 }

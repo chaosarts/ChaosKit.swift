@@ -10,42 +10,114 @@ import Cocoa
 import OpenGL
 import GLKit
 
+/**
+Wrapper class for shaders
+*/
 public class CKOpenGLShader: CKOpenGLBase {
 	
+	/**
+	Initializes the shader with the one source string
+	
+	:param: type The shader type like GL_VERTEX_SHADER
+	:param: source The source code as string
+	*/
 	public convenience init? (type : GLenum, source : String) {
 		self.init(type: type, sources: [source])
 	}
 	
 	
+	/**
+	Initializes the shader with the one or more source strings
+	
+	:param: type The shader type like GL_VERTEX_SHADER
+	:param: sources The source codes as string
+	*/
 	public init? (type : GLenum, sources : [String]) {
 		super.init(id: glCreateShader(type))
 		setSources(sources)
 	}
 	
 	
-	public convenience init? (type: GLenum, file: String, encoding: NSStringEncoding) {
+	/**
+	Initializes the shader with a resource file
+	
+	:param: type The shader type like GL_VERTEX_SHADER
+	:param: resource The resource file, that contains the source
+	*/
+	public convenience init? (type: GLenum, resource: String,
+		encoding: NSStringEncoding = NSUTF8StringEncoding) {
+			self.init(type: type, resources: [resource], encoding: encoding)
+	}
+	
+	
+	/**
+	Initializes the shader with one or more resource files
+	
+	:param: type The shader type like GL_VERTEX_SHADER
+	:param: resources The resource files, that contains the sources
+	*/
+	public convenience init? (type: GLenum, resources: [String],
+		encoding: NSStringEncoding = NSUTF8StringEncoding) {
+		
+		var files : [String] = []
+		var bundle : NSBundle = NSBundle.mainBundle()
+		
+		for resource in resources {
+			var file : String? = bundle.pathForResource(resource, ofType: nil)
+			if nil == file {
+				println("Shader resource \(file) not found.")
+				continue
+			}
+			files.append(file!)
+		}
+		self.init(type: type, files: files, encoding: encoding)
+	}
+	
+	
+	/**
+	Initializes the shader with a file
+	
+	:param: type The shader type like GL_VERTEX_SHADER
+	:param: file The file, that contains the source
+	*/
+	public convenience init? (type: GLenum, file: String,
+		encoding: NSStringEncoding = NSUTF8StringEncoding) {
 		self.init(type: type, files: [file], encoding: encoding)
 	}
 	
 	
-	public init? (type: GLenum, files: [String], encoding: NSStringEncoding) {
-		super.init(id: glCreateShader(type))
+	/**
+	Initializes the shader with one or more files
+	
+	:param: type The shader type like GL_VERTEX_SHADER
+	:param: files The files, that contains the sources
+	*/
+	public convenience init? (type: GLenum, files: [String],
+		encoding: NSStringEncoding = NSUTF8StringEncoding) {
 		
 		var sources : [String] = []
 		var fileManager : NSFileManager = NSFileManager.defaultManager()
 		
 		for file in files {
 			if !fileManager.fileExistsAtPath(file) {
+				println("Shader file \(file) not found.")
 				continue
 			}
 			
 			var fileContent : String = NSString(contentsOfFile: file, encoding: encoding, error: nil)!
 			sources.append(fileContent)
 		}
-		setSources(sources)
+		
+		self.init(type: type, sources: sources)
 	}
 	
 	
+	/**
+	A shortcut for glShaderiv. Returns information about the shader
+	
+	:param: pname A paramater value for glShaderiv like GL_COMPILE_STATUS
+	:returns: The unsafe mutable pointer that has been passed to glShaderiv within this method. Contains the result of the request
+	*/
 	public func iv (pname : Int32) -> UnsafeMutablePointer<GLint> {
 		var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		glGetShaderiv(id, GLenum(pname), param)
@@ -53,6 +125,9 @@ public class CKOpenGLShader: CKOpenGLBase {
 	}
 	
 	
+	/**
+	Returns the info log about the shader as UnsafeMutablePointer<GLchar>/C-String
+ 	*/
 	public func infolog () -> UnsafeMutablePointer<GLchar> {
 		var bufSize : GLint = iv(GL_INFO_LOG_LENGTH).memory
 		var log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
@@ -61,22 +136,18 @@ public class CKOpenGLShader: CKOpenGLBase {
 	}
 	
 	
+	/** 
+	Sets the source for this shader. The shader will be compiled immediatley
+	*/
 	private func setSources (sources: [String]) {
-		var sourceCount : Int = sources.count
-		var cstrings : UnsafeMutablePointer<UnsafePointer<GLchar>> =
-		UnsafeMutablePointer<UnsafePointer<GLchar>>.alloc(sourceCount)
-		var length : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(sourceCount)
+		var cstrings : UnsafeMutablePointer<UnsafePointer<GLchar>> = UnsafeMutablePointer<UnsafePointer<GLchar>>.alloc(1)
+		var length : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		
-		var sourceStartPointer = cstrings
-		var lengthStartPointer = length
+		var cstring : [GLchar] = ("\n".join(sources)).cStringUsingEncoding(NSUTF8StringEncoding)!
+		cstrings.initialize(toUnsafePointer(cstring))
+		length.initialize(GLint(cstring.count))
 		
-		for source in sources {
-			var cstring : [GLchar] = source.cStringUsingEncoding(NSUTF8StringEncoding)!
-			cstrings.put(toUnsafePointer(cstring))
-			length.put(GLint(cstring.count))
-		}
-		
-		glShaderSource(id, GLsizei(sourceCount), sourceStartPointer, lengthStartPointer)
+		glShaderSource(id, GLsizei(1), cstrings, length)
 		glCompileShader(id)
 		
 		if (iv(GL_COMPILE_STATUS).memory != GL_TRUE) {
