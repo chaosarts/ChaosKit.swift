@@ -8,6 +8,9 @@
 
 import Foundation
 
+public protocol CKOpenGLLightModelType : CKOpenGLModelType {
+	var lightSources : [CKOpenGLLight] {get}
+}
 
 public class CKOpenGLLight {
 		
@@ -22,20 +25,18 @@ public class CKOpenGLLight {
 	public var b : GLfloat {get {return color.b} set {color.b = newValue}}
 	
 	
-	public init () {
-		color = (0, 0, 0)
-		intensity = 1
+	public convenience init () {
+		self.init(color: (1, 1, 1), intensity: 1)
+	}
+	
+	
+	public convenience init (r: GLfloat, g: GLfloat, b: GLfloat, i: GLfloat) {
+		self.init(color: (r, g, b), intensity: i)
 	}
 	
 	
 	public init (color: RGBColor, intensity: GLfloat) {
 		self.color = color
 		self.intensity = intensity
-	}
-	
-	
-	public init (r: GLfloat, g: GLfloat, b: GLfloat, i: GLfloat) {
-		color = (r, g, b)
-		intensity = i
 	}
 }

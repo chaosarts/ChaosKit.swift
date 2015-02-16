@@ -9,7 +9,7 @@
 import Foundation
 
 
-public struct vec2 {
+public struct vec2 : vector {
 	private var vec : (x: GLfloat, y: GLfloat) = (0, 0)
 	
 	public var x: GLfloat {

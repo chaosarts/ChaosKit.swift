@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct CKvertex {
+public struct CKVertex {
 	
 	public var position : vec3
 	
@@ -16,14 +16,15 @@ public struct CKvertex {
 	
 	public var color : vec4?
 	
-	public var texCoord : vec3?
+	public var texCoord : vec2?
+	
 	
 	public init () {
 		position = vec3()
 	}
 	
 	
-	public init (position: vec3, color: vec4? = nil, normal: vec3? = nil, texCoord: vec3? = nil) {
+	public init (position: vec3, color: vec4? = nil, normal: vec3? = nil, texCoord: vec2? = nil) {
 		self.position = position
 		self.color = color
 		self.normal = normal

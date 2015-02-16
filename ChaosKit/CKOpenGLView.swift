@@ -11,10 +11,10 @@ import Cocoa
 public class CKOpenGLView : NSResponder  {
 	
 	/** Contains the translation matrix */
-	private var _translation : mat4 = mat4.identity
+	private var _translation : mat4?
 	
 	/** Contains the rotation matrix */
-	private var _rotation : mat4 = mat4.identity
+	private var _rotation : mat4?
 	
 	/** Provides a list of buffers */
 	private final var _buffers : UnsafeMutablePointer<GLuint>?
@@ -28,7 +28,6 @@ public class CKOpenGLView : NSResponder  {
 	/** Provides the parant view of this view */
 	public final var superview : CKOpenGLView?
 	
-	
 	/** Readonly buffer property*/
 	public final var buffers : UnsafeMutablePointer<GLuint>? {
 		get {return _buffers}
@@ -38,7 +37,7 @@ public class CKOpenGLView : NSResponder  {
 	public var programs : [CKOpenGLProgram] = []
 	
 	/** Contains the vertice of the view */
-	public final var vertice : [CKvertex] = []
+	public final var vertice : [CKVertex] = []
 	
 	/** Contains the renderer */
 	public var renderer : CKOpenGLRenderer? {
@@ -48,8 +47,11 @@ public class CKOpenGLView : NSResponder  {
 	/** Contains the modelViewMatrix */
 	public final var modelViewMatrix : mat4 {
 		get {
-			if nil == superview {return _translation * _rotation}
-			return superview!.modelViewMatrix * _translation * _rotation
+			var mat : mat4 = mat4.identity
+			if nil != _translation {mat = _translation!}
+			if nil != _rotation {mat = mat * _rotation!}
+			if nil != superview {mat = superview!.modelViewMatrix}
+			return mat
 		}
 	}
 	

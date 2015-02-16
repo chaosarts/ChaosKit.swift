@@ -8,6 +8,11 @@
 
 import Cocoa
 
-class CKOpenGLSpecularLight: CKOpenGLPositionedLight {
+public class CKOpenGLSpecularLight: CKOpenGLPositionedLight {
+	public var shininess : GLfloat = 1
 	
+	public init (shininess: GLfloat, position: vec3 = vec3(), color: RGBColor = (1, 1, 1), intensity: GLfloat = 1) {
+		self.shininess = shininess
+		super.init(position: position, color: color, intensity: intensity)
+	}
 }

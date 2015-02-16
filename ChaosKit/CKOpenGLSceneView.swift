@@ -13,12 +13,13 @@ public class CKOpenGLSceneView: CKOpenGLView {
 	public var clearColor : RGBAColor = (0, 0, 0, 1)
 	
 	/** Provides a list of light sources */
-	public var lightSources : [CKOpenGLLight] = []
+	private var _lightSources : [CKOpenGLLight] = []
 	
 	
-	public func setupLight () {
-		
+	public var lightSources : [CKOpenGLLight] {
+		get {return _lightSources}
 	}
+	
 	
 	/** Provides the opengl renderer */
 	override public var renderer : CKOpenGLRenderer? {
@@ -32,5 +33,17 @@ public class CKOpenGLSceneView: CKOpenGLView {
 		glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 		glClearDepth(1)
 		glClear(GLbitfield(GL_COLOR_BUFFER_BIT))
+	}
+	
+	
+	public func registerLightSource (light: CKOpenGLLight) {
+		
+	}
+	
+	
+	public func setupLight (program: CKOpenGLProgram) {
+		for l in lightSources {
+			
+		}
 	}
 }

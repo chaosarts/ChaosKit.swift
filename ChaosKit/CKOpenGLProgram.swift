@@ -79,6 +79,12 @@ public class CKOpenGLProgram: CKOpenGLBase {
 		set {uniforms[CKOpenGLBaseUniformType.SpecularLightPosition] = newValue}
 	}
 	
+	/** Shortcut for specular light position uniform */
+	public final var uniformSpecularLightShininess : CKOpenGLUniform {
+		get {return uniforms[CKOpenGLBaseUniformType.SpecularLightShininess]!}
+		set {uniforms[CKOpenGLBaseUniformType.SpecularLightShininess] = newValue}
+	}
+	
 	
 	// ATTRIBUTE SHORTCUTS
 	// *******************
@@ -143,10 +149,14 @@ public class CKOpenGLProgram: CKOpenGLBase {
 		uniformSpecularLightIntensity = CKOpenGLUniform(name: "uSpecularLightIntensity")
 		uniformSpecularLightPosition = CKOpenGLUniform(name: "uSpecularLightPosition")
 		
-		attributeVertexPosition = CKOpenGLAttribute(name: "aVertexPosition")
-		attributeVertexNormal = CKOpenGLAttribute(name: "aVertexNormal")
-		attributeVertexColor = CKOpenGLAttribute(name: "aVertexColor")
-		attributeVertexTexCoord = CKOpenGLAttribute(name: "aVertexTexCoord")
+		attributeVertexPosition = CKOpenGLAttribute(name: "aVertexPosition",
+			target: CKOpenGLTargetAttribute.Position)
+		attributeVertexNormal = CKOpenGLAttribute(name: "aVertexNormal",
+			target: CKOpenGLTargetAttribute.Normal)
+		attributeVertexColor = CKOpenGLAttribute(name: "aVertexColor",
+			target: CKOpenGLTargetAttribute.Color)
+		attributeVertexTexCoord = CKOpenGLAttribute(name: "aVertexTexCoord",
+			target: CKOpenGLTargetAttribute.TexCoord)
 	}
 	
 	
@@ -239,7 +249,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	:param: uniform
 	:returns: True when the unform has been located in the program, otherwise false
 	*/
-	func getActiveUniform (inout uniform: CKOpenGLUniform) -> Bool {
+	public func getActiveUniform (inout uniform: CKOpenGLUniform) -> Bool {
 		var location : GLint = glGetUniformLocation(id, uniform.name)
 		if location < 0 {println("Uniform \(uniform.name) not found in program."); return false}
 		
@@ -254,6 +264,10 @@ public class CKOpenGLProgram: CKOpenGLBase {
 		uniform.type = type.memory
 		uniform.size = size.memory
 		
+		for i in 0..<Int(uniform.size!) {
+			glGetUniformLocation(id, uniform.name + "[\(i)]")
+		}
+		
 		return true
 	}
 	
@@ -264,7 +278,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	:param: attribute
 	:returns: True when attribute has been located in the program, false otherwise
 	*/
-	func getActiveAttribute (inout attribute: CKOpenGLAttribute) -> Bool {
+	public func getActiveAttribute (inout attribute: CKOpenGLAttribute) -> Bool {
 		var location : GLint = glGetAttribLocation(id, attribute.name)
 		if location < 0 {println("Attribute \(attribute.name) not found"); return false}
 		
@@ -283,13 +297,8 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	}
 	
 	
-	public func getUniform (type: CKOpenGLBaseUniformType) -> CKOpenGLUniform {
-		return uniforms[type]!
-	}
-	
-	
-	public func getVertexAttribute (type: CKOpenGLBaseAttributeType) -> CKOpenGLAttribute {
-		return attributes[type]!
+	public func enableAttributes (view: CKOpenGLView) {
+		
 	}
 	
 	
@@ -329,4 +338,5 @@ public enum CKOpenGLBaseUniformType : String {
 	case SpecularLightColor = "SpecularLightColor"
 	case SpecularLightPosition = "SpecularLightPosition"
 	case SpecularLightIntensity = "SpecularLightIntensity"
+	case SpecularLightShininess = "SpecularLightShininess"
 }

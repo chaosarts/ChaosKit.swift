@@ -18,6 +18,20 @@ public struct CKOpenGLUniform {
 	
 	public var location : GLint = -1
 	
+	public var locations : [GLint] = []
+	
+	subscript (index: Int) -> GLint {
+		get {
+			assert(valid(index), "Bad index access for uniform")
+			return locations[index]
+		}
+		
+		set {
+			assert(valid(index), "Bad index access for uniform")
+			locations[index] = newValue
+		}
+	}
+	
 	public init (name: String, type: GLenum) {
 		self.name = name
 		self.type = type
@@ -25,5 +39,10 @@ public struct CKOpenGLUniform {
 	
 	public init (name: String) {
 		self.name = name
+	}
+	
+	
+	private func valid (index: Int) -> Bool {
+		return nil != size && index > 0 && index < Int(size!)
 	}
 }

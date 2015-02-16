@@ -15,6 +15,12 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	/** Contains the projection matrix */
 	private var _projectionMatrix : mat4 = mat4.identity
 	
+	/** Contains the rotation matrix */
+	private var _rotationMatrix : mat4 = mat4.identity
+	
+	/** Contains the rotation matrix */
+	private var _translationMatrix : mat4 = mat4.identity
+	
 	/** Provides the model for the camera model */
 	public var cameraModel : CKOpenGLCamera?
 	
@@ -26,6 +32,11 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	/** Provides the projection matrix */
 	public var projectionMatrix : mat4 {
 		get {return _projectionMatrix}
+	}
+	
+	/** Provides the model view matrix */
+	public var modelMatrix : mat4 {
+		get {return _translationMatrix * _rotationMatrix}
 	}
 	
 	/** 
@@ -92,6 +103,53 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	public func setOrthographic (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) -> CKOpenGLRenderer {
 		_projectionMatrix = mat4.makeOrtho(left: l, right: r, bottom: b, top: t, near: n, far: f)
 		return self
+	}
+	
+	
+	/**
+	Sets the transation of the camera
+	
+	:param: x The translation in x direction
+	:param: y The translation in y direction
+	:param: z The translation in z direction
+ 	*/
+	public func setTranslation (x mx: GLfloat, y my: GLfloat, z mz: GLfloat) {
+		setTranslation([mx, my, mz])
+	}
+	
+	
+	/**
+	Sets the translation of the camera
+	
+	:param: vec The direction, to translate to
+	*/
+	public func setTranslation (vec: vec3) {
+		_translationMatrix = mat4.makeTranslate(vec)
+	}
+	
+	
+	/** 
+	Sets the rotation of the camera
+	
+	:param: x The angle to rotate around the x axis
+	:param: y The angle to rotate around the y axis
+	:param: z The angle to rotate around the z axis
+	*/
+	public func setRotation (x rx: GLfloat, y ry: GLfloat, z rz: GLfloat) {
+		_rotationMatrix = mat4.identity
+		_rotationMatrix.rotateX(alpha: rx)
+		_rotationMatrix.rotateY(alpha: ry)
+		_rotationMatrix.rotateZ(alpha: rz)
+	}
+	
+	
+	/**
+	Sets the rotation of the camera
+	
+	:param: vec A vector containing the angles to rotate around the according axis
+	*/
+	public func setRotation (vec: vec3) {
+		setRotation(x: vec.x, y: vec.y, z: vec.z)
 	}
 	
 	
@@ -175,6 +233,5 @@ public class CKOpenGLRenderer: NSOpenGLView {
 		else {
 			setFrustum(left: l, right: r, bottom: b, top: t, near: n, far: f)
 		}
-
 	}
 }

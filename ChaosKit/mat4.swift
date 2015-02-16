@@ -374,9 +374,7 @@ extension mat4 {
 	/**
 	Provides the identity matrix
 	*/
-	public static var identity : mat4 {
-		return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
-	}
+	public static let identity : mat4 = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
 	
 	
 	/** 

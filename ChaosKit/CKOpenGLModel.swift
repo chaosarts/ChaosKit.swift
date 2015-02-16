@@ -8,6 +8,21 @@
 
 import Cocoa
 
+
+public protocol CKOpenGLMoveable {
+	var position : vec3 {get set}
+}
+
+
+public protocol CKOpenGLRotateable {
+	var rotation : vec3 {get set}
+}
+
+
+public protocol CKOpenGLModelType : CKOpenGLMoveable, CKOpenGLRotateable {
+
+}
+
 /**
 Base model class for opengl objects. A model contains a position and a rotation and
 notifies its observer about its changes. Notifications will be posted even if a
@@ -16,7 +31,7 @@ to update more than just one component. Otherwise the model posts notifications 
 every single component you change. It's recommended to replace the whole vector, if you want
 to change more than one component before notifying observer.
 */
-public class CKOpenGLModel {
+public class CKOpenGLModel : CKOpenGLModelType {
 	
 	/** Indicates if notifying observers is allowed in didSet{} */
 	private final var _allowNotification : Bool = true

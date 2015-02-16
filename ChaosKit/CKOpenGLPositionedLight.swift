@@ -19,23 +19,16 @@ public class CKOpenGLPositionedLight: CKOpenGLLight {
 	public var z : GLfloat {get {return position.z} set {position.z = newValue}}
 	
 	
-	public override init() {
-		position = vec3()
-		super.init()
+	public convenience init() {
+		self.init(position: vec3(), color: (1, 1, 1), intensity: 1)
 	}
 	
+	public convenience init(x: GLfloat, y: GLfloat, z: GLfloat, r: GLfloat, g: GLfloat, b: GLfloat, i: GLfloat) {
+		self.init(position: [x, y, z], color: (r, g, b), intensity: i)
+	}
 	
-	public init(position: vec3, color: RGBColor, intensity: GLfloat)
-	{
+	public init(position: vec3, color: RGBColor = (1, 1, 1), intensity: GLfloat = 1) {
 		self.position = position
 		super.init(color: color, intensity: intensity)
 	}
-	
-	
-	public init(x: GLfloat, y: GLfloat, z: GLfloat, r: GLfloat, g: GLfloat, b: GLfloat, i: GLfloat)
-	{
-		position = [x, y, z]
-		super.init(r: r, g: g, b: b, i: i)
-	}
-
 }
