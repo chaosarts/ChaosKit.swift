@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		16190D661A924E66007BFB59 /* CKOpenGLTestingClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16190D651A924E66007BFB59 /* CKOpenGLTestingClasses.swift */; };
 		C43D8AEC1A7AF6F700DCE13F /* CKOpenGLAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43D8AEB1A7AF6F700DCE13F /* CKOpenGLAttribute.swift */; };
 		C43D8AEE1A7AFEDC00DCE13F /* CKOpenGLUniform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43D8AED1A7AFEDC00DCE13F /* CKOpenGLUniform.swift */; };
 		C46FCAE91A6EA086008645B5 /* ChaosKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C46FCAE81A6EA086008645B5 /* ChaosKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -56,6 +57,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		16190D651A924E66007BFB59 /* CKOpenGLTestingClasses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLTestingClasses.swift; sourceTree = "<group>"; };
 		C43D8AEB1A7AF6F700DCE13F /* CKOpenGLAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLAttribute.swift; sourceTree = "<group>"; };
 		C43D8AED1A7AFEDC00DCE13F /* CKOpenGLUniform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLUniform.swift; sourceTree = "<group>"; };
 		C46FCAE31A6EA086008645B5 /* ChaosKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChaosKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -200,6 +202,7 @@
 				C4CAEF891A7074A3004DBED5 /* CKOpenGLVertexShader.swift */,
 				C4FF72D21A7A81C600DB4F2F /* CKOpenGLView.swift */,
 				C47BD4A01A8E75130027D5C8 /* CKOpenGLViewController.swift */,
+				16190D651A924E66007BFB59 /* CKOpenGLTestingClasses.swift */,
 			);
 			name = OpenGL;
 			sourceTree = "<group>";
@@ -355,6 +358,7 @@
 				C4CAEF8C1A7074C4004DBED5 /* CKOpenGLFragmentShader.swift in Sources */,
 				C4E025861A83ABB100BF762E /* CKOpenGLLight.swift in Sources */,
 				C4CDC5AE1A6EB00900AC1F0F /* mat2.swift in Sources */,
+				16190D661A924E66007BFB59 /* CKOpenGLTestingClasses.swift in Sources */,
 				C4FF72CB1A7A740900DB4F2F /* CKOpenGLRenderer.swift in Sources */,
 				C4CDC5B71A6EB1CA00AC1F0F /* mat4.swift in Sources */,
 				C4E0258C1A83D4D000BF762E /* CKOpenGLPositionedLight.swift in Sources */,
