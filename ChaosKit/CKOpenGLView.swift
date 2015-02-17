@@ -28,16 +28,16 @@ public class CKOpenGLView : NSResponder  {
 	/** Provides the parant view of this view */
 	public final var superview : CKOpenGLView?
 	
-	/** Readonly buffer property*/
-	public final var buffers : UnsafeMutablePointer<GLuint>? {
-		get {return _buffers}
-	}
-	
 	/** Contains the base program */
 	public var programs : [CKOpenGLProgram] = []
 	
 	/** Contains the vertice of the view */
-	public final var vertice : [CKVertex] = []
+	public final var shape : CKOpenGLShape = CKOpenGLShape()
+	
+	/** Readonly buffer property*/
+	public final var buffers : UnsafeMutablePointer<GLuint>? {
+		get {return _buffers}
+	}
 	
 	/** Contains the renderer */
 	public var renderer : CKOpenGLRenderer? {

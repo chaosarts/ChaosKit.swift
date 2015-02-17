@@ -8,40 +8,43 @@
 
 import Foundation
 
-public struct CKVertex {
+public enum CKOpenGLVertexAttributeType {
+	case Position
+	case Color
+	case Normal
+	case TexCoord
+}
+
+
+public struct CKOpenGLVertexAttribute<T where T: MatrixType> {
+	/** Provides the data internally */
+	private var _datas : [GLfloat] = []
 	
-	public var position : vec3
+	/** Readonly access to vertex data */
+	public var datas : [GLfloat] {get {return _datas}}
 	
-	public var normal : vec3?
+	/** Provides the vector size */
+	public let elementSize : UInt
 	
-	public var color : vec4?
+	/** Provides the target atrtibute type (vertex position, vertex color, etc) */
+	public let type : CKOpenGLVertexAttributeType
 	
-	public var texCoord : vec2?
+	/** 
+	Initializes the value
 	
-	
-	public init () {
-		position = vec3()
+	:param: type
+	*/
+	public init(type: CKOpenGLVertexAttributeType) {
+		self.elementSize = T.elementCount
+		self.type = type
 	}
 	
+	/** 
+	Adds new data to the vertex attribute
 	
-	public init (position: vec3, color: vec4? = nil, normal: vec3? = nil, texCoord: vec2? = nil) {
-		self.position = position
-		self.color = color
-		self.normal = normal
-		self.texCoord = texCoord
-	}
-	
-	
-	public init (x: GLfloat, y: GLfloat, z: GLfloat) {
-		position = [x, y, z]
-	}
-	
-	
-	public func array (normal n: Bool, color c: Bool, texCoord t: Bool) -> [GLfloat] {
-		var output = position.array
-		if n {output += normal!.array}
-		if c {output += color!.array}
-		if t {output += texCoord!.array}
-		return output
+	:param: data The data to add
+	*/
+	mutating public func add (data d: T) {
+		_datas = _datas + d.array
 	}
 }

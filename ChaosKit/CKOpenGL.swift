@@ -10,6 +10,7 @@ import Foundation
 import OpenGL
 
 public typealias RGBAColor = (r: GLclampf, g: GLclampf, b: GLclampf, a: GLclampf)
+
 public typealias RGBColor = (r: GLclampf, g: GLclampf, b: GLclampf)
 
 public func toUnsafePointer<T> (value: [T]) -> UnsafePointer<T> {
@@ -23,4 +24,9 @@ public func toUnsafePointer<T>(value: T) -> UnsafePointer<T> {
 	var ptr : UnsafeMutablePointer<T> = UnsafeMutablePointer<T>.alloc(1)
 	ptr.initialize(value)
 	return UnsafePointer<T>(ptr)
+}
+
+
+public protocol vec2Convertible {
+	init (vector v: vec2)
 }

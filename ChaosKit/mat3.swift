@@ -8,11 +8,19 @@
 
 import Foundation
 
-public struct mat3 {
+public struct mat3 : QuadraticMatrixType {
+	
+	public static let rows : UInt = 3
+	
+	public static let cols : UInt = rows
+	
+	public static var elementCount : UInt {get {return rows * cols}}
 	
 	/** Provides the list of components of this matrix in 
 	row-major representation */
 	private var mat : [GLfloat] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+	
+	public var array : [GLfloat] {get{return mat}}
 	
 	/** Provides the mdterminant of the matrix */
 	public var determinant : GLfloat {
@@ -26,7 +34,7 @@ public struct mat3 {
 	}
 	
 	/** Provides the transposed matrix of the matrix */
-	public var transpose : mat3 {
+	public var transposed : mat3 {
 		return [
 			mat[0], mat[3], mat[6],
 			mat[1], mat[4], mat[7],
@@ -128,6 +136,17 @@ extension mat3 : Printable {
 			return output
 		}
 	}
+}
+
+
+extension mat3 : Equatable {}
+
+public func ==(l: mat3, r: mat3) -> Bool {
+	for var i = l.array.count - 1; i >= 0; i-- {
+		if l.array[i] != r.array[i] {return false}
+	}
+	
+	return true
 }
 
 

@@ -8,8 +8,16 @@
 
 import Foundation
 
-public struct vec4 : vector {
+public struct vec4 : MatrixType {
+	
+	public static let rows : UInt = 4
+	
+	public static let cols : UInt = 1
+	
+	public static var elementCount : UInt {get {return rows * cols}}
+	
 	private var vec : (x: GLfloat, y: GLfloat, z: GLfloat, w: GLfloat) = (0, 0, 0, 0)
+	
 	
 	public var x : GLfloat {
 		get {return vec.x} set {vec.x = newValue}
@@ -55,6 +63,33 @@ public struct vec4 : vector {
 	public init (v: vec3) {
 		vec = (v.x, v.y, v.z, 0)
 	}
+	
+	
+	subscript (index: Int) -> GLfloat {
+		get {
+			assert(valid(index), "Bad index access for vec2")
+			switch index {
+			case 0: return x
+			case 1: return y
+			case 2: return z
+			default: return w
+			}
+		}
+		
+		set {
+			assert(valid(index), "Bad index access for vec2")
+			switch index {
+			case 0: x = newValue
+			case 1: y = newValue
+			case 2: z = newValue
+			default: w = newValue
+			}
+		}
+	}
+	
+	private func valid(index: Int) -> Bool {
+		return index >= 0 && index < Int(vec4.elementCount)
+	}
 }
 
 
@@ -69,22 +104,7 @@ extension vec4 : ArrayLiteralConvertible {
 
 
 extension vec4 : Printable {
-	public var description : String {
-		get {
-			var maxlength = max(countElements(x.description), countElements(y.description), countElements(z.description), countElements(w.description))
-			
-			var output : String = ""
-			var vec : [GLfloat] = self.array
-			
-			for i in 0...3 {
-				output += "|"
-				output += ((maxlength - countElements(vec[i].description)) * " ") + vec[i].description
-				output += "|\n"
-			}
-		
-			return output
-		}
-	}
+	public var description : String {get {return "(\(x), \(y), \(z), \(w))"}}
 }
 
 
@@ -111,7 +131,9 @@ public func -(l: vec4, r: vec4) -> vec4 {
 
 
 public func *(l: vec4, r: vec4) -> GLfloat {
-	return l.x * r.x + l.y * r.y + l.z * r.z + l.w * r.w
+	let a : GLfloat = l.x * r.x + l.y * r.y
+	let b : GLfloat = l.z * r.z + l.w * r.w
+	return a + b
 }
 
 

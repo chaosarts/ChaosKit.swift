@@ -9,7 +9,13 @@
 import Foundation
 
 
-public struct vec2 : vector {
+public struct vec2 : MatrixType {
+	public static let rows : UInt = 2
+	
+	public static let cols : UInt = 1
+	
+	public static var elementCount : UInt {get {return rows * cols}}
+	
 	private var vec : (x: GLfloat, y: GLfloat) = (0, 0)
 	
 	public var x: GLfloat {

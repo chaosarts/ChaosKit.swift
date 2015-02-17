@@ -8,14 +8,23 @@
 
 import Foundation
 
-public struct mat2 {
+public struct mat2 : QuadraticMatrixType {
+	
+	public static let rows : UInt = 2
+	
+	public static let cols : UInt = rows
+	
+	public static var elementCount : UInt {get {return rows * cols}}
+	
 	private var mat : [GLfloat] = [0, 0, 0 ,0]
+	
+	public var array : [GLfloat] {get {return mat}}
 	
 	public var determinant : GLfloat {
 		return mat[0] * mat[3] - mat[1] * mat[2]
 	}
 	
-	public var transpose : mat2 {
+	public var transposed : mat2 {
 		return [mat[0], mat[2], mat[1], mat[3]]
 	}
 	
@@ -93,6 +102,32 @@ extension mat2 : ArrayLiteralConvertible {
 	}
 }
 
+extension mat2 : Printable {
+	public var description : String {
+		get {
+			var maxlen : Int = 0
+			for index in 0...(mat.count - 1) {
+				maxlen = max(maxlen, countElements(mat[index].description))
+			}
+			
+			maxlen++
+			
+			var output : String = ""
+			let m : mat2 = self
+			
+			for r in 0...1 {
+				output += "|"
+				for c in 0...1 {
+					var fillLen : Int = maxlen - countElements(m[r, c].description)
+					var white : String = " " * UInt32(fillLen)
+					output += white + m[r, c].description
+				}
+				output += "|\n"
+			}
+			return output
+		}
+	}
+}
 
 extension mat2 : Equatable {}
 

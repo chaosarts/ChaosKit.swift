@@ -8,7 +8,13 @@
 
 import Foundation
 
-public struct vec3 : vector {
+public struct vec3 : MatrixType {
+	public static let rows : UInt = 3
+	
+	public static let cols : UInt = 1
+	
+	public static var elementCount : UInt {get {return rows * cols}}
+	
 	private var vec : (x: GLfloat, y: GLfloat, z: GLfloat) = (0, 0, 0)
 	
 	public var x : GLfloat {
@@ -47,6 +53,30 @@ public struct vec3 : vector {
 	public init (v: vec2) {
 		vec = (v.x, v.y, 0)
 	}
+	
+	subscript (index: Int) -> GLfloat {
+		get {
+			assert(valid(index), "Bad index access for vec2")
+			switch index {
+			case 0: return x
+			case 1: return y
+			default: return z
+			}
+		}
+		
+		set {
+			assert(valid(index), "Bad index access for vec2")
+			switch index {
+			case 0: x = newValue
+			case 1: y = newValue
+			default: z = newValue
+			}
+		}
+	}
+	
+	private func valid(index: Int) -> Bool {
+		return index >= 0 && index < Int(vec3.elementCount)
+	}
 }
 
 
@@ -60,6 +90,10 @@ extension vec3 : ArrayLiteralConvertible {
 
 
 extension vec3 : Equatable {}
+
+extension vec3 : Printable {
+	public var description : String {get {return "(\(x), \(y), \(z))"}}
+}
 
 public func ==(l: vec3, r: vec3) -> Bool {
 	return l.x == r.x && l.y == r.y && l.z == r.z

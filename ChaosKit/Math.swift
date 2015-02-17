@@ -10,15 +10,44 @@ import Foundation
 
 infix operator • {}
 
-public protocol vector : Equatable, ArrayLiteralConvertible {
+
+public protocol ArrayRepresentable {
 	var array : [GLfloat] {get}
-	
-	var magnitude : GLfloat {get}
-	
+}
+
+
+public protocol ListType : ArrayRepresentable {
+	class var elementCount : UInt {get}
+}
+
+
+public protocol ArithmeticType {
 	prefix func - (l: Self) -> Self
 	func + (l: Self, r: Self) -> Self
 	func - (l: Self, r: Self) -> Self
-	func * (l: Self, r: Self) -> GLfloat
 	func * (l: Self, r: GLfloat) -> Self
 	func * (l: GLfloat, r: Self) -> Self
+}
+
+
+public protocol MatrixType : ListType {
+	
+	class var rows : UInt {get}
+	
+	class var cols : UInt {get}
+}
+
+
+public protocol QuadraticMatrixType : MatrixType {
+	var transposed : Self {get}
+	
+	var determinant : GLfloat {get}
+	
+	func * (l: Self, r: Self) -> Self
+}
+
+
+public protocol VectorType : MatrixType {
+	var magnitude : GLfloat {get}
+	func * (l: Self, r: Self) -> GLfloat
 }
