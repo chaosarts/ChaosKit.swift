@@ -25,8 +25,3 @@ public func toUnsafePointer<T>(value: T) -> UnsafePointer<T> {
 	ptr.initialize(value)
 	return UnsafePointer<T>(ptr)
 }
-
-
-public protocol vec2Convertible {
-	init (vector v: vec2)
-}

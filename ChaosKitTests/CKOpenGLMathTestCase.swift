@@ -13,5 +13,6 @@ import XCTest
 class CKOpenGLMathTestCase: XCTestCase {
 	
 	func test2D () {
+	
 	}
 }

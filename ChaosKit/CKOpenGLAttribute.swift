@@ -8,11 +8,23 @@
 
 import Cocoa
 
-public struct CKOpenGLAttribute {
+
+/**
+Enumeration of vertex attribute types
+*/
+public enum CKOpenGLAttributeType : Int {
+	case Position
+	case Color
+	case Normal
+	case TexCoord
+}
+
+
+public struct CKOpenGLAttributeInfo {
 	
 	public let name : String
 	
-	public let target : CKOpenGLTargetAttribute
+	public let target : CKOpenGLAttributeType
 	
 	public var type : GLenum?
 	
@@ -20,17 +32,11 @@ public struct CKOpenGLAttribute {
 	
 	public var location : GLint = -1
 	
+	public var locations : [GLuint] = []
 	
-	public init(name: String, target: CKOpenGLTargetAttribute) {
+	
+	public init(name: String, target: CKOpenGLAttributeType) {
 		self.name = name
 		self.target = target
 	}
-}
-
-
-public enum CKOpenGLTargetAttribute {
-	case Position
-	case Color
-	case TexCoord
-	case Normal
 }

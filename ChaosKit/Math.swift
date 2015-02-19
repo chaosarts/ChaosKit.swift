@@ -42,12 +42,9 @@ public protocol QuadraticMatrixType : MatrixType {
 	var transposed : Self {get}
 	
 	var determinant : GLfloat {get}
-	
-	func * (l: Self, r: Self) -> Self
 }
 
 
 public protocol VectorType : MatrixType {
 	var magnitude : GLfloat {get}
-	func * (l: Self, r: Self) -> GLfloat
 }

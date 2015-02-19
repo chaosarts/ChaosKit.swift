@@ -12,11 +12,11 @@ import Cocoa
 Model class to represent a camera for a opengl scene. The viewport
 parameters are readonly outside the model, to prevent setting these
 values, to keep observers synchronized to this model. One might
-send notification for every single viewport parameter. But mostly you 
-won't just change one parameter at a time. So notify observer for every
-single parameter would have been a overhead.
+send notification for every single viewport parameter. But mostly one
+does not change one parameter at a time. Notifying each observer for
+every single parameter would be an overhead.
 */
-public class CKOpenGLCamera : CKOpenGLModel {
+public class CKOpenGLCameraModel : CKOpenGLModel {
 	
 	/** Internal left bound of the viewport */
 	private var _left : GLfloat = -1
@@ -82,7 +82,6 @@ public class CKOpenGLCamera : CKOpenGLModel {
 			var center = self.center
 			_left = center.x - newValue / 2
 			_right = center.x + newValue / 2
-			notify(CKOpenGLCameraEvent.Change)
 		}
 	}
 	
@@ -93,7 +92,6 @@ public class CKOpenGLCamera : CKOpenGLModel {
 			var center = self.center
 			_bottom = center.y - newValue / 2
 			_top = center.y + newValue / 2
-			notify(CKOpenGLCameraEvent.Change)
 		}
 	}
 	
@@ -104,7 +102,6 @@ public class CKOpenGLCamera : CKOpenGLModel {
 			var center = self.center
 			_near = center.z - newValue / 2
 			_far = center.z + newValue / 2
-			notify(CKOpenGLCameraEvent.Change)
 		}
 	}
 	
@@ -155,7 +152,6 @@ public class CKOpenGLCamera : CKOpenGLModel {
 		_top = t
 		_near = n
 		_far = f
-		notify(CKOpenGLCameraEvent.Change)
 	}
 	
 	

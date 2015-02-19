@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct vec3 : MatrixType {
+public struct vec3 : VectorType {
 	public static let rows : UInt = 3
 	
 	public static let cols : UInt = 1
@@ -52,6 +52,10 @@ public struct vec3 : MatrixType {
 	
 	public init (v: vec2) {
 		vec = (v.x, v.y, 0)
+	}
+	
+	public init (v: vec4) {
+		vec = (v.x, v.y, v.z)
 	}
 	
 	subscript (index: Int) -> GLfloat {

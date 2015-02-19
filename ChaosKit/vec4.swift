@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct vec4 : MatrixType {
+public struct vec4 : VectorType {
 	
 	public static let rows : UInt = 4
 	

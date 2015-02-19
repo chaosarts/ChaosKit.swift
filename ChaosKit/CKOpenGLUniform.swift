@@ -8,9 +8,28 @@
 
 import Cocoa
 
-public struct CKOpenGLUniform {
+public enum CKOpenGLUniformType {
+	case ModelViewMatrix
+	case ProjectionViewMatrix
+	
+	case AmbientLightColor
+	case AmbientLightIntensity
+	
+	case DiffuseLightColor
+	case DiffuseLightPosition
+	case DiffuseLightIntensity
+	
+	case SpecularLightColor
+	case SpecularLightPosition
+	case SpecularLightIntensity
+	case SpecularLightShininess
+}
+
+public struct CKOpenGLUniformInfo {
 	
 	public let name : String
+	
+	public let target : CKOpenGLUniformType
 	
 	public var type : GLenum?
 	
@@ -19,6 +38,7 @@ public struct CKOpenGLUniform {
 	public var location : GLint = -1
 	
 	public var locations : [GLint] = []
+	
 	
 	subscript (index: Int) -> GLint {
 		get {
@@ -32,13 +52,9 @@ public struct CKOpenGLUniform {
 		}
 	}
 	
-	public init (name: String, type: GLenum) {
+	public init (name: String, target: CKOpenGLUniformType) {
 		self.name = name
-		self.type = type
-	}
-	
-	public init (name: String) {
-		self.name = name
+		self.target = target
 	}
 	
 	

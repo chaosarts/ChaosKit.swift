@@ -8,11 +8,7 @@
 
 import Foundation
 
-public protocol CKOpenGLLightModelType : CKOpenGLModelType {
-	var lightSources : [CKOpenGLLight] {get}
-}
-
-public class CKOpenGLLight {
+public class CKOpenGLAmbientLight {
 		
 	public var color : RGBColor
 	
@@ -38,5 +34,25 @@ public class CKOpenGLLight {
 	public init (color: RGBColor, intensity: GLfloat) {
 		self.color = color
 		self.intensity = intensity
+	}
+}
+
+
+public class CKOpenGLDiffuseLight : CKOpenGLAmbientLight {
+	public var position : vec3
+	
+	public init (color: RGBColor, intensity: GLfloat, position: vec3) {
+		self.position = position
+		super.init(color: color, intensity: intensity)
+	}
+}
+
+
+public class CKOpenGLSpecularLight : CKOpenGLDiffuseLight {
+	public var shininess : Int
+	
+	public init (color: RGBColor, intensity: GLfloat, position: vec3, shininess: Int) {
+		self.shininess = shininess
+		super.init(color: color, intensity: intensity, position: position)
 	}
 }

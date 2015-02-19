@@ -10,6 +10,37 @@ import Foundation
 
 prefix operator * {}
 
+public enum CKLogType : String {
+	case Info = "Info"
+	case Warning = "Warning"
+	case Error = "Error"
+}
+
+
+public func log (message: String, type: CKLogType) {
+	let date : NSDate = NSDate()
+	let calendar : NSCalendar = NSCalendar.currentCalendar()
+	let components : NSDateComponents = calendar.components(.CalendarUnitHour | .CalendarUnitMinute | .CalendarUnitSecond, fromDate: date)
+	let m : String = message + "\(components.hour):\(components.minute):\(components.second)"
+		+ " [\(type.rawValue)]: \(message) (in \(__FILE__), line \(__LINE__))"
+	println(m)
+}
+
+
+public func info (message: String) {
+	log(message, .Info)
+}
+
+
+public func warn (message: String) {
+	log(message, .Warning)
+}
+
+
+public func error (message: String) {
+	log(message, .Error)
+}
+
 
 public prefix func *<T>(ptr : UnsafePointer<T>) -> T{
 	return ptr.memory

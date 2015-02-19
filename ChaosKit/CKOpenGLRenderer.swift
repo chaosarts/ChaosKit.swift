@@ -22,12 +22,7 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	private var _translationMatrix : mat4 = mat4.identity
 	
 	/** Provides the model for the camera model */
-	public var cameraModel : CKOpenGLCamera?
-	
-	/** Contains the scene to display by the renderer */
-	public var scene : CKOpenGLSceneView? {
-		didSet {if self != scene!.renderer {scene!.renderer = self; display()}}
-	}
+	public var cameraModel : CKOpenGLCameraModel?
 	
 	/** Provides the projection matrix */
 	public var projectionMatrix : mat4 {
@@ -55,7 +50,6 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	*/
 	public func render () {
 		openGLContext.makeCurrentContext()
-		scene?.display()
 		glFlush()
 	}
 	
@@ -165,11 +159,10 @@ public class CKOpenGLRenderer: NSOpenGLView {
 		glViewport(x, y, GLint(width), GLint(height))
 		
 		if cameraModel == nil {
-			render()
 			return
 		}
 		
-		var model : CKOpenGLCamera = cameraModel!
+		var model : CKOpenGLCameraModel = cameraModel!
 		var aspect : GLfloat = GLfloat(width) / GLfloat(height)
 		
 		if aspect == model.aspect {
@@ -178,7 +171,6 @@ public class CKOpenGLRenderer: NSOpenGLView {
 				bottom: model.bottom, top: model.top,
 				near: model.near, far: model.far
 			)
-			render()
 			return
 		}
 		
@@ -207,7 +199,6 @@ public class CKOpenGLRenderer: NSOpenGLView {
 		}
 		
 		updateProjection(left: left, right: right, bottom: bottom, top: top, near: model.near, far: model.far)
-		render()
 	}
 	
 	
