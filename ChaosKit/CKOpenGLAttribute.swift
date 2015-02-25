@@ -90,10 +90,6 @@ public struct CKOpenGLAttributeInfo {
 |--------------------------------------------------------------------------
 */
 
-public protocol CKOpenGLAttribute {
-	var data : [GLfloat] {get}
-}
-
 
 /** 
 The CKOpenGLAttributeData struct provides the data of a vertex attribute
