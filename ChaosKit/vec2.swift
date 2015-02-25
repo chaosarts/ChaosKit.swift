@@ -10,52 +10,79 @@ import Foundation
 
 
 public struct vec2 : VectorType {
-	public static let rows : UInt = 2
+	public static let rows : Int = 2
 	
-	public static let cols : UInt = 1
+	public static let cols : Int = 1
 	
-	public static var elementCount : UInt {get {return rows * cols}}
+	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
 	
+	/** The size of a vector */
+	public static var elementCount : Int {get {return rows * cols}}
+	
+	/** The internal representation of the vector */
 	private var vec : (x: GLfloat, y: GLfloat) = (0, 0)
 	
+	/** The x component of the vector */
 	public var x: GLfloat {
 		get {return vec.x} set {vec.x = newValue}
 	}
 	
+	/** The y component of the vector */
 	public var y: GLfloat {
 		get {return vec.y} set {vec.y = newValue}
 	}
 	
+	/** Provides the vector as array */
 	public var array : [GLfloat] {
 		get {return [x, y]}
 	}
 	
+	/** Provides the magnitude of the vector */
 	public var magnitude : GLfloat {
 		return sqrt(self * self)
 	}
 	
+	/** Provides the vector that is perpendicular to this vector */
 	public var normal : vec2 {
-		return vec2(x: -y, y: x)
+		return vec2(-y, x)
 	}
 	
+	/** Provides the normalized version of this vector */
 	public var normalized : vec2 {
 		var m : GLfloat = magnitude
-		return vec2(x: x / m, y: y / m)
+		return vec2(x / m, y / m)
 	}
 	
+	
+	/** 
+	Initializes the vector with x and y equals zero 
+	*/
 	public init () {}
 	
-	public init (x: GLfloat, y: GLfloat) {
+	
+	/** 
+	Initializes the vector with x and y arguments 
+	
+	:param: x
+	:param: y
+	*/
+	public init (_ x: GLfloat, _ y: GLfloat) {
 		vec = (x, y)
 	}
 	
 	
-	public init (v: vec3) {
+	/** 
+	Initializes the vector with vec3. The z component will be discarded
+	*/
+	public init (_ v: vec3) {
 		vec = (v.x, v.y)
 	}
 	
 	
-	public init (v: vec4) {
+	/**
+	Initializes the vector with vec3. The z and w component will be discarded
+	*/
+	public init (_ v: vec4) {
 		vec = (v.x, v.y)
 	}
 	
@@ -75,12 +102,20 @@ public struct vec2 : VectorType {
 		}
 	}
 	
+	
+	
 	private func valid(index: Int) -> Bool {
 		return index == 0 || index == 1
 	}
 }
 
 extension vec2 : ArrayLiteralConvertible {
+	
+	public init(_ array: [GLfloat]) {
+		x = array.count > 0 ? array[0] : 0
+		y = array.count > 1 ? array[1] : 0
+	}
+	
 	public init(arrayLiteral elements: GLfloat...) {
 		x = elements.count > 0 ? elements[0] : 0
 		y = elements.count > 1 ? elements[1] : 0
@@ -101,12 +136,12 @@ extension vec2 : Printable {
 
 
 public prefix func -(v: vec2) -> vec2 {
-	return vec2(x: -v.x, y: -v.y)
+	return vec2(-v.x, -v.y)
 }
 
 
 public func +(l: vec2, r: vec2) -> vec2 {
-	return vec2(x: l.x + r.x, y: l.y + r.y)
+	return vec2(l.x + r.x, l.y + r.y)
 }
 
 
@@ -121,7 +156,7 @@ public func *(l: vec2, r: vec2) -> GLfloat {
 
 
 public func *(l: GLfloat, r: vec2) -> vec2 {
-	return vec2(x: l * r.x, y: l * r.y)
+	return vec2(l * r.x, l * r.y)
 }
 
 

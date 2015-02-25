@@ -10,6 +10,7 @@ import Cocoa
 import OpenGL
 import GLKit
 
+
 public class CKOpenGLRenderer: NSOpenGLView {
 	
 	/** Contains the projection matrix */
@@ -21,8 +22,14 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	/** Contains the rotation matrix */
 	private var _translationMatrix : mat4 = mat4.identity
 	
+	/** Provides a list of different shader programs */
+	public var programs : [CKOpenGLProgram] = []
+	
 	/** Provides the model for the camera model */
 	public var cameraModel : CKOpenGLCameraModel?
+	
+	/** Provides the scene to render */
+	public var scene : CKOpenGLScene?
 	
 	/** Provides the projection matrix */
 	public var projectionMatrix : mat4 {
@@ -49,8 +56,30 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	Renders the scene
 	*/
 	public func render () {
+		if scene == nil {return}
 		openGLContext.makeCurrentContext()
+		
+		for program in programs {
+			program.use()
+			var queue : CKQueue<CKOpenGLShape> = CKQueue<CKOpenGLShape>(scene!.objects)
+			
+			while (!queue.empty) {
+				var shape : CKOpenGLShape = queue.dequeue()!
+				queue.enqueue(shape.children)
+				if !shape.matchRequirements(program) {continue}
+				draw(shape: shape, withProgram: program)
+			}
+		}
+		
 		glFlush()
+	}
+	
+	
+	/** 
+	Draws the shape on the screen 
+	*/
+	public func draw (shape s: CKOpenGLShape, withProgram program: CKOpenGLProgram) {
+		
 	}
 	
 	

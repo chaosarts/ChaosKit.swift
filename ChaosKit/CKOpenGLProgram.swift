@@ -8,6 +8,8 @@
 
 import Cocoa
 
+private var _currentProgram : CKOpenGLProgram?
+
 public class CKOpenGLProgram: CKOpenGLBase {
 	
 	/** Provides a list of uniforms */
@@ -18,20 +20,30 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	private final var _attributes : [CKOpenGLAttributeType : CKOpenGLAttributeInfo] =
 		[CKOpenGLAttributeType : CKOpenGLAttributeInfo]()
 	
+	/** Provides a list of uniform types, that are required by this program */
+	private final var _uniformRequirements : [CKOpenGLUniformType] = []
 	
-	// PROGRAM STATUS
-	// **************
+	/** Provides a lit of attribute types that are required by the program */
+	private final var _attributeRequirements : [CKOpenGLAttributeType] = []
+	
+	/** Provides a list of uniform types, that are required by this program */
+	public final var uniformRequirements : [CKOpenGLUniformType] {
+		get {return _uniformRequirements}
+	}
+	
+	/** Provides a lit of attribute types that are required by the program */
+	public final var attributeRequirements : [CKOpenGLAttributeType] {
+		get {return _attributeRequirements}
+	}
 	
 	/** Determines whether the program is valid or not */
-	public final var valid : Bool {
-		get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS).memory == GL_TRUE}
-	}
-	
+	public final var valid : Bool {get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS).memory == GL_TRUE}}
 	
 	/** Determines if the program is linked or not */
-	public final var linked : Bool {
-		get {return iv(GL_LINK_STATUS).memory == GL_TRUE}
-	}
+	public final var linked : Bool {get {return iv(GL_LINK_STATUS).memory == GL_TRUE}}
+	
+	/** Indicates if program is current */
+	public final var isCurrent : Bool {get {return self == _currentProgram}}
 	
 	
 	/**
@@ -48,7 +60,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	
 	:param: pname The paramater name to fetch the value
 	*/
-	final public func iv (pname : Int32) -> UnsafeMutablePointer<GLint> {
+	public final func iv (pname : Int32) -> UnsafeMutablePointer<GLint> {
 		var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		glGetProgramiv(id, GLenum(pname), param)
 		return param
@@ -60,7 +72,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	
 	:returns: The info log
 	*/
-	final public func infoLog () -> UnsafeMutablePointer<GLchar> {
+	public final func infoLog () -> UnsafeMutablePointer<GLchar> {
 		var log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(Int(iv(GL_INFO_LOG_LENGTH).memory))
 		glGetProgramInfoLog(id, iv(GL_INFO_LOG_LENGTH).memory, nil, log)
 		return log
@@ -72,7 +84,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	
 	:param: shader The shader to attach
 	*/
-	final public func attach (shader s: CKOpenGLShader) -> CKOpenGLProgram {
+	public final func attach (shader s: CKOpenGLShader) -> CKOpenGLProgram {
 		glAttachShader(id, s.id)
 		return self
 	}
@@ -81,7 +93,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	/**
 	Links the program
 	*/
-	final public func link () -> Bool {
+	public final func link () -> Bool {
 		glLinkProgram(id)
 		if !linked {
 			print(String.fromCString(infoLog())!)
@@ -98,25 +110,14 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	
 	:returns:
 	*/
-	final public func use () -> Bool {
+	public final func use () -> Bool {
 		if !linked && !link() {return false}
-		glUseProgram(id)
+		if !isCurrent {
+			_currentProgram = self
+			glUseProgram(id)
+		}
 		return true
 	}
-	
-	
-	public func bindVertexAttribute (type: CKOpenGLAttributeType, vecsize: Int = 3, stride: Int = 0) {
-		var attribute : CKOpenGLAttributeInfo? = _attributes[type]
-		if nil == attribute || attribute!.location < 0 {return}
-		
-		var location : GLuint = GLuint(attribute!.location)
-		var pointer : UnsafeMutablePointer<UnsafeMutablePointer<Void>> = UnsafeMutablePointer<UnsafeMutablePointer<Void>>.alloc(1)
-		
-		glGetVertexAttribPointerv(location, GLenum(GL_VERTEX_ATTRIB_ARRAY_POINTER), pointer)
-		glVertexAttribPointer(location, GLint(vecsize), GLenum(GL_FLOAT), GLboolean(GL_FALSE), GLsizei(stride), pointer.memory)
-		glEnableVertexAttribArray(location)
-	}
-	
 	
 	/** 
 	Adds a new attribute info object to indicate the according attribute
@@ -128,7 +129,9 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	*/
 	public func addAttributeInfo (attributeInfo: CKOpenGLAttributeInfo) {
 		_attributes[attributeInfo.target] = attributeInfo
-		if linked {updateAttributeInfo(&_attributes[attributeInfo.target]!)}
+		if linked {
+			updateAttributeInfo(&_attributes[attributeInfo.target]!)
+		}
 	}
 	
 	
@@ -142,7 +145,9 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	*/
 	public func addUniformInfo (uniformInfo: CKOpenGLUniformInfo) {
 		_uniforms[uniformInfo.target] = uniformInfo
-		if linked {updateUniformInfo(&_uniforms[uniformInfo.target]!)}
+		if linked {
+			updateUniformInfo(&_uniforms[uniformInfo.target]!)
+		}
 	}
 	
 	
@@ -218,6 +223,9 @@ public class CKOpenGLProgram: CKOpenGLBase {
 			
 			attribute.locations.append(GLuint(location))
 		}
+		
+		var index : Int? = find(_attributeRequirements, attribute.target)
+		if nil == index {_attributeRequirements.append(attribute.target)}
 	}
 	
 	
@@ -261,5 +269,15 @@ public class CKOpenGLProgram: CKOpenGLBase {
 		for i in 0..<Int(uniform.size!) {
 			glGetUniformLocation(id, uniform.name + "[\(i)]")
 		}
+		
+		var index : Int? = find(_uniformRequirements, uniform.target)
+		if index == nil {_uniformRequirements.append(uniform.target)}
 	}
+}
+
+
+extension CKOpenGLProgram : Equatable {}
+
+public func == (l: CKOpenGLProgram, r: CKOpenGLProgram) -> Bool {
+	return l === r
 }

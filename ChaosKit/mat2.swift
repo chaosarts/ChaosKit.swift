@@ -10,28 +10,31 @@ import Foundation
 
 public struct mat2 : QuadraticMatrixType {
 	
-	public static let rows : UInt = 2
+	public static let rows : Int = 2
 	
-	public static let cols : UInt = rows
+	public static var cols : Int {get {return rows}}
 	
-	public static var elementCount : UInt {get {return rows * cols}}
+	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
 	
-	private var mat : [GLfloat] = [0, 0, 0 ,0]
+	/** The size of a vector */
+	public static var elementCount : Int {get {return rows * cols}}
 	
-	public var array : [GLfloat] {get {return mat}}
+	private var _mat : [GLfloat] = [0, 0, 0 ,0]
+	
+	public var array : [GLfloat] {get {return _mat}}
 	
 	public var determinant : GLfloat {
-		return mat[0] * mat[3] - mat[1] * mat[2]
+		return _mat[0] * _mat[3] - _mat[1] * _mat[2]
 	}
 	
 	public var transposed : mat2 {
-		return [mat[0], mat[2], mat[1], mat[3]]
+		return [_mat[0], _mat[2], _mat[1], _mat[3]]
 	}
 	
 	public var ptr : UnsafeMutablePointer<GLfloat> {
 		get {
-			var pointer : UnsafeMutablePointer<GLfloat> = UnsafeMutablePointer<GLfloat>.alloc(mat.count)
-			pointer.initializeFrom(mat)
+			var pointer : UnsafeMutablePointer<GLfloat> = UnsafeMutablePointer<GLfloat>.alloc(_mat.count)
+			pointer.initializeFrom(_mat)
 			return pointer
 		}
 	}
@@ -40,13 +43,13 @@ public struct mat2 : QuadraticMatrixType {
 	subscript (row index: Int) -> vec2 {
 		get {
 			assert(valid(index), "Bad index access for mat2")
-			return vec2(x: mat[2 * index], y: mat[2 * index + 1])
+			return vec2(_mat[2 * index], _mat[2 * index + 1])
 		}
 		
 		set {
 			assert(valid(index), "Bad index access for mat2")
-			mat[2 * index] = newValue.x
-			mat[2 * index + 1] = newValue.y
+			_mat[2 * index] = newValue.x
+			_mat[2 * index + 1] = newValue.y
 		}
 	}
 	
@@ -54,13 +57,13 @@ public struct mat2 : QuadraticMatrixType {
 	subscript (col index: Int) -> vec2 {
 		get {
 			assert(valid(index), "Bad index access for mat2")
-			return vec2(x: mat[index], y: mat[2 + index])
+			return vec2(_mat[index], _mat[2 + index])
 		}
 		
 		set {
 			assert(valid(index), "Bad index access for mat2")
-			mat[index] = newValue.x
-			mat[2 + index] = newValue.y
+			_mat[index] = newValue.x
+			_mat[2 + index] = newValue.y
 		}
 	}
 	
@@ -68,12 +71,12 @@ public struct mat2 : QuadraticMatrixType {
 	subscript (row: Int, col: Int) -> GLfloat {
 		get {
 			assert(valid(row) && valid(col), "Bad index access for mat2")
-			return mat[row * 2 + col]
+			return _mat[row * 2 + col]
 		}
 		
 		set {
 			assert(valid(row) && valid(col), "Bad index access for mat2")
-			mat[row * 2 + col] = newValue
+			_mat[row * 2 + col] = newValue
 		}
 	}
 	
@@ -96,8 +99,18 @@ extension mat2 {
 
 extension mat2 : ArrayLiteralConvertible {
 	public init(arrayLiteral elements: GLfloat...) {
+		let maximum : Int = min(mat2.elementCount, elements.count)
+		_mat = [GLfloat](count: maximum, repeatedValue: 0.0)
+		for index in 0..<maximum {
+			_mat[index] = elements[index]
+		}
+	}
+}
+
+extension mat2 : ArrayRepresentable {
+	public init(_ array: [GLfloat]) {
 		for index in 0...3 {
-			mat[index] = elements.count > index ? elements[index] : 0
+			_mat[index] = array.count > index ? array[index] : 0
 		}
 	}
 }
@@ -106,8 +119,8 @@ extension mat2 : Printable {
 	public var description : String {
 		get {
 			var maxlen : Int = 0
-			for index in 0...(mat.count - 1) {
-				maxlen = max(maxlen, countElements(mat[index].description))
+			for index in 0...(_mat.count - 1) {
+				maxlen = max(maxlen, countElements(_mat[index].description))
 			}
 			
 			maxlen++

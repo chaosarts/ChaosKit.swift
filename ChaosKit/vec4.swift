@@ -9,12 +9,14 @@
 import Foundation
 
 public struct vec4 : VectorType {
+	public static let rows : Int = 4
 	
-	public static let rows : UInt = 4
+	public static let cols : Int = 1
 	
-	public static let cols : UInt = 1
+	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
 	
-	public static var elementCount : UInt {get {return rows * cols}}
+	/** The size of a vector */
+	public static var elementCount : Int {get {return rows * cols}}
 	
 	private var vec : (x: GLfloat, y: GLfloat, z: GLfloat, w: GLfloat) = (0, 0, 0, 0)
 	
@@ -45,25 +47,32 @@ public struct vec4 : VectorType {
 	
 	public var normalized : vec4 {
 		let m = magnitude
-		return vec4(x: x/m, y: y/m, z: z/m, w: w/m)
+		return vec4(x/m, y/m, z/m, w/m)
 	}
 	
 	public init () {
 		
 	}
 	
-	public init (x: GLfloat, y: GLfloat, z: GLfloat, w: GLfloat) {
+	public init (_ x: GLfloat, _ y: GLfloat, _ z: GLfloat, _ w: GLfloat) {
 		vec = (x, y, z, w)
 	}
 	
-	public init (v: vec2) {
+	public init (_ v: vec2) {
 		vec = (v.x, v.y, 0, 0)
 	}
 	
-	public init (v: vec3) {
+	public init (_ v: vec3) {
 		vec = (v.x, v.y, v.z, 0)
 	}
 	
+	
+	public init(_ array: [GLfloat]) {
+		x = array.count > 0 ? array[0] : 0
+		y = array.count > 1 ? array[1] : 0
+		z = array.count > 2 ? array[2] : 0
+		w = array.count > 3 ? array[3] : 0
+	}
 	
 	subscript (index: Int) -> GLfloat {
 		get {
@@ -116,12 +125,12 @@ public func ==(l: vec4, r: vec4) -> Bool {
 
 
 public prefix func -(v: vec4) -> vec4 {
-	return vec4(x: -v.x, y: -v.y, z: -v.z, w: -v.w)
+	return vec4(-v.x, -v.y, -v.z, -v.w)
 }
 
 
 public func +(l: vec4, r: vec4) -> vec4 {
-	return vec4(x: l.x + r.x, y: l.y + r.y, z: l.z + r.z, w: l.w + r.w)
+	return vec4(l.x + r.x, l.y + r.y, l.z + r.z, l.w + r.w)
 }
 
 
@@ -138,7 +147,7 @@ public func *(l: vec4, r: vec4) -> GLfloat {
 
 
 public func *(l: vec4, r: GLfloat) -> vec4 {
-	return vec4(x: l.x * r, y: l.y * r, z: l.z * r, w: l.w * r)
+	return vec4(l.x * r, l.y * r, l.z * r, l.w * r)
 }
 
 

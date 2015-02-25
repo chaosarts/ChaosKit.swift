@@ -10,17 +10,20 @@ import Foundation
 
 public struct mat3 : QuadraticMatrixType {
 	
-	public static let rows : UInt = 3
+	public static let rows : Int = 3
 	
-	public static let cols : UInt = rows
+	public static var cols : Int {get {return rows}}
 	
-	public static var elementCount : UInt {get {return rows * cols}}
+	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
+	
+	/** The size of a vector */
+	public static var elementCount : Int {get {return rows * cols}}
 	
 	/** Provides the list of components of this matrix in 
 	row-major representation */
-	private var mat : [GLfloat] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+	private var _mat : [GLfloat] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 	
-	public var array : [GLfloat] {get{return mat}}
+	public var array : [GLfloat] {get{return _mat}}
 	
 	/** Provides the mdterminant of the matrix */
 	public var determinant : GLfloat {
@@ -36,9 +39,9 @@ public struct mat3 : QuadraticMatrixType {
 	/** Provides the transposed matrix of the matrix */
 	public var transposed : mat3 {
 		return [
-			mat[0], mat[3], mat[6],
-			mat[1], mat[4], mat[7],
-			mat[2], mat[5], mat[8]
+			_mat[0], _mat[3], _mat[6],
+			_mat[1], _mat[4], _mat[7],
+			_mat[2], _mat[5], _mat[8]
 		]
 	}
 	
@@ -46,14 +49,14 @@ public struct mat3 : QuadraticMatrixType {
 	subscript (row index: Int) -> vec3 {
 		get {
 			assert(valid(index), "Bad index access for mat3")
-			return vec3(x: mat[index], y: mat[3 + index], z: mat[6 + index])
+			return vec3(_mat[index], _mat[3 + index], _mat[6 + index])
 		}
 		
 		set {
 			assert(valid(index), "Bad index access for mat3")
-			mat[index] = newValue.x
-			mat[index + 3] = newValue.y
-			mat[index + 6] = newValue.z
+			_mat[index] = newValue.x
+			_mat[index + 3] = newValue.y
+			_mat[index + 6] = newValue.z
 		}
 	}
 	
@@ -61,14 +64,14 @@ public struct mat3 : QuadraticMatrixType {
 	subscript (col index: Int) -> vec3 {
 		get {
 			assert(valid(index), "Bad index access for mat3")
-			return vec3(x: mat[index * 3], y: mat[index * 3 + 1], z: mat[index * 3 + 2])
+			return vec3(_mat[index * 3], _mat[index * 3 + 1], _mat[index * 3 + 2])
 		}
 		
 		set {
 			assert(valid(index), "Bad index access for mat3")
-			mat[index * 3] = newValue.x
-			mat[index * 3 + 1] = newValue.y
-			mat[index * 3 + 2] = newValue.z
+			_mat[index * 3] = newValue.x
+			_mat[index * 3 + 1] = newValue.y
+			_mat[index * 3 + 2] = newValue.z
 		}
 	}
 	
@@ -76,12 +79,12 @@ public struct mat3 : QuadraticMatrixType {
 	subscript (row: Int, col: Int) -> GLfloat {
 		get {
 			assert(valid(row) && valid(col), "Bad index access for mat3")
-			return mat[col * 3 + row]
+			return _mat[col * 3 + row]
 		}
 		
 		set {
 			assert(valid(row) && valid(col), "Bad index access for mat3")
-			mat[col * 3 + row] = newValue
+			_mat[col * 3 + row] = newValue
 		}
 	}
 	
@@ -104,8 +107,19 @@ extension mat3 {
 
 extension mat3 : ArrayLiteralConvertible {
 	public init(arrayLiteral elements: GLfloat...) {
-		for index in 0...8 {
-			mat[index] = elements.count > index ? elements[index] : 0
+		let maximum : Int = min(mat3.elementCount, elements.count)
+		_mat = [GLfloat](count: maximum, repeatedValue: 0.0)
+		for index in 0..<maximum {
+			_mat[index] = elements[index]
+		}
+	}
+}
+
+
+extension mat3 : ArrayRepresentable {
+	public init(_ array: [GLfloat]) {
+		for index in 0..<mat3.elementCount {
+			_mat[index] = array.count > index ? array[index] : 0
 		}
 	}
 }
@@ -115,8 +129,8 @@ extension mat3 : Printable {
 	public var description : String {
 		get {
 			var maxlen : Int = 0
-			for index in 0...(mat.count - 1) {
-				maxlen = max(maxlen, countElements(mat[index].description))
+			for index in 0...(_mat.count - 1) {
+				maxlen = max(maxlen, countElements(_mat[index].description))
 			}
 			
 			maxlen++

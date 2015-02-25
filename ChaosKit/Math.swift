@@ -12,12 +12,19 @@ infix operator • {}
 
 
 public protocol ArrayRepresentable {
+	class var byteSize : Int {get}
+	
 	var array : [GLfloat] {get}
+	
+	init ()
+
+	init (_ array: [GLfloat])
 }
 
 
-public protocol ListType : ArrayRepresentable {
-	class var elementCount : UInt {get}
+public protocol ListType : ArrayRepresentable, ArrayLiteralConvertible {
+	class var elementCount : Int {get}
+	
 }
 
 
@@ -32,9 +39,9 @@ public protocol ArithmeticType {
 
 public protocol MatrixType : ListType {
 	
-	class var rows : UInt {get}
+	class var rows : Int {get}
 	
-	class var cols : UInt {get}
+	class var cols : Int {get}
 }
 
 

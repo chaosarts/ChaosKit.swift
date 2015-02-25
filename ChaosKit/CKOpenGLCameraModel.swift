@@ -61,7 +61,7 @@ public class CKOpenGLCameraModel : CKOpenGLModel {
 	
 	/** Contains the centerpoint of the viewport in x, y and z direction*/
 	public var center : vec3 {
-		get {return vec3(x: (_right + _left) / 2, y: (_top + _bottom) / 2, z: (_far + _near) / 2)}
+		get {return vec3((_right + _left) / 2, (_top + _bottom) / 2, (_far + _near) / 2)}
 		set {
 			var width = self.width
 			var height = self.height

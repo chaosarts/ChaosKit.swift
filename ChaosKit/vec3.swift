@@ -9,11 +9,14 @@
 import Foundation
 
 public struct vec3 : VectorType {
-	public static let rows : UInt = 3
+	public static let rows : Int = 3
 	
-	public static let cols : UInt = 1
+	public static let cols : Int = 1
 	
-	public static var elementCount : UInt {get {return rows * cols}}
+	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
+	
+	/** The size of a vector */
+	public static var elementCount : Int {get {return rows * cols}}
 	
 	private var vec : (x: GLfloat, y: GLfloat, z: GLfloat) = (0, 0, 0)
 	
@@ -39,24 +42,32 @@ public struct vec3 : VectorType {
 	
 	public var normalized : vec3 {
 		let m = magnitude
-		return vec3(x: x/m, y: y/m, z: z/m)
+		return vec3(x/m, y/m, z/m)
 	}
 	
 	public init () {
 		
 	}
 	
-	public init (x: GLfloat, y: GLfloat, z: GLfloat) {
+	public init (_ x: GLfloat, _ y: GLfloat, _ z: GLfloat) {
 		vec = (x, y, z)
 	}
 	
-	public init (v: vec2) {
+	public init (_ v: vec2) {
 		vec = (v.x, v.y, 0)
 	}
 	
-	public init (v: vec4) {
+	public init (_ v: vec4) {
 		vec = (v.x, v.y, v.z)
 	}
+	
+	
+	public init(_ array: [GLfloat]) {
+		x = array.count > 0 ? array[0] : 0
+		y = array.count > 1 ? array[1] : 0
+		z = array.count > 2 ? array[2] : 0
+	}
+	
 	
 	subscript (index: Int) -> GLfloat {
 		get {
@@ -105,12 +116,12 @@ public func ==(l: vec3, r: vec3) -> Bool {
 
 
 public prefix func -(v: vec3) -> vec3 {
-	return vec3(x: -v.x, y: -v.y, z: -v.z)
+	return vec3(-v.x, -v.y, -v.z)
 }
 
 
 public func +(l: vec3, r: vec3) -> vec3 {
-	return vec3(x: l.x + r.x, y: l.y + r.y, z: l.z + r.z)
+	return vec3(l.x + r.x, l.y + r.y, l.z + r.z)
 }
 
 
@@ -125,7 +136,7 @@ public func *(l: vec3, r: vec3) -> GLfloat {
 
 
 public func *(l: vec3, r: GLfloat) -> vec3 {
-	return vec3(x: l.x * r, y: l.y * r, z: l.z * r)
+	return vec3(l.x * r, l.y * r, l.z * r)
 }
 
 
@@ -135,5 +146,9 @@ public func *(l: GLfloat, r: vec3) -> vec3 {
 
 
 public func •(l: vec3, r: vec3) -> vec3 {
-	return vec3(x: l.y * r.z - l.z * r.y, y: l.z * r.x - l.x * r.z, z: l.x * r.y - l.y * r.x)
+	return vec3(
+		l.y * r.z - l.z * r.y,
+		l.z * r.x - l.x * r.z,
+		l.x * r.y - l.y * r.x
+	)
 }

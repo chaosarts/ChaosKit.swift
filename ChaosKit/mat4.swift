@@ -10,11 +10,14 @@ import Foundation
 
 public struct mat4 : QuadraticMatrixType {
 	
-	public static let rows : UInt = 4
+	public static let rows : Int = 4
 	
-	public static let cols : UInt = rows
+	public static var cols : Int {get {return rows}}
 	
-	public static var elementCount : UInt {get {return rows * cols}}
+	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
+	
+	/** The size of a vector */
+	public static var elementCount : Int {get {return rows * cols}}
 	
 	/** 
 	Provides a list of matrix components in major-row
@@ -63,7 +66,7 @@ public struct mat4 : QuadraticMatrixType {
 	subscript(row index: Int) -> vec4 {
 		get {
 			assert(valid(index), "Invalid mat4 index access.")
-			return vec4(x: _mat[index], y: _mat[index + 4], z: _mat[index + 8], w: _mat[index + 12])
+			return vec4(_mat[index], _mat[index + 4], _mat[index + 8], _mat[index + 12])
 		}
 		
 		set {
@@ -81,7 +84,7 @@ public struct mat4 : QuadraticMatrixType {
 	subscript(col index: Int) -> vec4 {
 		get {
 		assert(valid(index), "Invalid mat4 index access.")
-		return vec4(x: _mat[index * 4], y: _mat[index * 4 + 1], z: _mat[index * 4 + 2], w: _mat[index * 4 + 3])
+		return vec4(_mat[index * 4], _mat[index * 4 + 1], _mat[index * 4 + 2], _mat[index * 4 + 3])
 		}
 		
 		set {
@@ -301,7 +304,7 @@ public struct mat4 : QuadraticMatrixType {
 		let cw : GLfloat = _mat[11] * dz + _mat[15]
 		
 		var m = self
-		m[col: 3] = vec4(x: ax + bx + cx, y: ay + by + cy, z: az + bz + cz, w: aw + bw + cw)
+		m[col: 3] = vec4(ax + bx + cx, ay + by + cy, az + bz + cz, aw + bw + cw)
 	}
 	
 	
@@ -323,9 +326,18 @@ public struct mat4 : QuadraticMatrixType {
 
 extension mat4 : ArrayLiteralConvertible {
 	public init(arrayLiteral elements: GLfloat...) {
-		_mat = [GLfloat]()
-		for index in 0...15 {
-			_mat.append(elements.count > index ? elements[index] : 0)
+		let maximum : Int = min(mat4.elementCount, elements.count)
+		_mat = [GLfloat](count: maximum, repeatedValue: 0.0)
+		for index in 0..<maximum {
+			_mat[index] = elements[index]
+		}
+	}
+}
+
+extension mat4 : ArrayRepresentable {
+	public init(_ array: [GLfloat]) {
+		for index in 0..<mat4.elementCount {
+			_mat[index] = array.count > index ? array[index] : 0
 		}
 	}
 }
