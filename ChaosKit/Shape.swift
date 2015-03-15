@@ -12,10 +12,6 @@ import OpenGL
 
 public class Shape : DisplayObject, Bufferable {
 	
-	public class func defaultBufferStrategy () -> BufferStrategy {
-		return DefaultBufferStrategy()
-	}
-	
 	/// Provides the vertice
 	private var _vertice : [Vertex] = []
 	
@@ -23,7 +19,7 @@ public class Shape : DisplayObject, Bufferable {
 	private var _buffers : [Buffer]?
 	
 	/// Contains the strategy how to buffer this shape
-	private var _strategy : BufferStrategy
+	private var _strategy : BufferStrategy = Buffer.defaultBufferStrategy()
 	
 	/// Contains the strategy how to buffer this shape
 	private var _compiled : Bool = true

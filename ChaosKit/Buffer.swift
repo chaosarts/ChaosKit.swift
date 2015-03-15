@@ -41,10 +41,6 @@ public class DefaultBufferStrategy : BufferStrategy {
 	public func buffer (bufferable: Bufferable) -> [Buffer]? {
 		if (bufferable.vertice.count == 0) {return nil}
 		
-		// Generate buffer
-		var vbo: UnsafeMutablePointer<GLuint> = UnsafeMutablePointer<GLuint>.alloc(1)
-		glGenBuffers(1, vbo);
-		
 		// Create buffer object
 		var vertex : Vertex = bufferable.vertice.first!
 		var blocks : [AttributeTarget : BufferBlock] = [AttributeTarget : BufferBlock]()
@@ -54,13 +50,13 @@ public class DefaultBufferStrategy : BufferStrategy {
 			var size : Int = vertex[target].array.count
 			var block : BufferBlock = BufferBlock(size, target)
 			block.byteOffset = byteOffset
-			
 			byteOffset += size
 			blocks[target] = block
 		}
 		
+		var buffer : Buffer = Buffer(GL_ARRAY_BUFFER, blocks)
+		
 		// Buffer data
-		var buffer : Buffer = Buffer(vbo.memory, blocks, GLenum(GL_ARRAY_BUFFER), byteOffset)
 		var data : [GLfloat] = []
 		
 		for vertex in bufferable.vertice {
@@ -68,8 +64,8 @@ public class DefaultBufferStrategy : BufferStrategy {
 				data += vertex[target].array
 			}
 		}
-		
-		buffer.bind()
+
+		buffer.setData(data)
 		
 		return [buffer]
 	}
@@ -127,42 +123,59 @@ public struct BufferBlock {
 This protocols describes a delegate for a buffer
 */
 public final class Buffer : OpenGLBase {
-		
-	/// Contains a list of block information objects
-	public let blocks : [AttributeTarget : BufferBlock]
+	
+	/// Returns the default buffer strategy
+	public class func defaultBufferStrategy () -> BufferStrategy {
+		return DefaultBufferStrategy()
+	}
 	
 	/// The target buffer like GL_ARRAY_BUFFER
 	public let target: GLenum
 	
-	/// Contains the stride
-	public let stride: Int
+	/// Contains a list of block information objects
+	public let blocks : [AttributeTarget : BufferBlock]
+	
+	/// Contains the stride in bytes
+	public let stride: GLsizeiptr
 	
 	/// Returns the size of the buffer in bytes
 	public var size : GLint {get {return iv(GL_BUFFER_SIZE)}}
 	
 	/// Returns the usage of the buffer, like GL_STATIC_DRAW
-	public var usage : GLint {get {return iv(GL_BUFFER_USAGE)}}
+	public var usage : GLenum = GLenum(GL_STATIC_DRAW)
 	
 	/**
 	Initializes
 	*/
-	public init (_ id: GLuint, _ blocks: [AttributeTarget : BufferBlock], _ target: GLenum, _ stride: Int) {
+	public init (_ target: Int32, _ blocks: [AttributeTarget : BufferBlock]) {
+		var vbo : UnsafeMutablePointer<GLuint> = UnsafeMutablePointer<GLuint>.alloc(1)
+		glGenBuffers(1, vbo)
+		
+		var stride : Int = 0
+		for type in blocks.keys {
+			stride += Int(blocks[type]!.size)
+		}
+		
+		self.target = GLenum(target)
 		self.blocks = blocks
-		self.target = target
-		self.stride = stride
-		super.init(id: id)
+		self.stride = GLsizeiptr(stride * sizeof(GLfloat))
+		
+		super.init(id: vbo.memory)
 	}
 	
 	
-	public func setData (data: [GLfloat]) {
-		bind()
-		var ptr : UnsafePointer<Void> = UnsafePointer<Void>(toUnsafePointer(data))
-		glBufferData(target, sizeof(GLfloat) * data.count, ptr, GLenum(usage))
-		unbind()
+	/**
+	Returns parameters of a buffer
+	
+	:param: pname The name of the parameter to retrieve
+	*/
+	public func iv (pname: Int32) -> GLint {
+		if _ivCache[pname] == nil {updateIvCache(pnames: pname)}
+		return _ivCache[pname]!
 	}
 	
 	
-	/** 
+	/**
 	Binds the buffer
 	*/
 	public func bind () {
@@ -174,22 +187,38 @@ public final class Buffer : OpenGLBase {
 	Unbinds the buffer
 	*/
 	public func unbind () {
-		glBindBuffer(target, id)
+		glBindBuffer(target, 0)
+	}
+	
+	
+	public func setData (data: [GLfloat]) {
+		bind()
+		var pointer = toUnsafePointer(data)
+		glBufferData(target, data.count * sizeof(GLfloat), UnsafePointer<Void>(pointer), usage)
+		updateIvCache(pnames: GL_BUFFER_SIZE)
+		unbind()
 	}
 	
 	
 	/**
-	Returns parameters of a buffer
+	Determines if the buffer contains data for passed attribute target
 	
-	:param: pname The name of the parameter to retrieve
- 	*/
-	public func iv (pname: Int32) -> GLint {
-		if _ivCache[pname] == nil {
+	:param: target The attribute target to check
+	:returns: True if there are values within the buffered data for passed target, otherwise false
+	*/
+	public func provides (target: AttributeTarget) -> Bool {
+		return blocks[target] != nil
+	}
+	
+	
+	/**
+	Updates the iv cache for passed parameter names
+	*/
+	private func updateIvCache (pnames names: Int32...) {
+		for pname in names {
 			var params : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 			glGetBufferParameteriv(target, GLenum(pname), params)
 			_ivCache[pname] = params.memory
 		}
-		
-		return _ivCache[pname]!
 	}
 }

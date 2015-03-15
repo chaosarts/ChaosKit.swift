@@ -61,8 +61,13 @@ public struct Vertex {
 	
 	public init () {}
 	
+	/**
+	Determines if the vertex attribute has acutally been set
 	
-	public func supports (target: AttributeTarget) -> Bool {
+	:param: target The attribute target to check
+ 	:returns: True when the according target has been properly set, otherwise false
+	*/
+	public func provides (target: AttributeTarget) -> Bool {
 		switch target {
 		case .Position: return _position != nil
 		case .Color: return _color != nil
