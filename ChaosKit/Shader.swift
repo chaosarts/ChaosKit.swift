@@ -1,5 +1,5 @@
 //
-//  CKOpenGLShader.swift
+//  Shader.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 22.01.15.
@@ -13,7 +13,7 @@ import GLKit
 /**
 Wrapper class for shaders
 */
-public class CKOpenGLShader: CKOpenGLBase {
+public class Shader: OpenGLBase {
 	
 	/**
 	Initializes the shader with the one source string
@@ -118,10 +118,13 @@ public class CKOpenGLShader: CKOpenGLBase {
 	:param: pname A paramater value for glShaderiv like GL_COMPILE_STATUS
 	:returns: The unsafe mutable pointer that has been passed to glShaderiv within this method. Contains the result of the request
 	*/
-	public func iv (pname : Int32) -> UnsafeMutablePointer<GLint> {
-		var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
-		glGetShaderiv(id, GLenum(pname), param)
-		return param
+	public func iv (pname : Int32) -> GLint {
+		if _ivCache[pname] != nil {
+			var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+			glGetShaderiv(id, GLenum(pname), param)
+			_ivCache[pname] = param.memory
+		}
+		return _ivCache[pname]!
 	}
 	
 	
@@ -129,7 +132,7 @@ public class CKOpenGLShader: CKOpenGLBase {
 	Returns the info log about the shader as UnsafeMutablePointer<GLchar>/C-String
  	*/
 	public func infolog () -> UnsafeMutablePointer<GLchar> {
-		var bufSize : GLint = iv(GL_INFO_LOG_LENGTH).memory
+		var bufSize : GLint = iv(GL_INFO_LOG_LENGTH)
 		var log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
 		glGetShaderInfoLog(id, bufSize, nil, log)
 		return log
@@ -150,7 +153,7 @@ public class CKOpenGLShader: CKOpenGLBase {
 		glShaderSource(id, GLsizei(1), cstrings, length)
 		glCompileShader(id)
 		
-		if (iv(GL_COMPILE_STATUS).memory != GL_TRUE) {
+		if (iv(GL_COMPILE_STATUS) != GL_TRUE) {
 			print(String.fromCString(infolog())!)
 		}
 	}

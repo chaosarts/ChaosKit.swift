@@ -1,5 +1,5 @@
 //
-//  CKOpenGLVertexShader.swift
+//  VertexShader.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 22.01.15.
@@ -8,7 +8,7 @@
 
 import Cocoa
 
-public class CKOpenGLVertexShader: CKOpenGLShader {
+public class VertexShader: Shader {
 	
 	
 	public convenience init?(source: String) {

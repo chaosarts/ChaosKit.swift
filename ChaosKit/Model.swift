@@ -1,5 +1,5 @@
 //
-//  CKOpenGLModel.swift
+//  Model.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 12.02.15.
@@ -9,41 +9,31 @@
 import Cocoa
 
 
-public protocol CKOpenGLMoveable {
-	var position : vec3 {get set}
-}
-
-
-public protocol CKOpenGLRotateable {
-	var rotation : vec3 {get set}
-}
-
-
-public protocol CKOpenGLModelType : CKOpenGLMoveable, CKOpenGLRotateable {
+public protocol ModelType : Placeable, Rotateable {
 
 }
 
 /**
-Base model class for opengl objects. A model contains a position and a rotation and
+OpenGLBase model class for opengl objects. A model contains a position and a rotation and
 notifies its observer about its changes. Notifications will be posted even if a
 single components of these properties are changed. So care must be taken, if you want
 to update more than just one component. Otherwise the model posts notifications for
 every single component you change. It's recommended to replace the whole vector, if you want
 to change more than one component before notifying observer.
 */
-public class CKOpenGLModel : CKOpenGLModelType {
+public class Model : ModelType {
 	
 	/** Indicates if notifying observers is allowed in didSet{} */
 	private final var _allowNotification : Bool = true
 	
 	/** Provides the position of the model in space of parent object */
 	public final var position : vec3 = vec3() {
-		didSet {if _allowNotification {notify(CKOpenGLModelEvent.Move)}}
+		didSet {if _allowNotification {notify(ModelEvent.Move)}}
 	}
 	
 	/** Provides the rotation of the model in space of parent object */
 	public final var rotation : vec3 = vec3() {
-		didSet {if _allowNotification {notify(CKOpenGLModelEvent.Rotate)}}
+		didSet {if _allowNotification {notify(ModelEvent.Rotate)}}
 	}
 	
 	/** The default notification center to post notifications to model observers */
@@ -55,25 +45,25 @@ public class CKOpenGLModel : CKOpenGLModelType {
 	
 	:param: observer The observer for this model to add
 	*/
-	public func add (observer o: CKOpenGLModelObserver) {
+	public func add (observer o: ModelObserver) {
 		var selector : Selector
 		
 		selector = Selector("modelDidMove:")
 		if o.respondsToSelector(selector) {
 			notificationCenter.addObserver(o, selector: selector,
-				name: CKOpenGLModelEvent.Move.rawValue, object: self)
+				name: ModelEvent.Move.rawValue, object: self)
 		}
 		
 		selector = Selector("modelDidRotate:")
 		if o.respondsToSelector(selector) {
 			notificationCenter.addObserver(o, selector: selector,
-				name: CKOpenGLModelEvent.Rotate.rawValue, object: self)
+				name: ModelEvent.Rotate.rawValue, object: self)
 		}
 		
 		selector = Selector("modelDidChange:")
 		if o.respondsToSelector(selector) {
 			notificationCenter.addObserver(o, selector: selector,
-				name: CKOpenGLModelEvent.Rotate.rawValue, object: self)
+				name: ModelEvent.Rotate.rawValue, object: self)
 		}
 	}
 	
@@ -81,7 +71,7 @@ public class CKOpenGLModel : CKOpenGLModelType {
 	/** 
 	Posts a notification to observers about a model event
 	*/
-	public func notify (type: CKOpenGLModelEvent) {
+	public func notify (type: ModelEvent) {
 		var notification : NSNotification = NSNotification(name: type.rawValue, object: self)
 		notificationCenter.postNotification(notification)
 		_allowNotification = true
@@ -185,7 +175,7 @@ public class CKOpenGLModel : CKOpenGLModelType {
 		_allowNotification = false
 		position = p
 		rotation = r
-		notify(CKOpenGLModelEvent.Change)
+		notify(ModelEvent.Change)
 	}
 }
 
@@ -193,7 +183,7 @@ public class CKOpenGLModel : CKOpenGLModelType {
 Protocol for a model observer
 */
 @objc
-public protocol CKOpenGLModelObserver : NSObjectProtocol {
+public protocol ModelObserver : NSObjectProtocol {
 	optional func modelDidMove (notification: NSNotification)
 	optional func modelDidRotate (notification: NSNotification)
 	optional func modelDidChange (notification: NSNotification)
@@ -203,8 +193,8 @@ public protocol CKOpenGLModelObserver : NSObjectProtocol {
 /**
 Enumerates the types of events, which a opengl model may post
 */
-public enum CKOpenGLModelEvent : String {
-	case Change = "CKOpenGLModelEvent.Change"
-	case Move = "CKOpenGLModelEvent.Move"
-	case Rotate = "CKOpenGLModelEvent.Rotate"
+public enum ModelEvent : String {
+	case Change = "ModelEvent.Change"
+	case Move = "ModelEvent.Move"
+	case Rotate = "ModelEvent.Rotate"
 }

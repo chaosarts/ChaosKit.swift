@@ -7,30 +7,38 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C43D8AEC1A7AF6F700DCE13F /* CKOpenGLAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43D8AEB1A7AF6F700DCE13F /* CKOpenGLAttribute.swift */; };
-		C43D8AEE1A7AFEDC00DCE13F /* CKOpenGLUniform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43D8AED1A7AFEDC00DCE13F /* CKOpenGLUniform.swift */; };
 		C46FCAE91A6EA086008645B5 /* ChaosKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C46FCAE81A6EA086008645B5 /* ChaosKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C46FCAEF1A6EA086008645B5 /* ChaosKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C46FCAE31A6EA086008645B5 /* ChaosKit.framework */; };
 		C46FCAF61A6EA086008645B5 /* ChaosKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46FCAF51A6EA086008645B5 /* ChaosKitTests.swift */; };
 		C46FCB0B1A6EA105008645B5 /* vec2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C46FCB0A1A6EA105008645B5 /* vec2.swift */; };
-		C47BD4891A8CD6A30027D5C8 /* CKOpenGLCameraModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47BD4881A8CD6A30027D5C8 /* CKOpenGLCameraModel.swift */; };
-		C47BD48B1A8CD7090027D5C8 /* CKOpenGLModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47BD48A1A8CD7090027D5C8 /* CKOpenGLModel.swift */; };
-		C480BF8B1A9762D900C2A85C /* CKOpenGLScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480BF8A1A9762D900C2A85C /* CKOpenGLScene.swift */; };
 		C480BF8D1A976F6A00C2A85C /* CKCollectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480BF8C1A976F6A00C2A85C /* CKCollectionType.swift */; };
-		C480BF8F1A98C69700C2A85C /* CKOpenGLEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C480BF8E1A98C69700C2A85C /* CKOpenGLEvent.swift */; };
 		C48368F41A76EC7900E14D66 /* CKOpenGLMathTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48368F31A76EC7900E14D66 /* CKOpenGLMathTestCase.swift */; };
 		C48368F61A76ECA200E14D66 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C48368F51A76ECA200E14D66 /* Cocoa.framework */; };
-		C4CAEF7D1A706980004DBED5 /* CKOpenGLBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CAEF7C1A706980004DBED5 /* CKOpenGLBase.swift */; };
-		C4CAEF7F1A70699E004DBED5 /* CKOpenGLProgram.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CAEF7E1A70699E004DBED5 /* CKOpenGLProgram.swift */; };
-		C4CAEF811A7069B8004DBED5 /* CKOpenGLShader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CAEF801A7069B8004DBED5 /* CKOpenGLShader.swift */; };
+		C48C42E71AB32605006AB10F /* vec3f.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C42E61AB32605006AB10F /* vec3f.swift */; };
+		C48C432D1AB372B3006AB10F /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C43181AB372B3006AB10F /* Attribute.swift */; };
+		C48C432E1AB372B3006AB10F /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C43191AB372B3006AB10F /* Base.swift */; };
+		C48C432F1AB372B3006AB10F /* Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C431A1AB372B3006AB10F /* Buffer.swift */; };
+		C48C43301AB372B3006AB10F /* CameraModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C431B1AB372B3006AB10F /* CameraModel.swift */; };
+		C48C43311AB372B3006AB10F /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C431C1AB372B3006AB10F /* Container.swift */; };
+		C48C43321AB372B3006AB10F /* DisplayObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C431D1AB372B3006AB10F /* DisplayObject.swift */; };
+		C48C43331AB372B3006AB10F /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C431E1AB372B3006AB10F /* Event.swift */; };
+		C48C43341AB372B3006AB10F /* FragmentShader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C431F1AB372B3006AB10F /* FragmentShader.swift */; };
+		C48C43351AB372B3006AB10F /* GeometryShader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C43201AB372B3006AB10F /* GeometryShader.swift */; };
+		C48C43361AB372B3006AB10F /* Light.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C43211AB372B3006AB10F /* Light.swift */; };
+		C48C43371AB372B3006AB10F /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C43221AB372B3006AB10F /* Main.swift */; };
+		C48C43381AB372B3006AB10F /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C43231AB372B3006AB10F /* Model.swift */; };
+		C48C43391AB372B3006AB10F /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C43241AB372B3006AB10F /* Program.swift */; };
+		C48C433A1AB372B3006AB10F /* ProgramDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C43251AB372B3006AB10F /* ProgramDelegate.swift */; };
+		C48C433B1AB372B3006AB10F /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C43261AB372B3006AB10F /* Renderer.swift */; };
+		C48C433C1AB372B3006AB10F /* Scene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C43271AB372B3006AB10F /* Scene.swift */; };
+		C48C433D1AB372B3006AB10F /* Shader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C43281AB372B3006AB10F /* Shader.swift */; };
+		C48C433E1AB372B3006AB10F /* Shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C43291AB372B3006AB10F /* Shape.swift */; };
+		C48C433F1AB372B3006AB10F /* Uniform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C432A1AB372B3006AB10F /* Uniform.swift */; };
+		C48C43401AB372B3006AB10F /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C432B1AB372B3006AB10F /* Vertex.swift */; };
+		C48C43411AB372B3006AB10F /* VertexShader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48C432C1AB372B3006AB10F /* VertexShader.swift */; };
 		C4CAEF831A7069E8004DBED5 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4CAEF821A7069E8004DBED5 /* GLKit.framework */; };
 		C4CAEF851A706A24004DBED5 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4CAEF841A706A24004DBED5 /* GLUT.framework */; };
 		C4CAEF871A706A2A004DBED5 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4CAEF861A706A2A004DBED5 /* OpenGL.framework */; };
-		C4CAEF8A1A7074A3004DBED5 /* CKOpenGLVertexShader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CAEF891A7074A3004DBED5 /* CKOpenGLVertexShader.swift */; };
-		C4CAEF8C1A7074C4004DBED5 /* CKOpenGLFragmentShader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CAEF8B1A7074C4004DBED5 /* CKOpenGLFragmentShader.swift */; };
-		C4CAEF8E1A70750A004DBED5 /* CKOpenGLGeometryShader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CAEF8D1A70750A004DBED5 /* CKOpenGLGeometryShader.swift */; };
-		C4CBC4181A93323C004EB44F /* CKOpenGLShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CBC4171A93323C004EB44F /* CKOpenGLShape.swift */; };
-		C4CBC41A1A938778004EB44F /* CKOpenGLBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CBC4191A938778004EB44F /* CKOpenGLBuffer.swift */; };
 		C4CDC5A81A6EAA7600AC1F0F /* vec4.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CDC5A71A6EAA7600AC1F0F /* vec4.swift */; };
 		C4CDC5AA1A6EADB200AC1F0F /* math.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CDC5A91A6EADB200AC1F0F /* math.swift */; };
 		C4CDC5AC1A6EAF0C00AC1F0F /* vec3.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CDC5AB1A6EAF0C00AC1F0F /* vec3.swift */; };
@@ -38,9 +46,6 @@
 		C4CDC5B51A6EB1C300AC1F0F /* mat3.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CDC5B41A6EB1C300AC1F0F /* mat3.swift */; };
 		C4CDC5B71A6EB1CA00AC1F0F /* mat4.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CDC5B61A6EB1CA00AC1F0F /* mat4.swift */; };
 		C4CDC5E71A6F2C9D00AC1F0F /* core.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CDC5E61A6F2C9D00AC1F0F /* core.swift */; };
-		C4E025861A83ABB100BF762E /* CKOpenGLLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E025851A83ABB100BF762E /* CKOpenGLLight.swift */; };
-		C4FF72CB1A7A740900DB4F2F /* CKOpenGLRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FF72CA1A7A740900DB4F2F /* CKOpenGLRenderer.swift */; };
-		C4FF72D71A7AA57600DB4F2F /* CKOpenGL.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4FF72D61A7AA57600DB4F2F /* CKOpenGL.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,8 +59,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C43D8AEB1A7AF6F700DCE13F /* CKOpenGLAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLAttribute.swift; sourceTree = "<group>"; };
-		C43D8AED1A7AFEDC00DCE13F /* CKOpenGLUniform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLUniform.swift; sourceTree = "<group>"; };
 		C46FCAE31A6EA086008645B5 /* ChaosKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChaosKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C46FCAE71A6EA086008645B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C46FCAE81A6EA086008645B5 /* ChaosKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChaosKit.h; sourceTree = "<group>"; };
@@ -63,24 +66,34 @@
 		C46FCAF41A6EA086008645B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C46FCAF51A6EA086008645B5 /* ChaosKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChaosKitTests.swift; sourceTree = "<group>"; };
 		C46FCB0A1A6EA105008645B5 /* vec2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = vec2.swift; sourceTree = "<group>"; };
-		C47BD4881A8CD6A30027D5C8 /* CKOpenGLCameraModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLCameraModel.swift; sourceTree = "<group>"; };
-		C47BD48A1A8CD7090027D5C8 /* CKOpenGLModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLModel.swift; sourceTree = "<group>"; };
-		C480BF8A1A9762D900C2A85C /* CKOpenGLScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLScene.swift; sourceTree = "<group>"; };
 		C480BF8C1A976F6A00C2A85C /* CKCollectionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKCollectionType.swift; sourceTree = "<group>"; };
-		C480BF8E1A98C69700C2A85C /* CKOpenGLEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLEvent.swift; sourceTree = "<group>"; };
 		C48368F31A76EC7900E14D66 /* CKOpenGLMathTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLMathTestCase.swift; sourceTree = "<group>"; };
 		C48368F51A76ECA200E14D66 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		C4CAEF7C1A706980004DBED5 /* CKOpenGLBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLBase.swift; sourceTree = "<group>"; };
-		C4CAEF7E1A70699E004DBED5 /* CKOpenGLProgram.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLProgram.swift; sourceTree = "<group>"; };
-		C4CAEF801A7069B8004DBED5 /* CKOpenGLShader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLShader.swift; sourceTree = "<group>"; };
+		C48C42E61AB32605006AB10F /* vec3f.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = vec3f.swift; sourceTree = "<group>"; };
+		C48C43181AB372B3006AB10F /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
+		C48C43191AB372B3006AB10F /* Base.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
+		C48C431A1AB372B3006AB10F /* Buffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buffer.swift; sourceTree = "<group>"; };
+		C48C431B1AB372B3006AB10F /* CameraModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraModel.swift; sourceTree = "<group>"; };
+		C48C431C1AB372B3006AB10F /* Container.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
+		C48C431D1AB372B3006AB10F /* DisplayObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayObject.swift; sourceTree = "<group>"; };
+		C48C431E1AB372B3006AB10F /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		C48C431F1AB372B3006AB10F /* FragmentShader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FragmentShader.swift; sourceTree = "<group>"; };
+		C48C43201AB372B3006AB10F /* GeometryShader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometryShader.swift; sourceTree = "<group>"; };
+		C48C43211AB372B3006AB10F /* Light.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Light.swift; sourceTree = "<group>"; };
+		C48C43221AB372B3006AB10F /* Main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
+		C48C43231AB372B3006AB10F /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		C48C43241AB372B3006AB10F /* Program.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
+		C48C43251AB372B3006AB10F /* ProgramDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgramDelegate.swift; sourceTree = "<group>"; };
+		C48C43261AB372B3006AB10F /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		C48C43271AB372B3006AB10F /* Scene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scene.swift; sourceTree = "<group>"; };
+		C48C43281AB372B3006AB10F /* Shader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shader.swift; sourceTree = "<group>"; };
+		C48C43291AB372B3006AB10F /* Shape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shape.swift; sourceTree = "<group>"; };
+		C48C432A1AB372B3006AB10F /* Uniform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Uniform.swift; sourceTree = "<group>"; };
+		C48C432B1AB372B3006AB10F /* Vertex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vertex.swift; sourceTree = "<group>"; };
+		C48C432C1AB372B3006AB10F /* VertexShader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VertexShader.swift; sourceTree = "<group>"; };
 		C4CAEF821A7069E8004DBED5 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		C4CAEF841A706A24004DBED5 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		C4CAEF861A706A2A004DBED5 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		C4CAEF891A7074A3004DBED5 /* CKOpenGLVertexShader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLVertexShader.swift; sourceTree = "<group>"; };
-		C4CAEF8B1A7074C4004DBED5 /* CKOpenGLFragmentShader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLFragmentShader.swift; sourceTree = "<group>"; };
-		C4CAEF8D1A70750A004DBED5 /* CKOpenGLGeometryShader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLGeometryShader.swift; sourceTree = "<group>"; };
-		C4CBC4171A93323C004EB44F /* CKOpenGLShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLShape.swift; sourceTree = "<group>"; };
-		C4CBC4191A938778004EB44F /* CKOpenGLBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLBuffer.swift; sourceTree = "<group>"; };
 		C4CDC5A71A6EAA7600AC1F0F /* vec4.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = vec4.swift; sourceTree = "<group>"; };
 		C4CDC5A91A6EADB200AC1F0F /* math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = math.swift; sourceTree = "<group>"; };
 		C4CDC5AB1A6EAF0C00AC1F0F /* vec3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = vec3.swift; sourceTree = "<group>"; };
@@ -88,9 +101,6 @@
 		C4CDC5B41A6EB1C300AC1F0F /* mat3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = mat3.swift; sourceTree = "<group>"; };
 		C4CDC5B61A6EB1CA00AC1F0F /* mat4.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = mat4.swift; sourceTree = "<group>"; };
 		C4CDC5E61A6F2C9D00AC1F0F /* core.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = core.swift; sourceTree = "<group>"; };
-		C4E025851A83ABB100BF762E /* CKOpenGLLight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLLight.swift; sourceTree = "<group>"; };
-		C4FF72CA1A7A740900DB4F2F /* CKOpenGLRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGLRenderer.swift; sourceTree = "<group>"; };
-		C4FF72D61A7AA57600DB4F2F /* CKOpenGL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CKOpenGL.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,23 +189,27 @@
 		C46FCB081A6EA0B9008645B5 /* OpenGL */ = {
 			isa = PBXGroup;
 			children = (
-				C4FF72D61A7AA57600DB4F2F /* CKOpenGL.swift */,
-				C43D8AEB1A7AF6F700DCE13F /* CKOpenGLAttribute.swift */,
-				C4CAEF7C1A706980004DBED5 /* CKOpenGLBase.swift */,
-				C4CBC4191A938778004EB44F /* CKOpenGLBuffer.swift */,
-				C47BD4881A8CD6A30027D5C8 /* CKOpenGLCameraModel.swift */,
-				C480BF8E1A98C69700C2A85C /* CKOpenGLEvent.swift */,
-				C4CAEF8B1A7074C4004DBED5 /* CKOpenGLFragmentShader.swift */,
-				C4CAEF8D1A70750A004DBED5 /* CKOpenGLGeometryShader.swift */,
-				C4E025851A83ABB100BF762E /* CKOpenGLLight.swift */,
-				C47BD48A1A8CD7090027D5C8 /* CKOpenGLModel.swift */,
-				C4CAEF7E1A70699E004DBED5 /* CKOpenGLProgram.swift */,
-				C4FF72CA1A7A740900DB4F2F /* CKOpenGLRenderer.swift */,
-				C480BF8A1A9762D900C2A85C /* CKOpenGLScene.swift */,
-				C4CAEF801A7069B8004DBED5 /* CKOpenGLShader.swift */,
-				C4CBC4171A93323C004EB44F /* CKOpenGLShape.swift */,
-				C43D8AED1A7AFEDC00DCE13F /* CKOpenGLUniform.swift */,
-				C4CAEF891A7074A3004DBED5 /* CKOpenGLVertexShader.swift */,
+				C48C43181AB372B3006AB10F /* Attribute.swift */,
+				C48C43191AB372B3006AB10F /* Base.swift */,
+				C48C431A1AB372B3006AB10F /* Buffer.swift */,
+				C48C431B1AB372B3006AB10F /* CameraModel.swift */,
+				C48C431C1AB372B3006AB10F /* Container.swift */,
+				C48C431D1AB372B3006AB10F /* DisplayObject.swift */,
+				C48C431E1AB372B3006AB10F /* Event.swift */,
+				C48C431F1AB372B3006AB10F /* FragmentShader.swift */,
+				C48C43201AB372B3006AB10F /* GeometryShader.swift */,
+				C48C43211AB372B3006AB10F /* Light.swift */,
+				C48C43221AB372B3006AB10F /* Main.swift */,
+				C48C43231AB372B3006AB10F /* Model.swift */,
+				C48C43241AB372B3006AB10F /* Program.swift */,
+				C48C43251AB372B3006AB10F /* ProgramDelegate.swift */,
+				C48C43261AB372B3006AB10F /* Renderer.swift */,
+				C48C43271AB372B3006AB10F /* Scene.swift */,
+				C48C43281AB372B3006AB10F /* Shader.swift */,
+				C48C43291AB372B3006AB10F /* Shape.swift */,
+				C48C432A1AB372B3006AB10F /* Uniform.swift */,
+				C48C432B1AB372B3006AB10F /* Vertex.swift */,
+				C48C432C1AB372B3006AB10F /* VertexShader.swift */,
 			);
 			name = OpenGL;
 			sourceTree = "<group>";
@@ -210,6 +224,7 @@
 				C46FCB0A1A6EA105008645B5 /* vec2.swift */,
 				C4CDC5AB1A6EAF0C00AC1F0F /* vec3.swift */,
 				C4CDC5A71A6EAA7600AC1F0F /* vec4.swift */,
+				C48C42E61AB32605006AB10F /* vec3f.swift */,
 			);
 			name = Math;
 			sourceTree = "<group>";
@@ -338,32 +353,37 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4CAEF8C1A7074C4004DBED5 /* CKOpenGLFragmentShader.swift in Sources */,
-				C4E025861A83ABB100BF762E /* CKOpenGLLight.swift in Sources */,
-				C4CBC41A1A938778004EB44F /* CKOpenGLBuffer.swift in Sources */,
-				C4CBC4181A93323C004EB44F /* CKOpenGLShape.swift in Sources */,
+				C48C433D1AB372B3006AB10F /* Shader.swift in Sources */,
+				C48C432E1AB372B3006AB10F /* Base.swift in Sources */,
+				C48C43401AB372B3006AB10F /* Vertex.swift in Sources */,
+				C48C43301AB372B3006AB10F /* CameraModel.swift in Sources */,
+				C48C433E1AB372B3006AB10F /* Shape.swift in Sources */,
+				C48C43371AB372B3006AB10F /* Main.swift in Sources */,
+				C48C43361AB372B3006AB10F /* Light.swift in Sources */,
 				C4CDC5AE1A6EB00900AC1F0F /* mat2.swift in Sources */,
-				C4FF72CB1A7A740900DB4F2F /* CKOpenGLRenderer.swift in Sources */,
 				C4CDC5B71A6EB1CA00AC1F0F /* mat4.swift in Sources */,
-				C47BD48B1A8CD7090027D5C8 /* CKOpenGLModel.swift in Sources */,
-				C4CAEF8E1A70750A004DBED5 /* CKOpenGLGeometryShader.swift in Sources */,
 				C480BF8D1A976F6A00C2A85C /* CKCollectionType.swift in Sources */,
 				C4CDC5A81A6EAA7600AC1F0F /* vec4.swift in Sources */,
 				C4CDC5AA1A6EADB200AC1F0F /* math.swift in Sources */,
+				C48C43341AB372B3006AB10F /* FragmentShader.swift in Sources */,
+				C48C43331AB372B3006AB10F /* Event.swift in Sources */,
+				C48C433C1AB372B3006AB10F /* Scene.swift in Sources */,
 				C46FCB0B1A6EA105008645B5 /* vec2.swift in Sources */,
-				C4CAEF8A1A7074A3004DBED5 /* CKOpenGLVertexShader.swift in Sources */,
-				C480BF8B1A9762D900C2A85C /* CKOpenGLScene.swift in Sources */,
-				C47BD4891A8CD6A30027D5C8 /* CKOpenGLCameraModel.swift in Sources */,
-				C4CAEF811A7069B8004DBED5 /* CKOpenGLShader.swift in Sources */,
-				C43D8AEE1A7AFEDC00DCE13F /* CKOpenGLUniform.swift in Sources */,
-				C4CAEF7F1A70699E004DBED5 /* CKOpenGLProgram.swift in Sources */,
-				C4FF72D71A7AA57600DB4F2F /* CKOpenGL.swift in Sources */,
-				C43D8AEC1A7AF6F700DCE13F /* CKOpenGLAttribute.swift in Sources */,
+				C48C43381AB372B3006AB10F /* Model.swift in Sources */,
+				C48C433A1AB372B3006AB10F /* ProgramDelegate.swift in Sources */,
+				C48C43321AB372B3006AB10F /* DisplayObject.swift in Sources */,
+				C48C42E71AB32605006AB10F /* vec3f.swift in Sources */,
+				C48C433F1AB372B3006AB10F /* Uniform.swift in Sources */,
+				C48C43351AB372B3006AB10F /* GeometryShader.swift in Sources */,
 				C4CDC5B51A6EB1C300AC1F0F /* mat3.swift in Sources */,
 				C4CDC5E71A6F2C9D00AC1F0F /* core.swift in Sources */,
 				C4CDC5AC1A6EAF0C00AC1F0F /* vec3.swift in Sources */,
-				C4CAEF7D1A706980004DBED5 /* CKOpenGLBase.swift in Sources */,
-				C480BF8F1A98C69700C2A85C /* CKOpenGLEvent.swift in Sources */,
+				C48C43391AB372B3006AB10F /* Program.swift in Sources */,
+				C48C432F1AB372B3006AB10F /* Buffer.swift in Sources */,
+				C48C43311AB372B3006AB10F /* Container.swift in Sources */,
+				C48C433B1AB372B3006AB10F /* Renderer.swift in Sources */,
+				C48C43411AB372B3006AB10F /* VertexShader.swift in Sources */,
+				C48C432D1AB372B3006AB10F /* Attribute.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

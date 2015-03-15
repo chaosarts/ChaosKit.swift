@@ -1,5 +1,5 @@
 //
-//  CKOpenGLUniform.swift
+//  Uniform.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 30.01.15.
@@ -8,7 +8,7 @@
 
 import Cocoa
 
-public enum CKOpenGLUniformType {
+public enum UniformType {
 	case ModelViewMatrix
 	case ProjectionViewMatrix
 	
@@ -25,11 +25,11 @@ public enum CKOpenGLUniformType {
 	case SpecularLightShininess
 }
 
-public struct CKOpenGLUniformInfo {
+public struct UniformInfo {
 	
 	public let name : String
 	
-	public let target : CKOpenGLUniformType
+	public let target : UniformType
 	
 	public var type : GLenum?
 	
@@ -52,7 +52,7 @@ public struct CKOpenGLUniformInfo {
 		}
 	}
 	
-	public init (name: String, target: CKOpenGLUniformType) {
+	public init (name: String, target: UniformType) {
 		self.name = name
 		self.target = target
 	}

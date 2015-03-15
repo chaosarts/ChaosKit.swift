@@ -1,5 +1,5 @@
 //
-//  CKOpenGLCamera.swift
+//  Camera.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 12.02.15.
@@ -16,7 +16,7 @@ send notification for every single viewport parameter. But mostly one
 does not change one parameter at a time. Notifying each observer for
 every single parameter would be an overhead.
 */
-public class CKOpenGLCameraModel : CKOpenGLModel {
+public class CameraModel : Model {
 	
 	/** Internal left bound of the viewport */
 	private var _left : GLfloat = -1
@@ -37,8 +37,8 @@ public class CKOpenGLCameraModel : CKOpenGLModel {
 	private var _far : GLfloat = 1
 	
 	/** Describes the camera type. Either orthographic or perspective */
-	public var type : CKOpenGLCameraType = CKOpenGLCameraType.Orthographic {
-		didSet {notify(CKOpenGLCameraEvent.Change)}
+	public var type : CameraType = CameraType.Orthographic {
+		didSet {notify(CameraEvent.Change)}
 	}
 	
 	/** Readonly left bound of the viewport */
@@ -160,12 +160,12 @@ public class CKOpenGLCameraModel : CKOpenGLModel {
 	
 	:param: observer The observer to add
  	*/
-	public func add(observer o: CKOpenGLCameraObserver) {
+	public func add(observer o: CameraObserver) {
 		super.add(observer: o)
 		var selector : Selector = Selector("viewportDidChange:")
 		if o.respondsToSelector(selector) {
 			notificationCenter.addObserver(o, selector: selector,
-				name: CKOpenGLCameraEvent.Change.rawValue, object: self)
+				name: CameraEvent.Change.rawValue, object: self)
 		}
 	}
 	
@@ -173,9 +173,9 @@ public class CKOpenGLCameraModel : CKOpenGLModel {
 	/** 
 	Notifies all observers about a camera event
 	
-	:param: type An enum value from CKOpenGLCamerEvent
+	:param: type An enum value from CamerEvent
 	*/
-	public func notify(type: CKOpenGLCameraEvent) {
+	public func notify(type: CameraEvent) {
 		var notification : NSNotification = NSNotification(name: type.rawValue, object: self)
 		notificationCenter.postNotification(notification)
 	}
@@ -186,7 +186,7 @@ public class CKOpenGLCameraModel : CKOpenGLModel {
 Defines a protocol for camera observers
 */
 @objc
-public protocol CKOpenGLCameraObserver : CKOpenGLModelObserver, NSObjectProtocol {
+public protocol CameraObserver : ModelObserver, NSObjectProtocol {
 	optional func viewportDidChange (notification: NSNotification)
 }
 
@@ -194,15 +194,15 @@ public protocol CKOpenGLCameraObserver : CKOpenGLModelObserver, NSObjectProtocol
 /**
 Enumerates the type of event names, the camera can dispatch
 */
-public enum CKOpenGLCameraEvent : String {
-	case Change = "CKOpenGLCameraEvent.Change"
+public enum CameraEvent : String {
+	case Change = "CameraEvent.Change"
 }
 
 
 /** 
 Enumerates the types of cameras
 */
-public enum CKOpenGLCameraType : String {
-	case Orthographic = "CKOpenGLCameraType.Orthographic"
-	case Perspective = "CKOpenGLCameraType.Perspective"
+public enum CameraType : String {
+	case Orthographic = "CameraType.Orthographic"
+	case Perspective = "CameraType.Perspective"
 }

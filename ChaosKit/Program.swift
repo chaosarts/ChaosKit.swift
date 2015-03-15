@@ -1,5 +1,5 @@
 //
-//  CKOpenGLProgram.swift
+//  Program.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 22.01.15.
@@ -8,39 +8,23 @@
 
 import Cocoa
 
-private var _currentProgram : CKOpenGLProgram?
+private var _currentProgram : Program?
 
-public class CKOpenGLProgram: CKOpenGLBase {
+public class Program: OpenGLBase {
 	
 	/** Provides a list of uniforms */
-	private final var _uniforms : [CKOpenGLUniformType : CKOpenGLUniformInfo] =
-		[CKOpenGLUniformType : CKOpenGLUniformInfo]()
+	private final var _uniforms : [UniformType : UniformInfo] =
+		[UniformType : UniformInfo]()
 	
 	/** Provides the vertex attributes */
-	private final var _attributes : [CKOpenGLAttributeType : CKOpenGLAttributeInfo] =
-		[CKOpenGLAttributeType : CKOpenGLAttributeInfo]()
-	
-	/** Provides a list of uniform types, that are required by this program */
-	private final var _uniformRequirements : [CKOpenGLUniformType] = []
-	
-	/** Provides a lit of attribute types that are required by the program */
-	private final var _attributeRequirements : [CKOpenGLAttributeType] = []
-	
-	/** Provides a list of uniform types, that are required by this program */
-	public final var uniformRequirements : [CKOpenGLUniformType] {
-		get {return _uniformRequirements}
-	}
-	
-	/** Provides a lit of attribute types that are required by the program */
-	public final var attributeRequirements : [CKOpenGLAttributeType] {
-		get {return _attributeRequirements}
-	}
+	private final var _attributes : [AttributeTarget : AttributeInfo] =
+		[AttributeTarget : AttributeInfo]()
 	
 	/** Determines whether the program is valid or not */
-	public final var valid : Bool {get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS).memory == GL_TRUE}}
+	public final var valid : Bool {get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS) == GL_TRUE}}
 	
 	/** Determines if the program is linked or not */
-	public final var linked : Bool {get {return iv(GL_LINK_STATUS).memory == GL_TRUE}}
+	public final var linked : Bool {get {return iv(GL_LINK_STATUS) == GL_TRUE}}
 	
 	/** Indicates if program is current */
 	public final var isCurrent : Bool {get {return self == _currentProgram}}
@@ -60,10 +44,13 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	
 	:param: pname The paramater name to fetch the value
 	*/
-	public final func iv (pname : Int32) -> UnsafeMutablePointer<GLint> {
-		var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
-		glGetProgramiv(id, GLenum(pname), param)
-		return param
+	public final func iv (pname : Int32) -> GLint {
+		if _ivCache[pname] == nil {
+			var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+			glGetProgramiv(id, GLenum(pname), param)
+			_ivCache[pname] = param.memory
+		}
+		return _ivCache[pname]!
 	}
 	
 	
@@ -73,8 +60,8 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	:returns: The info log
 	*/
 	public final func infoLog () -> UnsafeMutablePointer<GLchar> {
-		var log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(Int(iv(GL_INFO_LOG_LENGTH).memory))
-		glGetProgramInfoLog(id, iv(GL_INFO_LOG_LENGTH).memory, nil, log)
+		var log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(Int(iv(GL_INFO_LOG_LENGTH)))
+		glGetProgramInfoLog(id, iv(GL_INFO_LOG_LENGTH), nil, log)
 		return log
 	}
 	
@@ -84,7 +71,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	
 	:param: shader The shader to attach
 	*/
-	public final func attach (shader s: CKOpenGLShader) -> CKOpenGLProgram {
+	public final func attach (shader s: Shader) -> Program {
 		glAttachShader(id, s.id)
 		return self
 	}
@@ -92,15 +79,19 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	
 	/**
 	Links the program
+	
+	:returns:
 	*/
 	public final func link () -> Bool {
 		glLinkProgram(id)
+		_ivCache.removeAll(keepCapacity: true)
 		if !linked {
 			print(String.fromCString(infoLog())!)
 			return false
 		}
 		
 		updateAttributeInfos()
+		updateUniformInfos()
 		return true
 	}
 	
@@ -127,7 +118,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	
 	:param: attributeInfo
 	*/
-	public func addAttributeInfo (attributeInfo: CKOpenGLAttributeInfo) {
+	public func addAttributeInfo (attributeInfo: AttributeInfo) {
 		_attributes[attributeInfo.target] = attributeInfo
 		if linked {
 			updateAttributeInfo(&_attributes[attributeInfo.target]!)
@@ -143,7 +134,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	
 	:param: attributeInfo
 	*/
-	public func addUniformInfo (uniformInfo: CKOpenGLUniformInfo) {
+	public func addUniformInfo (uniformInfo: UniformInfo) {
 		_uniforms[uniformInfo.target] = uniformInfo
 		if linked {
 			updateUniformInfo(&_uniforms[uniformInfo.target]!)
@@ -157,7 +148,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	:param: forType
 	:returns: Some uniform info object
 	*/
-	public func getAttributeInfo (forType type: CKOpenGLAttributeType) -> CKOpenGLAttributeInfo? {
+	public func getAttributeInfo (forType type: AttributeTarget) -> AttributeInfo? {
 		return _attributes[type]
 	}
 	
@@ -168,7 +159,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	:param: forType
 	:returns: Some uniform info object
  	*/
-	public func getUniformInfo (forType type: CKOpenGLUniformType) -> CKOpenGLUniformInfo? {
+	public func getUniformInfo (forType type: UniformType) -> UniformInfo? {
 		return _uniforms[type]
 	}
 	
@@ -192,7 +183,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	/**
 	Updates a attribute info object
 	*/
-	private func updateAttributeInfo (inout attribute: CKOpenGLAttributeInfo) {
+	private func updateAttributeInfo (inout attribute: AttributeInfo) {
 		attribute.location = glGetAttribLocation(id, attribute.name)
 		
 		if attribute.location < 0 {
@@ -200,7 +191,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 			return
 		}
 		
-		var bufSize : GLsizei = GLsizei(iv(GL_ACTIVE_ATTRIBUTE_MAX_LENGTH).memory)
+		var bufSize : GLsizei = GLsizei(iv(GL_ACTIVE_ATTRIBUTE_MAX_LENGTH))
 		
 		let length : UnsafeMutablePointer<GLsizei> = UnsafeMutablePointer<GLsizei>.alloc(1)
 		let size : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
@@ -212,20 +203,15 @@ public class CKOpenGLProgram: CKOpenGLBase {
 		attribute.size = size.memory
 		attribute.type = type.memory
 		
-		if attribute.size <= 1 {return}
 		
 		attribute.locations = []
 		
 		for i in 0..<Int(attribute.size!) {
 			var location : GLint = glGetAttribLocation(id, "\(attribute.name)[\(i)]")
-			
 			if location < 0 {continue}
 			
 			attribute.locations.append(GLuint(location))
 		}
-		
-		var index : Int? = find(_attributeRequirements, attribute.target)
-		if nil == index {_attributeRequirements.append(attribute.target)}
 	}
 	
 	
@@ -251,7 +237,7 @@ public class CKOpenGLProgram: CKOpenGLBase {
 	:param: uniform
 	:returns: True when the unform has been located in the program, otherwise false
 	*/
-	private func updateUniformInfo (inout uniform: CKOpenGLUniformInfo) {
+	private func updateUniformInfo (inout uniform: UniformInfo) {
 		var location : GLint = glGetUniformLocation(id, uniform.name)
 		if location < 0 {println("Uniform \(uniform.name) not found in program."); return}
 		
@@ -260,24 +246,22 @@ public class CKOpenGLProgram: CKOpenGLBase {
 		var type : UnsafeMutablePointer<GLenum> = UnsafeMutablePointer<GLenum>.alloc(1)
 		var name : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
 		
-		glGetActiveUniform(id, GLuint(location), iv(GL_ACTIVE_UNIFORM_MAX_LENGTH).memory, length, size, type, name)
+		glGetActiveUniform(id, GLuint(location), iv(GL_ACTIVE_UNIFORM_MAX_LENGTH), length, size, type, name)
 		
 		uniform.location = location
 		uniform.type = type.memory
 		uniform.size = size.memory
+		uniform.locations = []
 		
 		for i in 0..<Int(uniform.size!) {
-			glGetUniformLocation(id, uniform.name + "[\(i)]")
+			uniform.locations.append(glGetUniformLocation(id, uniform.name + "[\(i)]"))
 		}
-		
-		var index : Int? = find(_uniformRequirements, uniform.target)
-		if index == nil {_uniformRequirements.append(uniform.target)}
 	}
 }
 
 
-extension CKOpenGLProgram : Equatable {}
+extension Program : Equatable {}
 
-public func == (l: CKOpenGLProgram, r: CKOpenGLProgram) -> Bool {
+public func == (l: Program, r: Program) -> Bool {
 	return l === r
 }

@@ -1,5 +1,5 @@
 //
-//  CKOpenGLRenderer.swift
+//  Renderer.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 29.01.15.
@@ -11,7 +11,7 @@ import OpenGL
 import GLKit
 
 
-public class CKOpenGLRenderer: NSOpenGLView {
+public class Renderer: NSOpenGLView {
 	
 	/** Contains the projection matrix */
 	private var _projectionMatrix : mat4 = mat4.identity
@@ -23,13 +23,13 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	private var _translationMatrix : mat4 = mat4.identity
 	
 	/** Provides a list of different shader programs */
-	public var programs : [CKOpenGLProgram] = []
+	public var programs : [Program] = []
 	
 	/** Provides the model for the camera model */
-	public var cameraModel : CKOpenGLCameraModel?
+	public var cameraModel : CameraModel?
 	
 	/** Provides the scene to render */
-	public var scene : CKOpenGLScene?
+	public var scene : Scene?
 	
 	/** Provides the projection matrix */
 	public var projectionMatrix : mat4 {
@@ -61,13 +61,11 @@ public class CKOpenGLRenderer: NSOpenGLView {
 		
 		for program in programs {
 			program.use()
-			var queue : CKQueue<CKOpenGLShape> = CKQueue<CKOpenGLShape>(scene!.objects)
+			var queue : CKQueue<Shape> = CKQueue<Shape>(scene!.objects)
 			
 			while (!queue.empty) {
-				var shape : CKOpenGLShape = queue.dequeue()!
+				var shape : Shape = queue.dequeue()!
 				queue.enqueue(shape.children)
-				if !shape.matchRequirements(program) {continue}
-				draw(shape: shape, withProgram: program)
 			}
 		}
 		
@@ -78,7 +76,7 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	/** 
 	Draws the shape on the screen 
 	*/
-	public func draw (shape s: CKOpenGLShape, withProgram program: CKOpenGLProgram) {
+	public func draw (shape s: Shape, withProgram program: Program) {
 		
 	}
 	
@@ -91,7 +89,7 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	:params: near The near value of the frustum
 	:params: far The far value of the frustum
 	*/
-	public func setPerspective(fovy f: GLfloat, aspect a: GLfloat, near n: GLfloat, far fa: GLfloat) -> CKOpenGLRenderer {
+	public func setPerspective(fovy f: GLfloat, aspect a: GLfloat, near n: GLfloat, far fa: GLfloat) -> Renderer {
 		_projectionMatrix = mat4.makePerspective(fovy: f, aspect: a, near: n, far: fa)
 		return self
 	}
@@ -107,7 +105,7 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	:param: near The near boundary of the view box
 	:param: far The far boundary of the view box
 	*/
-	public func setFrustum (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) -> CKOpenGLRenderer {
+	public func setFrustum (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) -> Renderer {
 		_projectionMatrix = mat4.makeFrustum(left: l, right: r, bottom: b, top: t, near: n, far: f)
 		return self
 	}
@@ -123,7 +121,7 @@ public class CKOpenGLRenderer: NSOpenGLView {
 	:param: near The near boundary of the view box
 	:param: far The far boundary of the view box
 	*/
-	public func setOrthographic (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) -> CKOpenGLRenderer {
+	public func setOrthographic (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) -> Renderer {
 		_projectionMatrix = mat4.makeOrtho(left: l, right: r, bottom: b, top: t, near: n, far: f)
 		return self
 	}
@@ -191,7 +189,7 @@ public class CKOpenGLRenderer: NSOpenGLView {
 			return
 		}
 		
-		var model : CKOpenGLCameraModel = cameraModel!
+		var model : CameraModel = cameraModel!
 		var aspect : GLfloat = GLfloat(width) / GLfloat(height)
 		
 		if aspect == model.aspect {
@@ -247,7 +245,7 @@ public class CKOpenGLRenderer: NSOpenGLView {
 		
 		var model = cameraModel!
 		
-		if model.type == CKOpenGLCameraType.Orthographic {
+		if model.type == CameraType.Orthographic {
 			setOrthographic(left: l, right: r, bottom: b, top: t, near: n, far: f)
 		}
 		else {
