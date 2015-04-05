@@ -1,5 +1,5 @@
 //
-//  Vertex.swift
+//  GLVertex.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 13.03.15.
@@ -9,7 +9,7 @@
 import Foundation
 
 
-public struct Vertex {
+public struct GLVertex {
 	
 	/// Contains the position of the vertex
 	private var _position : vec3?
@@ -47,8 +47,8 @@ public struct Vertex {
 		set {_texcoord = newValue}
 	}
 	
-	/// Subscript access to the properties by AttributeTarget enumeration
-	subscript (index: AttributeTarget) -> ArrayRepresentable {
+	/// Subscript access to the properties by GLAttributeTarget enumeration
+	subscript (index: GLAttributeTarget) -> ArrayRepresentable {
 		get {
 			switch index {
 			case .Position: return position
@@ -67,7 +67,7 @@ public struct Vertex {
 	:param: target The attribute target to check
  	:returns: True when the according target has been properly set, otherwise false
 	*/
-	public func provides (target: AttributeTarget) -> Bool {
+	public func provides (target: GLAttributeTarget) -> Bool {
 		switch target {
 		case .Position: return _position != nil
 		case .Color: return _color != nil

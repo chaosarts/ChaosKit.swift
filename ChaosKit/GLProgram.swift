@@ -1,5 +1,5 @@
 //
-//  Program.swift
+//  GLProgram.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 22.01.15.
@@ -8,17 +8,17 @@
 
 import Cocoa
 
-private var _currentProgram : Program?
+internal var _currentProgram : GLProgram?
 
-public class Program: OpenGLBase {
+public class GLProgram: GLBase {
 	
 	/** Provides a list of uniforms */
-	private final var _uniforms : [UniformType : UniformInfo] =
-		[UniformType : UniformInfo]()
+	private final var _uniforms : [GLUniformType : GLUniformInfo] =
+		[GLUniformType : GLUniformInfo]()
 	
 	/** Provides the vertex attributes */
-	private final var _attributes : [AttributeTarget : AttributeInfo] =
-		[AttributeTarget : AttributeInfo]()
+	private final var _attributes : [GLAttributeTarget : GLAttributeInfo] =
+		[GLAttributeTarget : GLAttributeInfo]()
 	
 	/** Determines whether the program is valid or not */
 	public final var valid : Bool {get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS) == GL_TRUE}}
@@ -71,7 +71,7 @@ public class Program: OpenGLBase {
 	
 	:param: shader The shader to attach
 	*/
-	public final func attach (shader s: Shader) -> Program {
+	public final func attach (shader s: GLShader) -> GLProgram {
 		glAttachShader(id, s.id)
 		return self
 	}
@@ -116,9 +116,9 @@ public class Program: OpenGLBase {
 	automatically, when program has been linked otherwise, when link()
 	is called
 	
-	:param: attributeInfo
+	:param: GLAttributeInfo
 	*/
-	public func addAttributeInfo (attributeInfo: AttributeInfo) {
+	public func addAttributeInfo (attributeInfo: GLAttributeInfo) {
 		_attributes[attributeInfo.target] = attributeInfo
 		if linked {
 			updateAttributeInfo(&_attributes[attributeInfo.target]!)
@@ -132,9 +132,9 @@ public class Program: OpenGLBase {
 	automatically, when program has been linked otherwise, when link()
 	is called
 	
-	:param: attributeInfo
+	:param: GLAttributeInfo
 	*/
-	public func addUniformInfo (uniformInfo: UniformInfo) {
+	public func addUniformInfo (uniformInfo: GLUniformInfo) {
 		_uniforms[uniformInfo.target] = uniformInfo
 		if linked {
 			updateUniformInfo(&_uniforms[uniformInfo.target]!)
@@ -148,7 +148,7 @@ public class Program: OpenGLBase {
 	:param: forType
 	:returns: Some uniform info object
 	*/
-	public func getAttributeInfo (forType type: AttributeTarget) -> AttributeInfo? {
+	public func getAttributeInfo (forType type: GLAttributeTarget) -> GLAttributeInfo? {
 		return _attributes[type]
 	}
 	
@@ -159,7 +159,7 @@ public class Program: OpenGLBase {
 	:param: forType
 	:returns: Some uniform info object
  	*/
-	public func getUniformInfo (forType type: UniformType) -> UniformInfo? {
+	public func getUniformInfo (forType type: GLUniformType) -> GLUniformInfo? {
 		return _uniforms[type]
 	}
 	
@@ -183,7 +183,7 @@ public class Program: OpenGLBase {
 	/**
 	Updates a attribute info object
 	*/
-	private func updateAttributeInfo (inout attribute: AttributeInfo) {
+	private func updateAttributeInfo (inout attribute: GLAttributeInfo) {
 		attribute.location = glGetAttribLocation(id, attribute.name)
 		
 		if attribute.location < 0 {
@@ -237,9 +237,9 @@ public class Program: OpenGLBase {
 	:param: uniform
 	:returns: True when the unform has been located in the program, otherwise false
 	*/
-	private func updateUniformInfo (inout uniform: UniformInfo) {
+	private func updateUniformInfo (inout uniform: GLUniformInfo) {
 		var location : GLint = glGetUniformLocation(id, uniform.name)
-		if location < 0 {println("Uniform \(uniform.name) not found in program."); return}
+		if location < 0 {println("GLUniform \(uniform.name) not found in program."); return}
 		
 		var length : UnsafeMutablePointer<GLsizei> = UnsafeMutablePointer<GLsizei>.alloc(1)
 		var size : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
@@ -260,8 +260,8 @@ public class Program: OpenGLBase {
 }
 
 
-extension Program : Equatable {}
+extension GLProgram : Equatable {}
 
-public func == (l: Program, r: Program) -> Bool {
+public func == (l: GLProgram, r: GLProgram) -> Bool {
 	return l === r
 }

@@ -1,5 +1,5 @@
 //
-//  Camera.swift
+//  GLCamera.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 12.02.15.
@@ -9,14 +9,14 @@
 import Cocoa
 
 /** 
-Model class to represent a camera for a opengl scene. The viewport
+GLObject class to represent a camera for a opengl scene. The viewport
 parameters are readonly outside the model, to prevent setting these
 values, to keep observers synchronized to this model. One might
 send notification for every single viewport parameter. But mostly one
 does not change one parameter at a time. Notifying each observer for
 every single parameter would be an overhead.
 */
-public class CameraModel : Model {
+public class GLCamera : GLObject {
 	
 	/** Internal left bound of the viewport */
 	private var _left : GLfloat = -1
@@ -37,8 +37,8 @@ public class CameraModel : Model {
 	private var _far : GLfloat = 1
 	
 	/** Describes the camera type. Either orthographic or perspective */
-	public var type : CameraType = CameraType.Orthographic {
-		didSet {notify(CameraEvent.Change)}
+	public var type : GLCameraType = GLCameraType.Orthographic {
+		didSet {notify(GLCameraEvent.Change)}
 	}
 	
 	/** Readonly left bound of the viewport */
@@ -160,12 +160,12 @@ public class CameraModel : Model {
 	
 	:param: observer The observer to add
  	*/
-	public func add(observer o: CameraObserver) {
-		super.add(observer: o)
+	public func addCameraObserver(observer: GLCameraObserver) {
+		super.addObserver(observer)
 		var selector : Selector = Selector("viewportDidChange:")
-		if o.respondsToSelector(selector) {
-			notificationCenter.addObserver(o, selector: selector,
-				name: CameraEvent.Change.rawValue, object: self)
+		if observer.respondsToSelector(selector) {
+			notificationCenter.addObserver(observer, selector: selector,
+				name: GLCameraEvent.Change.rawValue, object: self)
 		}
 	}
 	
@@ -175,7 +175,7 @@ public class CameraModel : Model {
 	
 	:param: type An enum value from CamerEvent
 	*/
-	public func notify(type: CameraEvent) {
+	public func notify(type: GLCameraEvent) {
 		var notification : NSNotification = NSNotification(name: type.rawValue, object: self)
 		notificationCenter.postNotification(notification)
 	}
@@ -186,7 +186,7 @@ public class CameraModel : Model {
 Defines a protocol for camera observers
 */
 @objc
-public protocol CameraObserver : ModelObserver, NSObjectProtocol {
+public protocol GLCameraObserver : GLObjectObserver {
 	optional func viewportDidChange (notification: NSNotification)
 }
 
@@ -194,15 +194,15 @@ public protocol CameraObserver : ModelObserver, NSObjectProtocol {
 /**
 Enumerates the type of event names, the camera can dispatch
 */
-public enum CameraEvent : String {
-	case Change = "CameraEvent.Change"
+public enum GLCameraEvent : String {
+	case Change = "GLCameraEvent.Change"
 }
 
 
 /** 
 Enumerates the types of cameras
 */
-public enum CameraType : String {
-	case Orthographic = "CameraType.Orthographic"
-	case Perspective = "CameraType.Perspective"
+public enum GLCameraType : String {
+	case Orthographic = "GLCameraType.Orthographic"
+	case Perspective = "GLCameraType.Perspective"
 }

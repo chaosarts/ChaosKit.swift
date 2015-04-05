@@ -1,13 +1,30 @@
 //
-//  .swift
+//  GLBase.swift
 //  ChaosKit
 //
-//  Created by Fu Lam Diep on 29.01.15.
+//  Created by Fu Lam Diep on 22.01.15.
 //  Copyright (c) 2015 Fu Lam Diep. All rights reserved.
 //
 
 import Foundation
-import OpenGL
+
+/**
+This is the GLBase class for all OpenGL wrapper classes, which requires an id for
+gl...-Functions, like GLPrograms, GLShaders etc
+*/
+public class GLBase: NSObject {
+	
+	internal var _ivCache : [Int32 : GLint] = [Int32 : GLint]()
+	
+	/// This is the id, which can be used, if required
+	public final let id : GLuint
+	
+	/// Initializes the object. Is only used by subclasses within the framework.
+	internal init (id: GLuint) {
+		self.id = id
+	}
+}
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +32,6 @@ import OpenGL
 |--------------------------------------------------------------------------
 */
 
-public typealias BlockMap = [AttributeTarget : BufferBlock]
 public typealias RGBAColor = (r: GLclampf, g: GLclampf, b: GLclampf, a: GLclampf)
 public typealias RGBColor = (r: GLclampf, g: GLclampf, b: GLclampf)
 
@@ -67,4 +83,5 @@ public func toUnsafeVoidPointer<T> (value: T) -> UnsafePointer<Void> {
 public func toUnsafeVoidPointer<T> (value: [T]) -> UnsafePointer<Void> {
 	return UnsafePointer<Void>(toUnsafePointer([T]))
 }
+
 

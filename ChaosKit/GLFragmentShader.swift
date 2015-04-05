@@ -1,5 +1,5 @@
 //
-//  GeometryShader.swift
+//  GLVertexShader.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 22.01.15.
@@ -9,14 +9,16 @@
 import Cocoa
 import OpenGL
 
-public class GeometryShader: Shader {
+public class GLFragmentShader: GLShader {
+	
+	
 	public convenience init?(source: String) {
 		self.init(sources: [source])
 	}
 	
 	
 	public convenience init? (sources: [String]) {
-		self.init(type: GLenum(GL_GEOMETRY_SHADER), sources: sources)
+		self.init(type: GLenum(GL_FRAGMENT_SHADER), sources: sources)
 	}
 	
 	public convenience init? (resource: String, encoding: NSStringEncoding = NSUTF8StringEncoding) {
@@ -25,7 +27,7 @@ public class GeometryShader: Shader {
 	
 	
 	public convenience init? (resources: [String], encoding: NSStringEncoding = NSUTF8StringEncoding) {
-		self.init(type: GLenum(GL_GEOMETRY_SHADER), resources: resources, encoding: encoding)
+		self.init(type: GLenum(GL_FRAGMENT_SHADER), resources: resources, encoding: encoding)
 	}
 	
 	
@@ -35,6 +37,6 @@ public class GeometryShader: Shader {
 	
 	
 	public convenience init? (files: [String], encoding: NSStringEncoding = NSUTF8StringEncoding) {
-		self.init(type: GLenum(GL_GEOMETRY_SHADER), files: files, encoding: encoding)
+		self.init(type: GLenum(GL_FRAGMENT_SHADER), files: files, encoding: encoding)
 	}
 }

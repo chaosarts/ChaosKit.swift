@@ -1,5 +1,5 @@
 //
-//  Uniform.swift
+//  GLUniform.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 30.01.15.
@@ -8,7 +8,7 @@
 
 import Cocoa
 
-public enum UniformType {
+public enum GLUniformType {
 	case ModelViewMatrix
 	case ProjectionViewMatrix
 	
@@ -25,11 +25,11 @@ public enum UniformType {
 	case SpecularLightShininess
 }
 
-public struct UniformInfo {
+public struct GLUniformInfo {
 	
 	public let name : String
 	
-	public let target : UniformType
+	public let target : GLUniformType
 	
 	public var type : GLenum?
 	
@@ -52,7 +52,7 @@ public struct UniformInfo {
 		}
 	}
 	
-	public init (name: String, target: UniformType) {
+	public init (name: String, target: GLUniformType) {
 		self.name = name
 		self.target = target
 	}

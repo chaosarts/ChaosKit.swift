@@ -1,5 +1,5 @@
 //
-//  Shader.swift
+//  GLShader.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 22.01.15.
@@ -13,7 +13,7 @@ import GLKit
 /**
 Wrapper class for shaders
 */
-public class Shader: OpenGLBase {
+public class GLShader: GLBase {
 	
 	/**
 	Initializes the shader with the one source string
@@ -65,7 +65,7 @@ public class Shader: OpenGLBase {
 		for resource in resources {
 			var file : String? = bundle.pathForResource(resource, ofType: nil)
 			if nil == file {
-				println("Shader resource \(file) not found.")
+				println("GLShader resource \(file) not found.")
 				continue
 			}
 			files.append(file!)
@@ -100,7 +100,7 @@ public class Shader: OpenGLBase {
 		
 		for file in files {
 			if !fileManager.fileExistsAtPath(file) {
-				println("Shader file \(file) not found.")
+				println("GLShader file \(file) not found.")
 				continue
 			}
 			
@@ -119,7 +119,7 @@ public class Shader: OpenGLBase {
 	:returns: The unsafe mutable pointer that has been passed to glShaderiv within this method. Contains the result of the request
 	*/
 	public func iv (pname : Int32) -> GLint {
-		if _ivCache[pname] != nil {
+		if _ivCache[pname] == nil {
 			var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 			glGetShaderiv(id, GLenum(pname), param)
 			_ivCache[pname] = param.memory

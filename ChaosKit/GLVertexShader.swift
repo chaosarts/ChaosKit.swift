@@ -1,5 +1,5 @@
 //
-//  VertexShader.swift
+//  GLVertexShader.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 22.01.15.
@@ -8,7 +8,7 @@
 
 import Cocoa
 
-public class VertexShader: Shader {
+public class GLVertexShader: GLShader {
 	
 	
 	public convenience init?(source: String) {

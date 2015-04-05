@@ -10,6 +10,7 @@ import Foundation
 
 
 public struct vec2 : VectorType {
+	
 	public static let rows : Int = 2
 	
 	public static let cols : Int = 1
