@@ -10,12 +10,6 @@ import Cocoa
 
 public class GLStage : GLContainer {
 	
-	public var ambientLight : GLAmbientLight?
-	
-	public var diffuseLights : [GLDiffuseLight] = []
-	
-	public var specularLights : [GLSpecularLight] = []
-	
 	public override init () {
 		super.init()
 	}

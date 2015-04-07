@@ -26,7 +26,7 @@ concrete variable in a shader program with this enumeration cases.
 - Position: Stands for the position attribute variable
 - TexCoord: Stands for the texture coordinate attribute variable
 */
-public enum GLAttributeTarget {
+public enum GLAttribAlias {
 	
 	/// Stands for the color attribute variable
 	case Color
@@ -41,7 +41,7 @@ public enum GLAttributeTarget {
 	case TexCoord
 	
 	/// Contains all cases
-	static let cases : [GLAttributeTarget] = [.Color, .Normal, .Position, .TexCoord]
+	static let cases : [GLAttribAlias] = [.Color, .Normal, .Position, .TexCoord]
 }
 
 
@@ -51,9 +51,27 @@ public enum GLAttributeTarget {
 |--------------------------------------------------------------------------
 */
 
+public struct GLAttribVariable {
+	
+	public let id : GLuint
+	
+	public let name : String
+	
+	public let type : GLenum
+	
+	public let size : GLint
+	
+	public init (index: GLuint, name: String, type: GLenum, size: GLint) {
+		self.id = index
+		self.name = name
+		self.type = type
+		self.size = size
+	}
+}
+
 /**
 This structs helps to bridge the gap between a concrete variable name in a
-shader program and GLAttributeTarget case. Further more consists of
+shader program and GLAttribAlias case. Further more consists of
 known OpenGL properties, such as the symbolic attribute location, size
 and name.
 */
@@ -64,7 +82,7 @@ public struct GLAttributeInfo {
 	public let name : String
 	
 	/// Provides the attribute type/categorie in an program object
-	public let target : GLAttributeTarget
+	public let target : GLAttribAlias
 	
 	/// Contains the data type the targeted attribute expects (GL_FLOAT, 
 	/// GL_DOUBLE, etc)*/
@@ -88,7 +106,7 @@ public struct GLAttributeInfo {
 	:param: name The variable name of the attribute
 	:param: target The vertex attribute type
 	*/
-	public init(name: String, target: GLAttributeTarget) {
+	public init(name: String, target: GLAttribAlias) {
 		self.name = name
 		self.target = target
 	}

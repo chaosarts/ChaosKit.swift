@@ -15,7 +15,7 @@ public struct GLBufferBlock {
 	public let size : GLint
 	
 	/// Provides the target with the buffered
-	public let attribute : GLAttributeTarget
+	public let attribute : GLAttribAlias
 	
 	/// Provides the offset of the buffer block
 	public var offset : GLint = 0
@@ -26,7 +26,7 @@ public struct GLBufferBlock {
 	:param: attribute The target symbol which represents an attribute in the shader
 	:param: size The size of the block per vertex. Mus be either 1, 2, 3 or 4
 	*/
-	public init (_ attribute: GLAttributeTarget, _ size: Int) {
+	public init (_ attribute: GLAttribAlias, _ size: Int) {
 		self.attribute = attribute
 		self.size = GLint(size)
 	}
@@ -54,6 +54,11 @@ public class GLBuffer : GLBase {
 	/// Contains the pointer to the buffered data
 	private var _data : UnsafePointer<Void>?
 	
+	/// Provides information about a block within the buffer
+	/// The blocks and the order in which, they are added, gives the buffer
+	/// information about how to buffer vertex data
+	public var blocks : [GLBufferBlock] {get {return _blocks}}
+	
 	/// The pointer to the non-zero buffer name
 	public let ptr : UnsafeMutablePointer<GLuint>
 	
@@ -78,6 +83,19 @@ public class GLBuffer : GLBase {
 		glGenBuffers(1, buffer)
 		ptr = buffer
 		super.init(id: ptr.memory)
+	}
+	
+	
+	///
+	public func draw (shape: GLShape, first: Int = 0) {
+		bind()
+		if GLenum(GL_ARRAY_BUFFER) == target {
+			glDrawArrays(shape.mode, GLint(first), count)
+		} else {
+			var indexlist : [Int] = shape.indices!
+			glDrawElements(shape.mode, count, GLenum(GL_UNSIGNED_BYTE), toUnsafeVoidPointer(indexlist))
+		}
+		unbind()
 	}
 	
 	
@@ -127,11 +145,16 @@ public class GLBuffer : GLBase {
 	}
 	
 	
+	/**
+	Updates the buffer
+	*/
 	public func update (offset: Int, vertice: [GLVertex]) {
 		glBufferSubData(target, GLintptr(offset), vertice.count * sizeof(GLfloat), toUnsafeVoidPointer(vertice))
 	}
 	
-	
+	/**
+	Interleaves the data for a vertex list
+	*/
 	private func interleave (vertice: [GLVertex]) -> [GLfloat] {
 		var array : [GLfloat] = []
 		for vertex in vertice {

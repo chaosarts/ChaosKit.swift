@@ -10,24 +10,70 @@ import Cocoa
 
 internal var _currentProgram : GLProgram?
 
-public class GLProgram: GLBase {
+public final class GLProgram: GLBase {
 	
-	/** Provides a list of uniforms */
-	private final var _uniforms : [GLUniformType : GLUniformInfo] =
-		[GLUniformType : GLUniformInfo]()
+	/// Provides a list of uniforms
+	private var _uniformvars : [String : GLUniformVariable] =
+		[String : GLUniformVariable]()
 	
-	/** Provides the vertex attributes */
-	private final var _attributes : [GLAttributeTarget : GLAttributeInfo] =
-		[GLAttributeTarget : GLAttributeInfo]()
+	/// Provides the vertex attributes
+	private var _attribvars : [String : GLAttribVariable] =
+		[String : GLAttribVariable]()
 	
-	/** Determines whether the program is valid or not */
+	/// Contains a uniform alias to variable name map
+	private var _uniformaliases : [GLUniformAlias : String] = [GLUniformAlias : String]()
+	
+	/// Contains a attribute alias to variable name map
+	private var _attribaliases : [GLAttribAlias : String] = [GLAttribAlias : String]()
+	
+	/// Provides the uniform
+	public var uniformvars : [GLUniformVariable] {get {return _uniformvars.values.array}}
+	
+	/// Provides the uniform
+	public var attribvars : [GLAttribVariable] {get {return _attribvars.values.array}}
+	
+	/// Provides all alias set for uniform aliases
+	public var uniformaliases : [GLUniformAlias] {get {return _uniformaliases.keys.array}}
+	
+	/// Provides all alias set for uniform aliases
+	public var attribaliases : [GLAttribAlias] {get {return _attribaliases.keys.array}}
+	
+	/// Determines whether the program is valid or not
 	public final var valid : Bool {get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS) == GL_TRUE}}
 	
-	/** Determines if the program is linked or not */
+	/// Determines if the program is linked or not
 	public final var linked : Bool {get {return iv(GL_LINK_STATUS) == GL_TRUE}}
 	
-	/** Indicates if program is current */
+	/// Indicates if program is current
 	public final var isCurrent : Bool {get {return self == _currentProgram}}
+	
+	
+	/** 
+	Subscript acces to associated attribute alias
+	
+	:param: alias The GLAttribAlias
+	:returns: Some GLAttribVariable object
+	*/
+	public subscript (alias: GLAttribAlias) -> GLAttribVariable? {
+		get {
+			if let varname = _attribaliases[alias] {return getAttribLocation(varname)}
+			return nil
+		}
+	}
+	
+	
+	/**
+	Subscript acces to associated attribute alias
+	
+	:param: alias The GLAttribAlias
+	:returns: Some GLAttribVariable object
+	*/
+	public subscript (alias: GLUniformAlias) -> GLUniformVariable? {
+		get {
+			if let varname = _uniformaliases[alias] {return getUniformLocation(varname)}
+			return nil
+		}
+	}
 	
 	
 	/**
@@ -78,21 +124,19 @@ public class GLProgram: GLBase {
 	
 	
 	/**
-	Links the program
+	Links the program and flushes all previously added attribute and
+	uniform variable informations
 	
 	:returns:
 	*/
 	public final func link () -> Bool {
-		glLinkProgram(id)
-		_ivCache.removeAll(keepCapacity: true)
-		if !linked {
-			print(String.fromCString(infoLog())!)
-			return false
-		}
+		if linked {return true}
 		
-		updateAttributeInfos()
-		updateUniformInfos()
-		return true
+		glLinkProgram(id)
+		_attribvars.removeAll(keepCapacity: false)
+		_uniformvars.removeAll(keepCapacity: false)
+
+		return linked
 	}
 	
 	
@@ -111,151 +155,78 @@ public class GLProgram: GLBase {
 	}
 	
 	/** 
-	Adds a new attribute info object to indicate the according attribute
-	to be present in the program. The informations will be deteced 
-	automatically, when program has been linked otherwise, when link()
-	is called
+	Retrieves information about an attribute variable in this shader program
 	
-	:param: GLAttributeInfo
+	:param: varname the variable name in the vertex shader
 	*/
-	public func addAttributeInfo (attributeInfo: GLAttributeInfo) {
-		_attributes[attributeInfo.target] = attributeInfo
-		if linked {
-			updateAttributeInfo(&_attributes[attributeInfo.target]!)
-		}
-	}
-	
-	
-	/**
-	Adds a new uniform info object to indicate the according attribute
-	to be present in the program. The informations will be deteced
-	automatically, when program has been linked otherwise, when link()
-	is called
-	
-	:param: GLAttributeInfo
-	*/
-	public func addUniformInfo (uniformInfo: GLUniformInfo) {
-		_uniforms[uniformInfo.target] = uniformInfo
-		if linked {
-			updateUniformInfo(&_uniforms[uniformInfo.target]!)
-		}
-	}
-	
-	
-	/**
-	Returns the uniform info object
-	
-	:param: forType
-	:returns: Some uniform info object
-	*/
-	public func getAttributeInfo (forType type: GLAttributeTarget) -> GLAttributeInfo? {
-		return _attributes[type]
-	}
-	
-	
-	/**
-	Returns the uniform info object
-	
-	:param: forType
-	:returns: Some uniform info object
- 	*/
-	public func getUniformInfo (forType type: GLUniformType) -> GLUniformInfo? {
-		return _uniforms[type]
-	}
-	
-	
-	/**
-	Updates information about all attribute info objects that has been added to 
-	this program
-	*/
-	private func updateAttributeInfos () {
-		if _attributes.count == 0 {
-			warn("No attribute locations added to program.")
-			return
-		}
+	public func getAttribLocation (varname: String) -> GLAttribVariable? {
+		if _attribvars[varname] != nil {return _attribvars[varname]}
 		
-		for key in _attributes.keys {
-			updateAttributeInfo(&_attributes[key]!)
-		}
-	}
-	
-	
-	/**
-	Updates a attribute info object
-	*/
-	private func updateAttributeInfo (inout attribute: GLAttributeInfo) {
-		attribute.location = glGetAttribLocation(id, attribute.name)
+		var location : GLint = glGetAttribLocation(id, varname)
+		if location < 0 {println("GLAttribute \(varname) not found in program."); return nil}
 		
-		if attribute.location < 0 {
-			warn("Attribute location with name '\(attribute.name)' not found.")
-			return
-		}
-		
+		var index : GLuint = GLuint(location)
 		var bufSize : GLsizei = GLsizei(iv(GL_ACTIVE_ATTRIBUTE_MAX_LENGTH))
-		
 		let length : UnsafeMutablePointer<GLsizei> = UnsafeMutablePointer<GLsizei>.alloc(1)
 		let size : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		let type : UnsafeMutablePointer<GLenum> = UnsafeMutablePointer<GLenum>.alloc(1)
 		let name : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
 		
-		glGetActiveAttrib(id, GLuint(attribute.location), bufSize, length, size, type, name)
+		glGetActiveAttrib(id, index, bufSize, length, size, type, name)
 		
-		attribute.size = size.memory
-		attribute.type = type.memory
-		
-		
-		attribute.locations = []
-		
-		for i in 0..<Int(attribute.size!) {
-			var location : GLint = glGetAttribLocation(id, "\(attribute.name)[\(i)]")
-			if location < 0 {continue}
-			
-			attribute.locations.append(GLuint(location))
-		}
+		var attribvar : GLAttribVariable = GLAttribVariable(index: index, name: varname, type: type.memory, size: size.memory)
+		_attribvars[varname] = attribvar
+		return attribvar
 	}
 	
 	
 	/**
-	Updates information about all uniforms info objects that has been added to
-	this program
+	Retrieves information about an uniform variable in this shader program
+	
+	:param: varname the variable name in the shader program
 	*/
-	private func updateUniformInfos () {
-		if _uniforms.count == 0 {
-			warn("No uniform locations added to program.")
-			return
-		}
+	public func getUniformLocation (varname: String) -> GLUniformVariable? {
+		if _uniformvars[varname] != nil {return _uniformvars[varname]}
 		
-		for key in _uniforms.keys {
-			updateUniformInfo(&_uniforms[key]!)
-		}
-	}
-	
-	
-	/**
-	Fills the passed uniform with information about type size etc
-	
-	:param: uniform
-	:returns: True when the unform has been located in the program, otherwise false
-	*/
-	private func updateUniformInfo (inout uniform: GLUniformInfo) {
-		var location : GLint = glGetUniformLocation(id, uniform.name)
-		if location < 0 {println("GLUniform \(uniform.name) not found in program."); return}
+		var location : GLint = glGetUniformLocation(id, varname)
+		if location < 0 {println("GLUniform \(varname) not found in program."); return nil}
 		
+		var index : GLuint = GLuint(location)
+		var bufSize : GLsizei = GLsizei(iv(GL_ACTIVE_UNIFORM_MAX_LENGTH))
 		var length : UnsafeMutablePointer<GLsizei> = UnsafeMutablePointer<GLsizei>.alloc(1)
 		var size : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		var type : UnsafeMutablePointer<GLenum> = UnsafeMutablePointer<GLenum>.alloc(1)
 		var name : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
 		
-		glGetActiveUniform(id, GLuint(location), iv(GL_ACTIVE_UNIFORM_MAX_LENGTH), length, size, type, name)
+		glGetActiveUniform(id, index, bufSize, length, size, type, name)
 		
-		uniform.location = location
-		uniform.type = type.memory
-		uniform.size = size.memory
-		uniform.locations = []
-		
-		for i in 0..<Int(uniform.size!) {
-			uniform.locations.append(glGetUniformLocation(id, uniform.name + "[\(i)]"))
-		}
+		var uniformvar : GLUniformVariable = GLUniformVariable(index: index, name: varname, type: type.memory, size: size.memory)
+		_uniformvars[varname] = uniformvar
+		return uniformvar
+	}
+	
+	
+	/**
+	Sets an attribute alias to grant access to variables in a shader without knowing the
+	concrete name of it
+	
+	:param: alias The symbolic alias
+	:param: varname The variablename
+	*/
+	public func setAttribAlias (alias: GLAttribAlias, varname: String) {
+		_attribaliases[alias] = varname
+	}
+	
+	
+	/**
+	Sets an uniform alias to grant access to variables in a shader without knowing the
+	concrete name of it
+	
+	:param: alias The symbolic alias
+	:param: varname The variablename
+	*/
+	public func setUniformAlias (alias: GLUniformAlias, varname: String) {
+		_uniformaliases[alias] = varname
 	}
 }
 

@@ -8,18 +8,26 @@
 
 import Cocoa
 
-public struct GLAmbientLight {
+public class GLLight : GLDisplayObject {
+	
 	public var color : vec3
+	
+	public var intensity : GLfloat
+	
+	public init (color c: vec3, intensity i: GLfloat) {
+		self.color = c
+		self.intensity = i
+	}
 }
 
 
-public struct GLDiffuseLight {
-	public var color : vec3
-	public var position : vec3
+public class GLDiffusePointlight : GLDisplayObject {
+	
 }
 
 
-public struct GLSpecularLight {
-	public var color : vec3
-	public var position : vec3
+public class GLSpecularPointlight : GLDisplayObject {
+	
 }
+
+

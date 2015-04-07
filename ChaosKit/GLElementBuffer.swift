@@ -13,7 +13,7 @@ public class GLElementBuffer : GLBuffer {
 	/// Provides the indices data type
 	public var type : GLenum
 	
-	public var indices : [Int]?
+	public var indices : [Int] = []
 	
 	public init (type t: Int32 = GL_UNSIGNED_BYTE) {
 		type = GLenum(t)
@@ -22,7 +22,6 @@ public class GLElementBuffer : GLBuffer {
 	
 	
 	public func draw (mode: GLenum) {
-		if nil == indices {return}
-		glDrawElements(mode, count, type, toUnsafeVoidPointer(indices!))
+		glDrawElements(mode, count, type, toUnsafeVoidPointer(indices))
 	}
 }

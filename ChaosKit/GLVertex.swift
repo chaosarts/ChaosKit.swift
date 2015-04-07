@@ -47,8 +47,8 @@ public struct GLVertex {
 		set {_texcoord = newValue}
 	}
 	
-	/// Subscript access to the properties by GLAttributeTarget enumeration
-	subscript (index: GLAttributeTarget) -> ArrayRepresentable {
+	/// Subscript access to the properties by GLAttribAlias enumeration
+	subscript (index: GLAttribAlias) -> ArrayRepresentable {
 		get {
 			switch index {
 			case .Position: return position
@@ -67,7 +67,7 @@ public struct GLVertex {
 	:param: target The attribute target to check
  	:returns: True when the according target has been properly set, otherwise false
 	*/
-	public func provides (target: GLAttributeTarget) -> Bool {
+	public func provides (target: GLAttribAlias) -> Bool {
 		switch target {
 		case .Position: return _position != nil
 		case .Color: return _color != nil

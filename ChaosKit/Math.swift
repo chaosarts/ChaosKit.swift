@@ -11,7 +11,7 @@ import Foundation
 infix operator • {}
 
 public func polar2cartesian (radius: GLfloat, phi: GLfloat, rho: GLfloat) -> vec3 {
-	return vec3(radius * sin(phi) * cos(rho), radius * sin(phi) * sin(rho), radius * cos(phi))
+	return vec3(radius * sin(phi) * sin(rho), radius * cos(phi), radius * sin(phi) * cos(rho))
 }
 
 

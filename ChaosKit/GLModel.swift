@@ -1,5 +1,5 @@
 //
-//  GLObject.swift
+//  GLModel.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 12.02.15.
@@ -9,8 +9,8 @@
 import Cocoa
 
 
-public protocol GLObjectType : Placeable, Rotateable {
-
+public protocol GLModelType : Placeable, Rotateable {
+	
 }
 
 /**
@@ -21,57 +21,57 @@ to update more than just one component. Otherwise the model posts notifications 
 every single component you change. It's recommended to replace the whole vector, if you want
 to change more than one component before notifying observer.
 */
-public class GLObject : NSObject, GLObjectType {
+public class GLModel : NSObject, GLModelType {
 	
 	/** Indicates if notifying observers is allowed in didSet{} */
 	private final var _allowNotification : Bool = true
 	
 	/** Provides the position of the model in space of parent object */
 	public final var position : vec3 = vec3() {
-		didSet {if _allowNotification {notify(GLObjectEvent.Move)}}
+		didSet {if _allowNotification {notify(GLModelEvent.Move)}}
 	}
 	
 	/** Provides the rotation of the model in space of parent object */
 	public final var rotation : vec3 = vec3() {
-		didSet {if _allowNotification {notify(GLObjectEvent.Rotate)}}
+		didSet {if _allowNotification {notify(GLModelEvent.Rotate)}}
 	}
 	
 	/** The default notification center to post notifications to model observers */
 	public lazy var notificationCenter : NSNotificationCenter = NSNotificationCenter.defaultCenter()
 	
 	
-	/** 
-	Adds a new model observer 
+	/**
+	Adds a new model observer
 	
 	:param: observer The observer for this model to add
 	*/
-	public func addObserver (o: GLObjectObserver) {
+	public func addObserver (o: GLModelObserver) {
 		var selector : Selector
 		
 		selector = Selector("modelDidMove:")
 		if o.respondsToSelector(selector) {
 			notificationCenter.addObserver(o, selector: selector,
-				name: GLObjectEvent.Move.rawValue, object: self)
+				name: GLModelEvent.Move.rawValue, object: self)
 		}
 		
 		selector = Selector("modelDidRotate:")
 		if o.respondsToSelector(selector) {
 			notificationCenter.addObserver(o, selector: selector,
-				name: GLObjectEvent.Rotate.rawValue, object: self)
+				name: GLModelEvent.Rotate.rawValue, object: self)
 		}
 		
 		selector = Selector("modelDidChange:")
 		if o.respondsToSelector(selector) {
 			notificationCenter.addObserver(o, selector: selector,
-				name: GLObjectEvent.Rotate.rawValue, object: self)
+				name: GLModelEvent.Rotate.rawValue, object: self)
 		}
 	}
 	
 	
-	/** 
+	/**
 	Posts a notification to observers about a model event
 	*/
-	public func notify (type: GLObjectEvent) {
+	public func notify (type: GLModelEvent) {
 		var notification : NSNotification = NSNotification(name: type.rawValue, object: self)
 		notificationCenter.postNotification(notification)
 		_allowNotification = true
@@ -175,7 +175,7 @@ public class GLObject : NSObject, GLObjectType {
 		_allowNotification = false
 		position = p
 		rotation = r
-		notify(GLObjectEvent.Change)
+		notify(GLModelEvent.Change)
 	}
 }
 
@@ -183,7 +183,7 @@ public class GLObject : NSObject, GLObjectType {
 Protocol for a model observer
 */
 @objc
-public protocol GLObjectObserver : NSObjectProtocol {
+public protocol GLModelObserver : NSObjectProtocol {
 	optional func modelDidMove (notification: NSNotification)
 	optional func modelDidRotate (notification: NSNotification)
 	optional func modelDidChange (notification: NSNotification)
@@ -193,8 +193,8 @@ public protocol GLObjectObserver : NSObjectProtocol {
 /**
 Enumerates the types of events, which a opengl model may post
 */
-public enum GLObjectEvent : String {
-	case Change = "GLObjectEvent.Change"
-	case Move = "GLObjectEvent.Move"
-	case Rotate = "GLObjectEvent.Rotate"
+public enum GLModelEvent : String {
+	case Change = "GLModelEvent.Change"
+	case Move = "GLModelEvent.Move"
+	case Rotate = "GLModelEvent.Rotate"
 }

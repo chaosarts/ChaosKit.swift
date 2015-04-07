@@ -24,15 +24,6 @@ public class GLContainer: GLDisplayObject {
 	*/
 	public override init () {}
 	
-	/**
-	Displays the object
- 	*/
-	public override func display () {
-		for child in _children {
-			child.display()
-		}
-	}
-	
 	
 	/** 
 	Adds a new child to the container 

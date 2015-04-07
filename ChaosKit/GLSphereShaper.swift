@@ -37,7 +37,7 @@ public class GLSphereShaper : GLShaper {
 	
 	private func getVertice () -> [GLVertex]{
 		var vertice : [GLVertex] = []
-		var steps : GLfloat = GLfloat(M_2_PI) / GLfloat(grain)
+		var steps : GLfloat = GLfloat(M_2_PI) / GLfloat(grain - 1)
 		
 		for lat in 0..<grain {
 			for lng in 0..<grain {

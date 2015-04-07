@@ -8,7 +8,7 @@
 
 import Cocoa
 
-public enum GLUniformType {
+public enum GLUniformAlias {
 	case ModelViewMatrix
 	case ProjectionViewMatrix
 	
@@ -25,40 +25,22 @@ public enum GLUniformType {
 	case SpecularLightShininess
 }
 
-public struct GLUniformInfo {
+
+public struct GLUniformVariable {
+	
+	public let id : GLuint
 	
 	public let name : String
 	
-	public let target : GLUniformType
+	public let type : GLenum
 	
-	public var type : GLenum?
-	
-	public var size : GLint?
-	
-	public var location : GLint = -1
-	
-	public var locations : [GLint] = []
+	public let size : GLint
 	
 	
-	subscript (index: Int) -> GLint {
-		get {
-			assert(valid(index), "Bad index access for uniform")
-			return locations[index]
-		}
-		
-		set {
-			assert(valid(index), "Bad index access for uniform")
-			locations[index] = newValue
-		}
-	}
-	
-	public init (name: String, target: GLUniformType) {
+	public init (index: GLuint, name: String, type: GLenum, size: GLint) {
+		self.id = index
 		self.name = name
-		self.target = target
-	}
-	
-	
-	private func valid (index: Int) -> Bool {
-		return nil != size && index > 0 && index < Int(size!)
+		self.type = type
+		self.size = size
 	}
 }

@@ -22,12 +22,6 @@ public class GLCanvas: NSOpenGLView, GLTransformable {
 	/** Provides the scene to render */
 	public var stage : GLStage?
 	
-	public var preRenderpasses : [GLOffscreenRenderpass] = []
-	
-	public var mainRenderpass : GLRenderpass?
-	
-	public var postRenderpasses : [GLOffscreenRenderpass] = []
-	
 	/** Provides the projection matrix */
 	public var projectionViewMatrix : mat4 {
 		get {return _projectionViewMatrix}
@@ -62,40 +56,7 @@ public class GLCanvas: NSOpenGLView, GLTransformable {
 	
 	
 	public func drawStage () {
-		if stage == nil || mainRenderpass == nil {return}
-		
-		for pass in preRenderpasses {
-			pass.render(projectionViewMatrix, modelViewMatrix, stage!)
-		}
-		
-		mainRenderpass!.render(projectionViewMatrix, modelViewMatrix, stage!)
 	}
-	
-	
-	public func bufferShapeData (shape: GLShape) -> UnsafeMutablePointer<GLuint> {
-		var data : [GLfloat] = packShapeData(shape)
-		var size : GLsizeiptr = GLsizeiptr(shape.vertice.count * 12 * sizeof(GLfloat))
-		var buffers : UnsafeMutablePointer<GLuint> = UnsafeMutablePointer<GLuint>.alloc(1)
-		glGenBuffers(1, buffers)
-		glBindBuffer(GLenum(GL_ARRAY_BUFFER), buffers.memory)
-		glBufferData(GLenum(GL_ARRAY_BUFFER), size, UnsafePointer<Void>(toUnsafePointer(data)), GLenum(GL_STATIC_DRAW))
-		glBindBuffer(GLenum(GL_ARRAY_BUFFER), 0)
-		return buffers
-	}
-	
-	
-	public func packShapeData (shape: GLShape) -> [GLfloat]{
-		var data : [GLfloat] = []
-		for vertex in shape.vertice {
-			data.extend(vertex.position.array)
-			data.extend(vertex.color.array)
-			data.extend(vertex.normal.array)
-			data.extend(vertex.texcoord.array)
-		}
-		
-		return data
-	}
-	
 	
 	/**
 	Sets the projection to perspective view according to passed parameters

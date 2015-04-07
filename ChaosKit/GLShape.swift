@@ -10,13 +10,19 @@ import Cocoa
 import OpenGL
 
 
-public class GLShape : GLDisplayObject, GLDisplayable {
+public class GLShape : GLDisplayObject {
 	
 	/// Provides the vertice
-	private var _vertice : [GLVertex] = []
+	private var _vertice : [GLVertex] = [] {didSet {_compiled = false}}
 	
 	/// Provides the indices for element array buffer
 	private var _indices : [Int]?
+	
+	/// Indicates if the shape has been compiled or not
+	private var _compiled : Bool = false
+	
+	/// Contains the buffer
+	private var _buffers : [GLBuffer] = [] {didSet {_compiled = false}}
 	
 	/// Provides the vertice of the shape
 	public var vertice : [GLVertex] {get {return _vertice}}
@@ -30,21 +36,18 @@ public class GLShape : GLDisplayObject, GLDisplayable {
 	/// Provides the draw mode of the shape, such as GL_POINT, GL_TRIANGLE etc
 	public var mode : GLenum = GLenum(GL_POINT)
 	
-	public var buffer : GLBuffer?
+	/// Contains the buffer
+	public var buffers : [GLBuffer] {
+		get {if !_compiled {compile()}; return _buffers}
+		set {_buffers = newValue}
+	}
 	
 	
 	/** 
 	Initializes the shape with a buffer strategy
-	
-	:param: bufferstrategy
 	*/
 	public override init () {
 		super.init()
-	}
-	
-	
-	public override func display () {
-		
 	}
 	
 	
@@ -65,6 +68,13 @@ public class GLShape : GLDisplayObject, GLDisplayable {
 	
 	public func setIndices (indices: [Int]) {
 		_indices = indices
+	}
+	
+	
+	private func compile () {
+		for buffer in buffers {
+			buffer.buffer(vertice)
+		}
 	}
 }
 

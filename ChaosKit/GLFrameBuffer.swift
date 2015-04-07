@@ -30,4 +30,9 @@ public class GLFrameBuffer : GLBase {
 	public func unbind () {
 		glBindFramebuffer(GLenum(GL_FRAMEBUFFER), id)
 	}
+	
+	
+	public func texture2d (texture: GLTexture2D, target: Int32, attachment: Int32, level: Int) {
+		glFramebufferTexture2D(GLenum(target), GLenum(attachment), texture.target, texture.id, GLint(level))
+	}
 }
