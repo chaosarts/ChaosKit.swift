@@ -10,7 +10,7 @@ import Cocoa
 
 public class GLEvent {
 	
-	let target : GLEventTarget?
+	var target : GLEventTarget?
 	
 	let type : String
 	

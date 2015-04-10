@@ -10,13 +10,13 @@ import Foundation
 
 infix operator • {}
 
-public func polar2cartesian (radius: GLfloat, phi: GLfloat, rho: GLfloat) -> vec3 {
-	return vec3(radius * sin(phi) * sin(rho), radius * cos(phi), radius * sin(phi) * cos(rho))
+public func polar2cartesian (radius: GLfloat, theta: GLfloat, phi: GLfloat) -> vec3 {
+	return vec3(radius * sin(theta) * sin(phi), radius * cos(theta), radius * sin(theta) * cos(phi))
 }
 
 
 public protocol ArrayRepresentable {
-	class var byteSize : Int {get}
+	static var byteSize : Int {get}
 	
 	var array : [GLfloat] {get}
 	
@@ -27,7 +27,7 @@ public protocol ArrayRepresentable {
 
 
 public protocol ListType : ArrayRepresentable, ArrayLiteralConvertible {
-	class var elementCount : Int {get}
+	static var elementCount : Int {get}
 	
 }
 
@@ -42,9 +42,9 @@ public protocol ArithmeticType {
 
 
 public protocol MatrixType : ListType {	
-	class var rows : Int {get}
+	static var rows : Int {get}
 	
-	class var cols : Int {get}
+	static var cols : Int {get}
 }
 
 

@@ -8,21 +8,58 @@
 
 import Cocoa
 
-public enum GLUniformAlias {
-	case ModelViewMatrix
-	case ProjectionViewMatrix
+public enum GLUniformAlias : String {
+	case ModelViewMatrix = "ModelViewMatrix"
+	case ProjectionViewMatrix = "ProjectionViewMatrix"
 	
-	case AmbientLightColor
-	case AmbientLightIntensity
+	case AmbientLightColor = "AmbientLightColor"
+	case AmbientLightIntensity = "AmbientLightIntensity"
 	
-	case DiffuseLightColor
-	case DiffuseLightPosition
-	case DiffuseLightIntensity
+	case DiffuseLightColor = "DiffuseLightColor"
+	case DiffuseLightPosition = "DiffuseLightPosition"
+	case DiffuseLightIntensity = "DiffuseLightIntensity"
 	
-	case SpecularLightColor
-	case SpecularLightPosition
-	case SpecularLightIntensity
-	case SpecularLightShininess
+	case SpecularLightColor = "SpecularLightColor"
+	case SpecularLightPosition = "SpecularLightPosition"
+	case SpecularLightIntensity = "SpecularLightIntensity"
+	case SpecularLightShininess = "SpecularLightShininess"
+	
+	case Texture = "Texture"
+	case ShadowMap = "ShadowMap"
+	case BumpMap = "BumpMap"
+	case DisplacementMap = "DisplacementMap"
+	case HeightMap = "HeightMap"
+	case NormalMap = "NormalMap"
+	case SpecularMap = "SpecularMap"
+	case GlowMap = "GlowMap"
+	case EnviromentMap = "EnviromentMap"
+	
+	static let cases : [GLUniformAlias] = [
+		.ModelViewMatrix,
+		.ProjectionViewMatrix,
+		
+		.AmbientLightColor,
+		.AmbientLightIntensity,
+		
+		.DiffuseLightColor,
+		.DiffuseLightPosition,
+		.DiffuseLightIntensity,
+		
+		.SpecularLightColor,
+		.SpecularLightPosition,
+		.SpecularLightIntensity,
+		.SpecularLightShininess,
+		
+		.Texture,
+		.ShadowMap,
+		.BumpMap,
+		.NormalMap,
+		.DisplacementMap,
+		.HeightMap,
+		.SpecularMap,
+		.GlowMap,
+		.EnviromentMap
+	]
 }
 
 
@@ -35,7 +72,6 @@ public struct GLUniformVariable {
 	public let type : GLenum
 	
 	public let size : GLint
-	
 	
 	public init (index: GLuint, name: String, type: GLenum, size: GLint) {
 		self.id = index

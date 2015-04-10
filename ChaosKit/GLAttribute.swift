@@ -26,19 +26,19 @@ concrete variable in a shader program with this enumeration cases.
 - Position: Stands for the position attribute variable
 - TexCoord: Stands for the texture coordinate attribute variable
 */
-public enum GLAttribAlias {
+public enum GLAttribAlias : String {
 	
 	/// Stands for the color attribute variable
-	case Color
+	case Color = "Color"
 	
 	/// Stands for the normal attribute variable
-	case Normal
+	case Normal = "Normal"
 	
 	/// Stands for the position attribute variable
-	case Position
+	case Position = "Position"
 	
 	/// Stands for the texture coordinate attribute variable
-	case TexCoord
+	case TexCoord = "TexCoord"
 	
 	/// Contains all cases
 	static let cases : [GLAttribAlias] = [.Color, .Normal, .Position, .TexCoord]

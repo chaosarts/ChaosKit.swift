@@ -32,20 +32,20 @@ public final class GLProgram: GLBase {
 	/// Provides the uniform
 	public var attribvars : [GLAttribVariable] {get {return _attribvars.values.array}}
 	
-	/// Provides all alias set for uniform aliases
+	/// Provides all alias set for uniforms
 	public var uniformaliases : [GLUniformAlias] {get {return _uniformaliases.keys.array}}
 	
-	/// Provides all alias set for uniform aliases
+	/// Provides all alias set for attributes aliases
 	public var attribaliases : [GLAttribAlias] {get {return _attribaliases.keys.array}}
 	
 	/// Determines whether the program is valid or not
-	public final var valid : Bool {get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS) == GL_TRUE}}
+	public var valid : Bool {get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS) == GL_TRUE}}
 	
 	/// Determines if the program is linked or not
-	public final var linked : Bool {get {return iv(GL_LINK_STATUS) == GL_TRUE}}
+	public var linked : Bool {get {return iv(GL_LINK_STATUS) == GL_TRUE}}
 	
 	/// Indicates if program is current
-	public final var isCurrent : Bool {get {return self == _currentProgram}}
+	public var isCurrent : Bool {get {return self == _currentProgram}}
 	
 	
 	/** 
@@ -90,7 +90,7 @@ public final class GLProgram: GLBase {
 	
 	:param: pname The paramater name to fetch the value
 	*/
-	public final func iv (pname : Int32) -> GLint {
+	public func iv (pname : Int32) -> GLint {
 		if _ivCache[pname] == nil {
 			var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 			glGetProgramiv(id, GLenum(pname), param)
@@ -105,7 +105,7 @@ public final class GLProgram: GLBase {
 	
 	:returns: The info log
 	*/
-	public final func infoLog () -> UnsafeMutablePointer<GLchar> {
+	public func infoLog () -> UnsafeMutablePointer<GLchar> {
 		var log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(Int(iv(GL_INFO_LOG_LENGTH)))
 		glGetProgramInfoLog(id, iv(GL_INFO_LOG_LENGTH), nil, log)
 		return log
@@ -117,7 +117,7 @@ public final class GLProgram: GLBase {
 	
 	:param: shader The shader to attach
 	*/
-	public final func attach (shader s: GLShader) -> GLProgram {
+	public func attach (shader s: GLShader) -> GLProgram {
 		glAttachShader(id, s.id)
 		return self
 	}
@@ -129,7 +129,7 @@ public final class GLProgram: GLBase {
 	
 	:returns:
 	*/
-	public final func link () -> Bool {
+	public func link () -> Bool {
 		if linked {return true}
 		
 		glLinkProgram(id)
@@ -145,7 +145,7 @@ public final class GLProgram: GLBase {
 	
 	:returns:
 	*/
-	public final func use () -> Bool {
+	public func use () -> Bool {
 		if !linked && !link() {return false}
 		if !isCurrent {
 			_currentProgram = self

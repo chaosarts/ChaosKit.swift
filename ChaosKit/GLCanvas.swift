@@ -11,27 +11,7 @@ import OpenGL
 import GLKit
 
 
-public class GLCanvas: NSOpenGLView, GLTransformable {
-	
-	/** Contains the projection matrix */
-	private var _projectionViewMatrix : mat4 = mat4.identity
-	
-	/** Contains the rotation matrix */
-	private var _modelViewMatrix : mat4 = mat4.identity
-	
-	/** Provides the scene to render */
-	public var stage : GLStage?
-	
-	/** Provides the projection matrix */
-	public var projectionViewMatrix : mat4 {
-		get {return _projectionViewMatrix}
-	}
-	
-	/** Provides the model view matrix */
-	public var modelViewMatrix : mat4 {
-		get {return _modelViewMatrix}
-	}
-	
+public class GLCanvas: NSOpenGLView {
 	
 	public func add (obeserver o: GLCanvasObserver) {
 		var notificationCenter : NSNotificationCenter = NSNotificationCenter.defaultCenter();
@@ -43,9 +23,6 @@ public class GLCanvas: NSOpenGLView, GLTransformable {
 	}
 	
 	
-	/** 
-	NSView native draw action
-	*/
     override public func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)
 		var notificationCenter : NSNotificationCenter = NSNotificationCenter.defaultCenter();
@@ -53,93 +30,6 @@ public class GLCanvas: NSOpenGLView, GLTransformable {
 		
 		notificationCenter.postNotification(notification)
     }
-	
-	
-	public func drawStage () {
-	}
-	
-	/**
-	Sets the projection to perspective view according to passed parameters
-	
-	:param: left The left boundary of the view box
-	:param: right The right boundary of the view box
-	:param: bottom The bottom boundary of the view box
-	:param: top The top boundary of the view box
-	:param: near The near boundary of the view box
-	:param: far The far boundary of the view box
-	*/
-	public func setFrustum (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) -> GLCanvas {
-		_projectionViewMatrix = mat4.makeFrustum(left: l, right: r, bottom: b, top: t, near: n, far: f)
-		return self
-	}
-	
-	
-	/**
-	Sets the projection to othographic view according to passed parameters
-	
-	:param: left The left boundary of the view box
-	:param: right The right boundary of the view box
-	:param: bottom The bottom boundary of the view box
-	:param: top The top boundary of the view box
-	:param: near The near boundary of the view box
-	:param: far The far boundary of the view box
-	*/
-	public func setOrthographic (left l: GLfloat, right r: GLfloat, bottom b: GLfloat, top t: GLfloat, near n: GLfloat, far f: GLfloat) -> GLCanvas {
-		_projectionViewMatrix = mat4.makeOrtho(left: l, right: r, bottom: b, top: t, near: n, far: f)
-		return self
-	}
-	
-	
-	/**
-	Sets the translation of the camera
-	
-	:param: vec The direction, to translate to
-	*/
-	public func translate (vec v: vec3) {
-		_modelViewMatrix.translate(v)
-	}
-	
-	
-	public func translate (x tx: GLfloat, y ty: GLfloat, z tz: GLfloat) {
-		translate(vec: [tx, ty, tz])
-	}
-	
-	
-	/**
-	Rotates the display object around the x axis
-	*/
-	public func rotateX (alpha a: GLfloat) {
-		rotate(alpha: a, axis: [1 ,0 ,0])
-	}
-	
-	
-	/**
-	Rotates the display object around the y axis
-	*/
-	public func rotateY (alpha a: GLfloat) {
-		rotate(alpha: a, axis: [1 ,0 ,0])
-	}
-	
-	
-	/**
-	Rotates the display object around the z axis
-	*/
-	public func rotateZ (alpha a: GLfloat) {
-		rotate(alpha: a, axis: [1 ,0 ,0])
-	}
-	
-	
-	/**
-	Rotates the display object around an arbitrary axis
-	*/
-	public func rotate (alpha a: GLfloat, axis: vec3) {
-		_modelViewMatrix.rotate(alpha: a, vec: axis)
-	}
-	
-	
-	public func resetTransformation () {
-		_modelViewMatrix = mat4.identity
-	}
 }
 
 

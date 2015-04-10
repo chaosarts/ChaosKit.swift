@@ -16,14 +16,14 @@ public class GLTexture : GLBase {
 	
 	/// Contains the texture target like GL_TEXTURE_2D
 	public let target : GLenum
-	
+		
 	
 	/** 
 	Initializes the texture with passed target
 	
 	:param: target Texture target like GL_TEXTURE_2D
 	*/
-	private init (target: Int32) {
+	internal init (target: Int32) {
 		var textures : UnsafeMutablePointer<GLuint> = UnsafeMutablePointer<GLuint>.alloc(1)
 		glGenTextures(1, textures)
 		
@@ -48,10 +48,17 @@ public class GLTexture : GLBase {
 	}
 	
 	
+	/** 
+	Sets an paramter for the texture
+	*/
 	public func parameteri (pname: Int32, _ param: Int32) {
 		glTexParameteri(id, GLenum(pname), GLint(param))
 	}
 	
+	
+	/**
+	Sets an paramter for the texture
+	*/
 	public func parameterf (pname: Int32, _ param: GLfloat) {
 		glTexParameterf(id, GLenum(pname), param)
 	}
@@ -67,37 +74,3 @@ public class GLTexture : GLBase {
 	}
 }
 
-
-public class GLTexture1D : GLTexture {
-	
-	private var _width : Int
-	
-	public var width : Int {get {return _width}}
-	
-	public init (_ width: Int) {
-		_width = width
-		super.init (target: GL_TEXTURE_1D)
-	}
-}
-
-
-
-public class GLTexture2D : GLTexture {
-	
-	public let size : Sizei
-	
-	public var width : Int {get {return size.width}}
-	
-	public var height : Int {get {return size.height}}
-	
-	
-	public init (_ size: Sizei) {
-		self.size = size
-		super.init (target: GL_TEXTURE_2D)
-	}
-	
-	
-	public func create (internalFormat: Int32, _ format: Int32, _ type: Int32, _ pointer: UnsafePointer<Void>) {
-		glTexImage2D(id, 0, GLint(internalFormat), GLsizei(width), GLsizei(height), 0, GLenum(format), GLenum(type), pointer)
-	}
-}

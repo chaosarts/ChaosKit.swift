@@ -104,7 +104,7 @@ public class GLShader: GLBase {
 				continue
 			}
 			
-			var fileContent : String = NSString(contentsOfFile: file, encoding: encoding, error: nil)!
+			var fileContent : String = NSString(contentsOfFile: file, encoding: encoding, error: nil)! as String
 			sources.append(fileContent)
 		}
 		

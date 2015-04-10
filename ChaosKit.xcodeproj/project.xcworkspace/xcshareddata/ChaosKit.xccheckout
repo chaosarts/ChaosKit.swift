@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>2A84F3D1-0BFE-4D4F-ACDA-2E054AD03496</string>
 	<key>IDESourceControlProjectName</key>
-	<string>ChaosKit</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>2A26F8AB459B9BE949D05956049B0366D0E19BCD</key>
 		<string>https://github.com/chaosarts/ChaosKit.xcode.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>ChaosKit.xcodeproj</string>
+	<string>ChaosKit.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>2A26F8AB459B9BE949D05956049B0366D0E19BCD</key>

@@ -13,10 +13,13 @@ public class GLShadowmapRenderpass : GLRenderpass {
 	
 	private var _framebuffer : GLFrameBuffer = GLFrameBuffer()
 	
+	private var _texture : GLTexture?
+	
 	public var program : GLProgram
 	
-	public var size : Sizei = Sizei(1024, 1024)
+	public var renderToTexture : Bool = true
 	
+	public var texture : GLTexture? {get {return _texture}}
 	
 	public init (program: GLProgram) {
 		self.program = program
@@ -24,10 +27,10 @@ public class GLShadowmapRenderpass : GLRenderpass {
 	
 	
 	public func execute (camera: GLCamera, stage: GLStage) {
-		var texture : GLTexture2D = GLTexture2D(size)
+		var texture : GLTexture2D = GLTexture2D(0, GL_DEPTH_COMPONENT, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nil)
 		
 		texture.bind()
-		texture.create(GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT, nil)
+		texture.create()
 		texture.parameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR)
 		texture.parameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 		texture.parameteri(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER)
@@ -40,5 +43,6 @@ public class GLShadowmapRenderpass : GLRenderpass {
 		
 				
 		_framebuffer.unbind()
+		_texture = texture
 	}
 }

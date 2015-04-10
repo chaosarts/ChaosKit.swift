@@ -361,7 +361,7 @@ extension mat4 : Printable {
 		get {
 			var maxlen : Int = 0
 			for index in 0...(_mat.count - 1) {
-				maxlen = max(maxlen, countElements(_mat[index].description))
+				maxlen = max(maxlen, count(_mat[index].description))
 			}
 			
 			maxlen++
@@ -372,7 +372,7 @@ extension mat4 : Printable {
 			for r in 0...3 {
 				output += "|"
 				for c in 0...3 {
-					var fillLen : Int = maxlen - countElements(m[r, c].description)
+					var fillLen : Int = maxlen - count(m[r, c].description)
 					var white : String = " " * fillLen
 					output += white + m[r, c].description
 				}

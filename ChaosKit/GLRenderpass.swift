@@ -2,26 +2,25 @@
 //  GLRenderpass.swift
 //  ChaosKit
 //
-//  Created by Fu Lam Diep on 06.04.15.
+//  Created by Fu Lam Diep on 08.04.15.
 //  Copyright (c) 2015 Fu Lam Diep. All rights reserved.
 //
 
 import Foundation
 
-/** 
-Describes the 'interface' for a render pass
-*/
+
 public protocol GLRenderpass {
 	
-	/// The program to use for the render pass
+	/// The GLProgram to use for rendering
 	var program : GLProgram {get}
 	
+	/// Indicates if the render pass shall render to screen
+	/// or framebuffer
+	var renderToTexture : Bool {get set}
 	
-	/** 
-	Executes the render pass
+	/// If renderToTexture is true, than result is rendered to this
+	/// texture
+	var texture : GLTexture? {get}
 	
-	:param: camera The user camera that looks at the stage as it is shown on the real screen
-	:param: stage The stage on which the camera looks at
-	*/
 	func execute (camera: GLCamera, stage: GLStage)
 }

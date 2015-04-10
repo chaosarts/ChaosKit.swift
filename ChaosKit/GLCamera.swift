@@ -61,4 +61,13 @@ public class GLCamera {
 		self.projection = projection
 	}
 	
+	
+	public convenience init () {
+		self.init(projection: GLOrthographicProjection(viewVolume: GLViewVolume()))
+	}
+	
+	
+	public func lookAt (position: vec3) {
+		polar2cartesian(1, rotation.z * GLfloat(M_PI / 180.0), rotation.y * GLfloat(M_PI / 180.0))
+	}
 }
