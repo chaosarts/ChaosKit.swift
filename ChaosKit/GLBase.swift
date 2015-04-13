@@ -8,11 +8,22 @@
 
 import Foundation
 
+
+public protocol GLIdentifiable {
+	var id : GLuint {get}
+}
+
+public protocol GLBindable {
+	func bind ()
+	func unbind ()
+}
+
+
 /**
 This is the GLBase class for all OpenGL wrapper classes, which requires an id for
 gl...-Functions, like GLPrograms, GLShaders etc
 */
-public class GLBase: NSObject {
+public class GLBase: NSObject, GLIdentifiable {
 	
 	internal var _ivCache : [Int32 : GLint] = [Int32 : GLint]()
 	

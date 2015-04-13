@@ -9,47 +9,58 @@
 import Cocoa
 
 /** 
+This class models a camera for open gl to draw a stage
 */
 public class GLCamera {
 	
+	/// Caches the model view matrix
 	private var _cache : mat4?
 	
+	/// Contains the stage which the camera captures
+	public var stage : GLStage = GLStage()
+	
+	/// Contains the projection matrix of the camera
 	public var projection : GLCameraProjection
 	
-	public var position : vec3 = vec3() {
-		didSet {_cache = nil}
-	}
+	/// Contains the position of the camera
+	public var position : vec3 = vec3() {didSet {_cache = nil}}
 	
-	public var rotation : vec3 = vec3 () {
-		didSet {_cache = nil}
-	}
+	/// Provides the vector (global) in which the camera is directed
+	public var rotation : vec3 = vec3 () {didSet {_cache = nil}}
 	
+	/// Provides the vector (global) in which the camera is directed
+	public var direction : vec3 = vec3 () {didSet {_cache = nil}}
+	
+	/// Provides the up vector of the camera
+	public var up : vec3 = vec3(0, 1, 0) {didSet {_cache = nil}}
+	
+	/// Contains the x position of the camera
 	public var x : GLfloat {
 		get {return position.x}
 		set {position.x = newValue}
 	}
 	
+	/// Contains the y position of the camera
 	public var y : GLfloat {
 		get {return position.y}
 		set {position.y = newValue}
 	}
 	
+	/// Contains the z position of the camera
 	public var z : GLfloat {
 		get {return position.z}
 		set {position.z = newValue}
 	}
 	
-	public var projectionViewMatrix : mat4 {
-		get {return projection.viewMatrix}
-	}
-	
+	/// Provides the model view matrix generated according to position
+	/// and watch direction of the camera
 	public var modelViewMatrix : mat4 {
 		get {
 			if _cache == nil {
-				_cache = mat4.makeRotationX(rotation.x)
-				_cache!.rotateY(alpha: rotation.y)
-				_cache!.rotateZ(alpha: rotation.z)
-				_cache!.translate(position)
+				_cache = mat4.makeRotationX(-rotation.x)
+				_cache!.rotateY(alpha: -rotation.y)
+				_cache!.rotateZ(alpha: -rotation.z)
+				_cache!.translate(-position)
 			}
 			
 			return _cache!

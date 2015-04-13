@@ -8,31 +8,58 @@
 
 import Foundation
 
-public class GLFrameBuffer : GLBase {
+
+public protocol GLFrameBuffer {
+	var id : GLuint {get}
+	
+	var ptr : UnsafeMutablePointer<GLuint> {get}
+	
+	var texture : GLTexture {get}
+	
+	func texture (attachment: Int32, level: Int)
+}
+
+public class GLFrameBufferBase : GLBase {
 	
 	private var _ptr : UnsafeMutablePointer<GLuint>
 	
 	public var ptr : UnsafeMutablePointer<GLuint> {get {return _ptr}}
 	
-	public init () {
+	public var texture : GLTexture
+	
+	public let target : GLenum = GLenum(GL_FRAMEBUFFER)
+	
+	
+	public init (texture: GLTexture) {
+		self.texture = texture
+		
 		_ptr = UnsafeMutablePointer<GLuint>.alloc(1)
 		glGenFramebuffers(1, _ptr)
-		
 		super.init(id: _ptr.memory)
 	}
 	
 	
 	public func bind () {
-		glBindFramebuffer(GLenum(GL_FRAMEBUFFER), id)
+		glBindFramebuffer(target, id)
+		texture.bind()
 	}
 	
 	
 	public func unbind () {
-		glBindFramebuffer(GLenum(GL_FRAMEBUFFER), id)
+		glBindFramebuffer(target, id)
+		texture.unbind()
 	}
-	
-	
-	public func texture2d (texture: GLTexture2D, target: Int32, attachment: Int32, level: Int) {
-		glFramebufferTexture2D(GLenum(target), GLenum(attachment), texture.target, texture.id, GLint(level))
+}
+
+
+public class GLFrameBufferTexture1D : GLFrameBufferBase, GLFrameBuffer {
+	public func texture (attachment: Int32, level: Int) {
+		glFramebufferTexture1D(target, GLenum(attachment), texture.target, texture.id, GLint(level))
+	}
+}
+
+public class GLFrameBufferTexture2D : GLFrameBufferBase, GLFrameBuffer {
+	public func texture (attachment: Int32, level: Int) {
+		glFramebufferTexture2D(target, GLenum(attachment), texture.target, texture.id, GLint(level))
 	}
 }

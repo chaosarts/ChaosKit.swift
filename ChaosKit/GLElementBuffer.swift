@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class GLElementBuffer : GLBuffer {
+public class GLElementBuffer : GLBufferBase {
 	
 	/// Provides the indices data type
 	public var type : GLenum

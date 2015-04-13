@@ -24,7 +24,8 @@ public enum GLUniformAlias : String {
 	case SpecularLightIntensity = "SpecularLightIntensity"
 	case SpecularLightShininess = "SpecularLightShininess"
 	
-	case Texture = "Texture"
+	case ImageMap = "ImageMap"
+	case DiffuseMap = "DiffuseMap"
 	case ShadowMap = "ShadowMap"
 	case BumpMap = "BumpMap"
 	case DisplacementMap = "DisplacementMap"
@@ -50,7 +51,7 @@ public enum GLUniformAlias : String {
 		.SpecularLightIntensity,
 		.SpecularLightShininess,
 		
-		.Texture,
+		.ImageMap,
 		.ShadowMap,
 		.BumpMap,
 		.NormalMap,
