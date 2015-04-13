@@ -29,8 +29,7 @@ public class GLSphereShaper : GLShaper {
 	
 	public func form () -> GLShape {
 		var shape : GLShape = GLShape()
-		shape.setVertice(getVertice())
-		shape.setIndices(getIndices())
+		shape.extend(getVertice())
 		return shape
 	}
 	
@@ -42,12 +41,14 @@ public class GLSphereShaper : GLShaper {
 		for lat in 0..<grain {
 			for lng in 0..<grain {
 				var vertex : GLVertex = GLVertex()
+
 				var phi : GLfloat = GLfloat(lat) * steps
 				var rho : GLfloat = GLfloat(lng) * steps
-				vertex.position = polar2cartesian(radius, phi, rho)
-				vertex.color = getColor(phi: phi, rho: rho)
-				vertex.normal = vertex.position.normalized
-				vertex.texcoord = getTexCoord(phi: phi, rho: rho)
+
+				vertex[.Position] = GLVertexAttributeData<vec3>(polar2cartesian(radius, phi, rho))
+				vertex[.Color] = GLVertexAttributeData<vec4>(getColor(phi: phi, rho: rho))
+				vertex[.Normal] = GLVertexAttributeData<vec3>(vertex[.Position]!.array)
+				vertex[.TexCoord] = GLVertexAttributeData<vec2>(getTexCoord(phi: phi, rho: rho))
 				vertice.append(vertex)
 				
 				if lat == 0 || lat == grain {break}

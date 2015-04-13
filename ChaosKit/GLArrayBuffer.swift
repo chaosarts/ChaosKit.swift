@@ -9,7 +9,7 @@
 import Cocoa
 
 
-public class GLArrayBuffer : GLBuffer {
+public class GLArrayBuffer : GLBufferBase {
 	public init () {
 		super.init(target: GL_ARRAY_BUFFER)
 	}

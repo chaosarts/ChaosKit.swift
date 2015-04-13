@@ -11,7 +11,7 @@ import Foundation
 public protocol GLCameraProjection {
 	var viewMatrix : mat4 {get}
 	
-	var viewVolume : GLViewVolume {get}
+	var viewVolume : GLViewVolume {get set}
 }
 
 

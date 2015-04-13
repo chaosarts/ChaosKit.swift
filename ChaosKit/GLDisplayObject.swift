@@ -26,6 +26,14 @@ public class GLDisplayObject : NSObject {
 		didSet {_cache = nil}
 	}
 	
+	public var scale : vec3 = vec3 (1, 1, 1) {
+		didSet {_cache = nil}
+	}
+	
+	public var shear : vec3 = vec3 (0, 0, 0) {
+		didSet {_cache = nil}
+	}
+	
 	public var x : GLfloat {
 		get {return position.x}
 		set {position.x = newValue}

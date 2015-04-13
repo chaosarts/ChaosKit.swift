@@ -9,6 +9,36 @@
 import Cocoa
 
 
+public protocol GLBuffer: GLBindable {
+	/// Provides information about a block within the buffer
+	/// The blocks and the order in which, they are added, gives the buffer
+	/// information about how to buffer vertex data
+	var blocks : [GLBufferBlock] {get}
+	
+	/// The pointer to the non-zero buffer name
+	var ptr : UnsafeMutablePointer<GLuint> {get}
+	
+	/// Provides the buffer target sucha as GL_ARRAY_BUFFER
+	var target : GLenum {get}
+	
+	/// Contains the stride per vertex
+	var stride : GLsizei {get}
+	
+	/// Contains the count of vertices to draw
+	var count : GLsizei {get}
+	
+	/// Provides the usage of the buffer (GL_STATIC_DRAW)
+	var usage : GLenum {get}
+	
+	func bind ()
+	
+	func unbind ()
+	
+	func buffer (vertice: [GLVertex])
+	
+	func update (offset: Int, vertice: [GLVertex])
+}
+
 public struct GLBufferBlock {
 	
 	/// Contains the size of the block. Must be either 1, 2, 3 or 4
@@ -33,7 +63,7 @@ public struct GLBufferBlock {
 }
 
 
-public class GLBuffer : GLBase {
+public class GLBufferBase : GLBase {
 	
 	/// Provides information about a block within the buffer
 	/// The blocks and the order in which, they are added, gives the buffer 
@@ -83,19 +113,6 @@ public class GLBuffer : GLBase {
 		glGenBuffers(1, buffer)
 		ptr = buffer
 		super.init(id: ptr.memory)
-	}
-	
-	
-	///
-	public func draw (shape: GLShape, first: Int = 0) {
-		bind()
-		if GLenum(GL_ARRAY_BUFFER) == target {
-			glDrawArrays(shape.mode, GLint(first), count)
-		} else {
-			var indexlist : [Int] = shape.indices!
-			glDrawElements(shape.mode, count, GLenum(GL_UNSIGNED_BYTE), toUnsafeVoidPointer(indexlist))
-		}
-		unbind()
 	}
 	
 	
@@ -159,7 +176,7 @@ public class GLBuffer : GLBase {
 		var array : [GLfloat] = []
 		for vertex in vertice {
 			for block in _blocks {
-				array.extend(vertex[block.attribute].array)
+				array.extend(vertex[block.attribute]!.array)
 			}
 		}
 		
