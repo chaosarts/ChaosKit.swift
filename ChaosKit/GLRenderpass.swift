@@ -20,8 +20,20 @@ public protocol GLRenderpass {
 
 public class GLRenderpassBase {
 	
-	/// Contains the render pass config for clear
-	public var config : GLRenderpassConfig
+	/// Contains a capability map
+	private var _capabilities : [GLenum : Bool] = [GLenum : Bool]()
+	
+	/// Contains the bitfield for clearing the buffers
+	private var _clearBitMask : [Int32 : Bool] = [Int32 : Bool]()
+	
+	/// Contains the color, with which to clear
+	public var clearColor : RGBAColor = (0, 0, 0, 0)
+	
+	/// Contains the depth value to clear
+	public var clearDepth : Double = 1.0
+	
+	/// Contains the stencil value to clear
+	public var clearStencil : Int = 0
 	
 	/// The GLProgram to use for rendering
 	public var program : GLProgram
@@ -35,14 +47,9 @@ public class GLRenderpassBase {
 	
 	:param: program The program to use for this render pass
 	*/
-	public init (program: GLProgram, config: GLRenderpassConfig) {
+	public init (program: GLProgram) {
 		self.program = program
-		self.config = config
-	}
-	
-	
-	public convenience init (program: GLProgram) {
-		self.init(program: program, config: GLRenderpassConfig())
+		_configure()
 	}
 	
 	
@@ -51,23 +58,80 @@ public class GLRenderpassBase {
 	*/
 	public func render () {
 		program.use()
-		config.apply()
-		
-		var projectionVar : GLUniformVariable? = program[.ProjectionViewMatrix]
-		if projectionVar != nil {
-			glUniformMatrix4fv(GLint(projectionVar!.id), GLsizei(1), GLboolean(GL_FALSE), toUnsafePointer(camera.projection.viewMatrix.array))
+	}
+	
+	
+	/**
+	Enables clear masks
+	*/
+	public func enableClear (masks: Int32...) {
+		for mask in masks {
+			_clearBitMask[mask] = true
+		}
+	}
+	
+	
+	/**
+	Disables clear masks
+	*/
+	public func disableClear (masks: Int32...) {
+		for mask in masks {
+			_clearBitMask[mask] = false
+		}
+	}
+	
+	
+	/**
+	Enables a server-side GL capabilities
+	
+	:param: cap The capability name as Int32
+	*/
+	public func enableCapabilities (caps: Int32...) {
+		for cap in caps {
+			_capabilities[GLenum(cap)] = true
+		}
+	}
+	
+	
+	/**
+	Disables a server-side GL capabilities
+	
+	:param: cap The capability name as Int32
+	*/
+	public func disableCapabilities (caps: Int32...) {
+		for cap in caps {
+			_capabilities[GLenum(cap)] = false
+		}
+	}
+	
+	private func _configure () {
+		for name in _capabilities.keys {
+			var enabled : Bool = _capabilities[name]!
+			if enabled {glEnable(name)}
+			else {glDisable(name)}
 		}
 		
-		var children : CKQueue<GLDisplayObject> = CKQueue<GLDisplayObject>(camera.stage.children)
-		while !children.empty {
-			var child : GLDisplayObject = children.dequeue()!
-			if let container = child as? GLContainer {
-				children.enqueue(container.children)
-			}
-			
-			if let shape = child as? GLShape {
-				
-			}
+		
+		if _clearBitMask[GL_COLOR_BUFFER_BIT] != nil {
+			glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a)
 		}
+		
+		if _clearBitMask[GL_STENCIL_BUFFER_BIT] != nil {
+			glClearStencil(GLint(clearStencil))
+		}
+		
+		if _clearBitMask[GL_DEPTH_BUFFER_BIT] != nil {
+			glClearDepth(GLclampd(clearDepth))
+		}
+		
+		
+		var mask : Int32 = 0
+		for name in _clearBitMask.keys {
+			var enabled : Bool = _clearBitMask[name]!
+			if !enabled {continue}
+			mask = mask | name
+		}
+		
+		if mask != 0 {glClear(GLbitfield(mask))}
 	}
 }

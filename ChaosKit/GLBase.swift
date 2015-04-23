@@ -34,6 +34,34 @@ public class GLBase: NSObject, GLIdentifiable {
 	internal init (id: GLuint) {
 		self.id = id
 	}
+	
+	public func validateAction (funcname: String) {
+		var error : GLenum = glGetError()
+		
+		if error != GLenum(GL_NO_ERROR) {
+			
+			var classname : String = _stdlib_getDemangledTypeName(self)
+			var message : String = ""
+			
+			switch error {
+			case GLenum(GL_INVALID_ENUM):
+				message = "Invalid enum"
+			case GLenum(GL_INVALID_FRAMEBUFFER_OPERATION):
+				message = "Invalid framebuffer operation"
+			case GLenum(GL_INVALID_INDEX):
+				message = "Invalid index"
+			case GLenum(GL_INVALID_OPERATION):
+				message = "Invalid operation"
+			case GLenum(GL_INVALID_VALUE):
+				message = "Invalid value"
+			default:
+				message = "Something is invalid "
+			}
+			
+			message = message + " in class <" + self.className + "@" + funcname + ">"
+			warn(message)
+		}
+	}
 }
 
 

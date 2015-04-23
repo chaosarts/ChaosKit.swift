@@ -2,27 +2,27 @@
 //  GLVertexArray.swift
 //  ChaosKit
 //
-//  Created by Fu Lam Diep on 06.04.15.
+//  Created by Fu Lam Diep on 21.04.15.
 //  Copyright (c) 2015 Fu Lam Diep. All rights reserved.
 //
 
 import Foundation
 
-
-public class GLVertexArray : GLBase {
+public class GLVertexArray : GLBase, GLBindable {
 	
-	let ptr : UnsafeMutablePointer<GLuint>
+	public let ptr : UnsafeMutablePointer<GLuint>
 	
-	let buffer : GLBuffer
-	
-	public init (buffer: GLBuffer) {
+	public init () {
 		var vao : UnsafeMutablePointer<GLuint> = UnsafeMutablePointer<GLuint>.alloc(1)
 		glGenVertexArrays(1, vao)
 		ptr = vao
 		
-		self.buffer = buffer
+		super.init(id: ptr.memory)
+	}
+	
+	
+	public func draw () {
 		
-		super.init(id: vao.memory)
 	}
 	
 	
@@ -31,7 +31,7 @@ public class GLVertexArray : GLBase {
 	}
 	
 	
-	public func unbind () {
+	public func unbind() {
 		glBindVertexArray(0)
 	}
 }

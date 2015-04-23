@@ -17,12 +17,12 @@ public enum CKLogType : String {
 }
 
 
-public func log (message: String, type: CKLogType) {
+public func log (message: String, _ type: CKLogType = .Info) {
 	let date : NSDate = NSDate()
 	let calendar : NSCalendar = NSCalendar.currentCalendar()
 	let components : NSDateComponents = calendar.components(.CalendarUnitHour | .CalendarUnitMinute | .CalendarUnitSecond, fromDate: date)
-	let m : String = message + "\(components.hour):\(components.minute):\(components.second)"
-		+ " [\(type.rawValue)]: \(message) (in \(__FILE__), line \(__LINE__))"
+	let m : String = "\(components.hour):\(components.minute):\(components.second)"
+		+ " [\(type.rawValue)]: \(message)"
 	println(m)
 }
 

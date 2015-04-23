@@ -8,6 +8,29 @@
 
 import Cocoa
 
+internal class GLDisplayObjectManager {
+	
+	private static var instance : GLDisplayObjectManager?
+	
+	class func getInstance () -> GLDisplayObjectManager {
+		if instance == nil {
+			instance = GLDisplayObjectManager()
+		}
+		
+		return instance!
+	}
+	
+	private var _id : DisplayObjectID
+	
+	private init () {
+		_id = 0
+	}
+	
+	
+	func generateId () -> UInt32 {
+		return _id++
+	}
+}
 
 /**
 Base class for displayable objects. Does not implement the GLDisplayable
@@ -15,6 +38,8 @@ protocol, since it is 'abstract' and therefore it is unknown what to do in
 display method.
 */
 public class GLDisplayObject : NSObject {
+	
+	internal var _id : DisplayObjectID
 	
 	private var _cache : mat4?
 	
@@ -72,7 +97,16 @@ public class GLDisplayObject : NSObject {
 	}
 	
 	
-	public override init () {}
+	public var normalViewMatrix : mat4 {
+		get {
+			return modelViewMatrix
+		}
+	}
+	
+	
+	internal override init () {
+		_id = GLDisplayObjectManager.getInstance().generateId()
+	}
 	
 	
 	public func resetTransformation () {

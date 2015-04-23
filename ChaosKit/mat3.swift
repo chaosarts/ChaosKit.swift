@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct mat3 : QuadraticMatrixType {
+public struct mat3 : QuadraticMatrix {
 	
 	public static let rows : Int = 3
 	

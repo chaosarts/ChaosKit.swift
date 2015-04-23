@@ -51,7 +51,7 @@ public enum GLAttribAlias : String {
 |--------------------------------------------------------------------------
 */
 
-public struct GLAttribVariable {
+public struct GLAttribLocation {
 	
 	public let id : GLuint
 	

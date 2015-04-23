@@ -65,7 +65,7 @@ public class GLShader: GLBase {
 		for resource in resources {
 			var file : String? = bundle.pathForResource(resource, ofType: nil)
 			if nil == file {
-				println("GLShader resource \(file) not found.")
+				error("GLShader resource \(file) not found.")
 				continue
 			}
 			files.append(file!)
@@ -100,7 +100,7 @@ public class GLShader: GLBase {
 		
 		for file in files {
 			if !fileManager.fileExistsAtPath(file) {
-				println("GLShader file \(file) not found.")
+				error("GLShader file \(file) not found.")
 				continue
 			}
 			
@@ -153,8 +153,12 @@ public class GLShader: GLBase {
 		glShaderSource(id, GLsizei(1), cstrings, length)
 		glCompileShader(id)
 		
+		validateAction("setSources:\(__LINE__)")
+		
 		if (iv(GL_COMPILE_STATUS) != GL_TRUE) {
 			print(String.fromCString(infolog())!)
 		}
+		
+		
 	}
 }

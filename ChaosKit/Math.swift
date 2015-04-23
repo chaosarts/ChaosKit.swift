@@ -17,45 +17,28 @@ public func polar2cartesian (radius: GLfloat, theta: GLfloat, phi: GLfloat) -> v
 
 public protocol ArrayRepresentable {
 	static var byteSize : Int {get}
-	
 	var array : [GLfloat] {get}
-	
-	init ()
-
-	init (_ array: [GLfloat])
 }
 
 
 public protocol ListType : ArrayRepresentable, ArrayLiteralConvertible {
 	static var elementCount : Int {get}
-	
+	init (_ list: [GLfloat])
+	init ()
 }
 
 
-public protocol ArithmeticType {
-	prefix func - (l: Self) -> Self
-	func + (l: Self, r: Self) -> Self
-	func - (l: Self, r: Self) -> Self
-	func * (l: Self, r: GLfloat) -> Self
-	func * (l: GLfloat, r: Self) -> Self
-}
-
-
-public protocol MatrixType : ListType {	
+public protocol Matrix : ListType {	
 	static var rows : Int {get}
-	
 	static var cols : Int {get}
 }
 
 
-public protocol QuadraticMatrixType : MatrixType {
+public protocol QuadraticMatrix : Matrix {
 	var determinant : GLfloat {get}
 }
 
 
-public protocol VectorType : MatrixType {
-	
-	typealias Type = Self
-	
+public protocol Vector : Matrix {
 	var magnitude : GLfloat {get}
 }

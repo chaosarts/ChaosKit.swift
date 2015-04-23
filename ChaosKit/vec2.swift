@@ -9,7 +9,7 @@
 import Foundation
 
 
-public struct vec2 : VectorType {
+public struct vec2 : Vector {
 	
 	public static let rows : Int = 2
 	

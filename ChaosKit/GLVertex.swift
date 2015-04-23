@@ -12,6 +12,10 @@ import Foundation
 public struct GLVertex {
 	private var _attributes : [GLAttribAlias : GLVertexAttribute] = [GLAttribAlias : GLVertexAttribute]()
 	
+	public var attributes : [GLAttribAlias : GLVertexAttribute] {
+		get {return _attributes}
+	}
+	
 	public subscript (attribname: GLAttribAlias) -> GLVertexAttribute? {
 		get {return _attributes[attribname]}
 		set {_attributes[attribname] = newValue}
@@ -19,23 +23,15 @@ public struct GLVertex {
 }
 
 
-public protocol GLVertexAttribute {
-	var array : [GLfloat] {get}
-}
+extension GLVertex : Equatable {}
 
-
-public struct GLVertexAttributeData<T: VectorType> : GLVertexAttribute {
-
-	typealias Type = T
-
-	public let array : [GLfloat]
+public func == (l: GLVertex, r: GLVertex) -> Bool {
+	if l.attributes.keys.array.count != r.attributes.keys.array.count {return false}
 	
-	public init (_ vector: T) {
-		array = vector.array
+	for key in l.attributes.keys {
+		if r.attributes[key] == nil {return false}
+		if r.attributes[key]!.array != l.attributes[key]!.array {return false}
 	}
 	
-	
-	public init (_ data: [GLfloat]) {
-		array = T(data).array
-	}
+	return true
 }

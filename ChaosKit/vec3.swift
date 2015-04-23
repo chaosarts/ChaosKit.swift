@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct vec3 : VectorType {
+public struct vec3 : Vector {
 	public static let rows : Int = 3
 	
 	public static let cols : Int = 1

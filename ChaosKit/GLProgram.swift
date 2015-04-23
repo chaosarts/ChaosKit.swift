@@ -13,12 +13,12 @@ internal var _currentProgram : GLProgram?
 public final class GLProgram: GLBase {
 	
 	/// Provides a list of uniforms
-	private var _uniformvars : [String : GLUniformVariable] =
-		[String : GLUniformVariable]()
+	private var _uniformvars : [String : GLUniformLocation] =
+		[String : GLUniformLocation]()
 	
 	/// Provides the vertex attributes
-	private var _attribvars : [String : GLAttribVariable] =
-		[String : GLAttribVariable]()
+	private var _attribvars : [String : GLAttribLocation] =
+		[String : GLAttribLocation]()
 	
 	/// Contains a uniform alias to variable name map
 	private var _uniformaliases : [GLUniformAlias : String] = [GLUniformAlias : String]()
@@ -27,10 +27,10 @@ public final class GLProgram: GLBase {
 	private var _attribaliases : [GLAttribAlias : String] = [GLAttribAlias : String]()
 	
 	/// Provides the uniform
-	public var uniformvars : [GLUniformVariable] {get {return _uniformvars.values.array}}
+	public var uniformvars : [GLUniformLocation] {get {return _uniformvars.values.array}}
 	
 	/// Provides the uniform
-	public var attribvars : [GLAttribVariable] {get {return _attribvars.values.array}}
+	public var attribvars : [GLAttribLocation] {get {return _attribvars.values.array}}
 	
 	/// Provides all alias set for uniforms
 	public var uniformaliases : [GLUniformAlias] {get {return _uniformaliases.keys.array}}
@@ -52,9 +52,9 @@ public final class GLProgram: GLBase {
 	Subscript acces to associated attribute alias
 	
 	:param: alias The GLAttribAlias
-	:returns: Some GLAttribVariable object
+	:returns: Some GLAttribLocation object
 	*/
-	public subscript (alias: GLAttribAlias) -> GLAttribVariable? {
+	public subscript (alias: GLAttribAlias) -> GLAttribLocation? {
 		get {
 			if let varname = _attribaliases[alias] {return getAttribLocation(varname)}
 			return nil
@@ -66,9 +66,9 @@ public final class GLProgram: GLBase {
 	Subscript acces to associated attribute alias
 	
 	:param: alias The GLAttribAlias
-	:returns: Some GLAttribVariable object
+	:returns: Some GLAttribLocation object
 	*/
-	public subscript (alias: GLUniformAlias) -> GLUniformVariable? {
+	public subscript (alias: GLUniformAlias) -> GLUniformLocation? {
 		get {
 			if let varname = _uniformaliases[alias] {return getUniformLocation(varname)}
 			return nil
@@ -91,12 +91,9 @@ public final class GLProgram: GLBase {
 	:param: pname The paramater name to fetch the value
 	*/
 	public func iv (pname : Int32) -> GLint {
-		if _ivCache[pname] == nil {
-			var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
-			glGetProgramiv(id, GLenum(pname), param)
-			_ivCache[pname] = param.memory
-		}
-		return _ivCache[pname]!
+		var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		glGetProgramiv(id, GLenum(pname), param)
+		return param.memory
 	}
 	
 	
@@ -119,6 +116,7 @@ public final class GLProgram: GLBase {
 	*/
 	public func attach (shader s: GLShader) -> GLProgram {
 		glAttachShader(id, s.id)
+		validateAction("attach")
 		return self
 	}
 	
@@ -133,6 +131,8 @@ public final class GLProgram: GLBase {
 		if linked {return true}
 		
 		glLinkProgram(id)
+		validateAction("link")
+		
 		_attribvars.removeAll(keepCapacity: false)
 		_uniformvars.removeAll(keepCapacity: false)
 
@@ -150,6 +150,7 @@ public final class GLProgram: GLBase {
 		if !isCurrent {
 			_currentProgram = self
 			glUseProgram(id)
+			validateAction("use")
 		}
 		return true
 	}
@@ -159,24 +160,34 @@ public final class GLProgram: GLBase {
 	
 	:param: varname the variable name in the vertex shader
 	*/
-	public func getAttribLocation (varname: String) -> GLAttribVariable? {
+	public func getAttribLocation (varname: String) -> GLAttribLocation? {
 		if _attribvars[varname] != nil {return _attribvars[varname]}
 		
 		var location : GLint = glGetAttribLocation(id, varname)
-		if location < 0 {println("GLAttribute \(varname) not found in program."); return nil}
+		if location < 0 {warn("GLAttribute \(varname) not found in program."); return nil}
 		
 		var index : GLuint = GLuint(location)
 		var bufSize : GLsizei = GLsizei(iv(GL_ACTIVE_ATTRIBUTE_MAX_LENGTH))
-		let length : UnsafeMutablePointer<GLsizei> = UnsafeMutablePointer<GLsizei>.alloc(1)
-		let size : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
-		let type : UnsafeMutablePointer<GLenum> = UnsafeMutablePointer<GLenum>.alloc(1)
-		let name : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
+		var length : UnsafeMutablePointer<GLsizei> = UnsafeMutablePointer<GLsizei>.alloc(1)
+		var size : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		var type : UnsafeMutablePointer<GLenum> = UnsafeMutablePointer<GLenum>.alloc(1)
+		var name : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
 		
 		glGetActiveAttrib(id, index, bufSize, length, size, type, name)
+		validateAction("getAttribLocation")
 		
-		var attribvar : GLAttribVariable = GLAttribVariable(index: index, name: varname, type: type.memory, size: size.memory)
+		var attribvar : GLAttribLocation = GLAttribLocation(index: index, name: varname, type: type.memory, size: size.memory)
 		_attribvars[varname] = attribvar
 		return attribvar
+	}
+	
+	/**
+	Returns the attrib location by given alias
+	*/
+	public func getAttribLocation (alias: GLAttribAlias) -> GLAttribLocation? {
+		var varname : String? = _attribaliases[alias]
+		if varname == nil {return nil}
+		return getAttribLocation(varname!)
 	}
 	
 	
@@ -185,12 +196,27 @@ public final class GLProgram: GLBase {
 	
 	:param: varname the variable name in the shader program
 	*/
-	public func getUniformLocation (varname: String) -> GLUniformVariable? {
+	public func getUniformLocation (varname: String) -> GLUniformLocation? {
 		if _uniformvars[varname] != nil {return _uniformvars[varname]}
 		
 		var location : GLint = glGetUniformLocation(id, varname)
+		validateAction("getUniformLocation:\(__LINE__)")
 		if location < 0 {println("GLUniform \(varname) not found in program."); return nil}
 		
+		return getActiveUniform(location)
+	}
+	
+	/**
+	Shortcut for getUniformLocation with alias
+	*/
+	public func getUniformLocation (alias: GLUniformAlias) -> GLUniformLocation? {
+		var varname : String? = _uniformaliases[alias]
+		if varname == nil {return nil}
+		return getUniformLocation(varname!)
+	}
+	
+	
+	public func getActiveUniform (location: GLint) -> GLUniformLocation {
 		var index : GLuint = GLuint(location)
 		var bufSize : GLsizei = GLsizei(iv(GL_ACTIVE_UNIFORM_MAX_LENGTH))
 		var length : UnsafeMutablePointer<GLsizei> = UnsafeMutablePointer<GLsizei>.alloc(1)
@@ -199,8 +225,11 @@ public final class GLProgram: GLBase {
 		var name : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
 		
 		glGetActiveUniform(id, index, bufSize, length, size, type, name)
+		validateAction("getActiveUniform:\(__LINE__)")
 		
-		var uniformvar : GLUniformVariable = GLUniformVariable(index: index, name: varname, type: type.memory, size: size.memory)
+		var varname : String = String.fromCString(name)!
+		var uniformvar : GLUniformLocation = GLUniformLocation(index: index, name: varname, type: type.memory, size: size.memory)
+		
 		_uniformvars[varname] = uniformvar
 		return uniformvar
 	}
@@ -213,7 +242,7 @@ public final class GLProgram: GLBase {
 	:param: alias The symbolic alias
 	:param: varname The variablename
 	*/
-	public func setAttribAlias (alias: GLAttribAlias, varname: String) {
+	public func setAttribAlias (alias: GLAttribAlias, _ varname: String) {
 		_attribaliases[alias] = varname
 	}
 	
@@ -225,8 +254,18 @@ public final class GLProgram: GLBase {
 	:param: alias The symbolic alias
 	:param: varname The variablename
 	*/
-	public func setUniformAlias (alias: GLUniformAlias, varname: String) {
+	public func setUniformAlias (alias: GLUniformAlias, _ varname: String) {
 		_uniformaliases[alias] = varname
+	}
+	
+	
+	public func uniformMatrix4fv (location: GLint, _ count: Int, _ transpose: Bool, _ value: mat4) {
+		glUniformMatrix4fv(location, GLsizei(count), GLboolean(transpose ? GL_TRUE : GL_FALSE), toUnsafePointer(value.array))
+	}
+	
+	
+	public func uniformMatrix4fv (uniform: GLUniformLocation, _ count: Int, _ transpose: Bool, _ value: mat4) {
+		uniformMatrix4fv(GLint(uniform.id), count, transpose, value)
 	}
 }
 

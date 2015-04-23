@@ -10,6 +10,7 @@ import Cocoa
 
 
 public protocol GLBuffer: GLBindable {
+	
 	/// Provides information about a block within the buffer
 	/// The blocks and the order in which, they are added, gives the buffer
 	/// information about how to buffer vertex data
@@ -30,6 +31,8 @@ public protocol GLBuffer: GLBindable {
 	/// Provides the usage of the buffer (GL_STATIC_DRAW)
 	var usage : GLenum {get}
 	
+	func draw ()
+	
 	func bind ()
 	
 	func unbind ()
@@ -37,29 +40,8 @@ public protocol GLBuffer: GLBindable {
 	func buffer (vertice: [GLVertex])
 	
 	func update (offset: Int, vertice: [GLVertex])
-}
-
-public struct GLBufferBlock {
 	
-	/// Contains the size of the block. Must be either 1, 2, 3 or 4
-	public let size : GLint
-	
-	/// Provides the target with the buffered
-	public let attribute : GLAttribAlias
-	
-	/// Provides the offset of the buffer block
-	public var offset : GLint = 0
-	
-	/** 
-	Initializes the block
-	
-	:param: attribute The target symbol which represents an attribute in the shader
-	:param: size The size of the block per vertex. Mus be either 1, 2, 3 or 4
-	*/
-	public init (_ attribute: GLAttribAlias, _ size: Int) {
-		self.attribute = attribute
-		self.size = GLint(size)
-	}
+	func delete ()
 }
 
 
@@ -82,7 +64,7 @@ public class GLBufferBase : GLBase {
 	private var _locked : Bool = false
 	
 	/// Contains the pointer to the buffered data
-	private var _data : UnsafePointer<Void>?
+	private var _data : [GLfloat] = []
 	
 	/// Provides information about a block within the buffer
 	/// The blocks and the order in which, they are added, gives the buffer
@@ -102,7 +84,7 @@ public class GLBufferBase : GLBase {
 	public var count : GLsizei {get {return GLsizei(_count)}}
 	
 	/// Provides the usage of the buffer
-	public var usage : GLenum = GLenum (GL_STATIC_DRAW)
+	public var usage : GLenum = GLenum (GL_DYNAMIC_DRAW)
 
 	
 	/// Initializes the buffer
@@ -138,6 +120,10 @@ public class GLBufferBase : GLBase {
 	public func addBlock (block: GLBufferBlock) {
 		if _locked {return}
 		
+		if blocks.count > 1 {
+			usage = GLenum(GL_STATIC_DRAW)
+		}
+		
 		// Workaround to modify parameter
 		var b = block
 		b.offset = GLint(_stride)
@@ -153,11 +139,10 @@ public class GLBufferBase : GLBase {
 		_locked = true
 		_count = vertice.count
 		
-		var array : [GLfloat] = interleave(vertice)
-		_data = toUnsafeVoidPointer(array)
+		_data = interleave(vertice)
 		
 		bind()
-		glBufferData(target, sizeof(GLfloat) * array.count, _data!, usage)
+		glBufferData(target, sizeof(GLfloat) * _data.count, _data, usage)
 		unbind()
 	}
 	
@@ -181,5 +166,10 @@ public class GLBufferBase : GLBase {
 		}
 		
 		return array
+	}
+	
+	
+	public func delete () {
+		glDeleteBuffers(1, ptr)
 	}
 }

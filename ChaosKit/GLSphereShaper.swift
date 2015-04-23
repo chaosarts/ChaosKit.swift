@@ -29,12 +29,29 @@ public class GLSphereShaper : GLShaper {
 	
 	public func form () -> GLShape {
 		var shape : GLShape = GLShape()
-		shape.extend(getVertice())
+		
+		var steps : GLfloat = GLfloat(M_2_PI) / GLfloat(grain - 1)
+		
+		for lat in 0..<grain {
+			for lng in 0..<grain {
+				var vertex : GLVertex = GLVertex()
+				
+				var phi : GLfloat = GLfloat(lat) * steps
+				var rho : GLfloat = GLfloat(lng) * steps
+				
+				var position : vec3 = polar2cartesian(radius, phi, rho)
+				shape.color = getColor(phi: phi, rho: rho)
+				shape.createVertex(position: position, normal: position.normalized)
+				
+				if lat == 0 || lat == grain {break}
+			}
+		}
+		
 		return shape
 	}
 	
 	
-	private func getVertice () -> [GLVertex]{
+	private func createVertice () -> [GLVertex]{
 		var vertice : [GLVertex] = []
 		var steps : GLfloat = GLfloat(M_2_PI) / GLfloat(grain - 1)
 		

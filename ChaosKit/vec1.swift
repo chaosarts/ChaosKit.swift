@@ -10,7 +10,7 @@ import Foundation
 
 public typealias scalar = vec1
 
-public struct vec1 : VectorType {
+public struct vec1 : Vector {
 	
 	public static let rows : Int = 1
 	

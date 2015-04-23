@@ -52,3 +52,5 @@ public let GL_TEXTURES : [Int32] = [
 	GL_TEXTURE30,
 	GL_TEXTURE31
 ]
+
+public typealias DisplayObjectID = UInt32

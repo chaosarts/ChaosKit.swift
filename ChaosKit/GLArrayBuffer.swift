@@ -9,8 +9,16 @@
 import Cocoa
 
 
-public class GLArrayBuffer : GLBufferBase {
+public class GLArrayBuffer {
+	
+	private var _static : GLVertexBuffer?
+	
+	private var _dynamic : [GLBuffer] = []
+	
 	public init () {
-		super.init(target: GL_ARRAY_BUFFER)
+	}
+	
+	public func draw (program p: GLProgram) {
+
 	}
 }

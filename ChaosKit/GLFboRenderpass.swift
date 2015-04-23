@@ -8,19 +8,19 @@
 
 import Foundation
 
-
-public class GLFboRenderpass : GLRenderpassBase, GLRenderpass {
-	
-	public var texture : GLTexture
-	
-	public var framebuffer : GLFrameBuffer
-	
-	public init (program: GLProgram, texture: GLTexture) {
-		self.texture = texture
-	}
-	
-	
-	public override func render() {
-		
-	}
-}
+//
+//public class GLFboRenderpass : GLRenderpassBase, GLRenderpass {
+//	
+//	public var texture : GLTexture
+//	
+//	public var framebuffer : GLFrameBuffer
+//	
+//	public init (program: GLProgram, texture: GLTexture) {
+//		self.texture = texture
+//	}
+//	
+//	
+//	public override func render() {
+//		
+//	}
+//}

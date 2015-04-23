@@ -11,24 +11,27 @@ import Foundation
 
 public struct GLBufferConfig {
 	
-	private var _blocks : [GLBufferBlock]
+	private var _interleavedBlocks : [GLBufferBlock] = []
 	
-	private var _stride : GLsizei = 0
+	private var _separatedBlocks : [GLBufferBlock] = []
 	
-	public var stride : GLsizei {get {return _stride}}
+	private var _stride : GLint
 	
-	public var usage : GLenum = GLenum(GL_STATIC_DRAW)
+	public var stride : GLint {get{return _stride}}
 	
-	public var count : Int {get {return _blocks.count}}
+	public var interleavedBlocks : [GLBufferBlock] {get {return _interleavedBlocks}}
 	
-	public subscript (index: Int) -> GLBufferBlock {
-		get {return _blocks[index]}
-	}
+	public var separatedBlocks : [GLBufferBlock] {get {return _separatedBlocks}}
 	
-	
-	public mutating func append (inout block: GLBufferBlock) {
-		block.offset = GLint(stride)
-		_stride += GLsizei(block.size)
-		_blocks.append(block)
+	public mutating func addBlock (block: GLBufferBlock, interleave: Bool = true) {
+		var b : GLBufferBlock = block
+		if interleave {
+			b.offset = _stride
+			_stride += b.size
+			_interleavedBlocks.append(b)
+		}
+		else {
+			_separatedBlocks.append(block)
+		}
 	}
 }

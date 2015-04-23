@@ -64,7 +64,7 @@ public enum GLUniformAlias : String {
 }
 
 
-public struct GLUniformVariable {
+public struct GLUniformLocation {
 	
 	public let id : GLuint
 	
