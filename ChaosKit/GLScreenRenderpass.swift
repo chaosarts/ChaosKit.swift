@@ -9,6 +9,6 @@
 import Foundation
 
 
-public class GLScreenRenderpass : GLRenderpassBase, GLRenderpass {
+public class GLScreenRenderpass : GLRenderpassBase {
 	
 }

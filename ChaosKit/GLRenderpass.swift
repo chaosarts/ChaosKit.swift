@@ -49,7 +49,7 @@ public class GLRenderpassBase {
 	*/
 	public init (program: GLProgram) {
 		self.program = program
-		_configure()
+		_prepare()
 	}
 	
 	
@@ -104,7 +104,7 @@ public class GLRenderpassBase {
 		}
 	}
 	
-	private func _configure () {
+	private func _prepare () {
 		for name in _capabilities.keys {
 			var enabled : Bool = _capabilities[name]!
 			if enabled {glEnable(name)}

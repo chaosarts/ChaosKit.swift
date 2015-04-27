@@ -259,6 +259,18 @@ public final class GLProgram: GLBase {
 	}
 	
 	
+	public func enableVertexAttribArray (index: GLuint) {
+		glEnableVertexAttribArray(index)
+	}
+	
+	
+	public func enableVertexAttribArray (alias: GLAttribAlias) {
+		var attriblocation : GLAttribLocation? = getAttribLocation(alias)
+		if attriblocation == nil {return}
+		glEnableVertexAttribArray(attriblocation!.id)
+	}
+	
+	
 	public func uniformMatrix4fv (location: GLint, _ count: Int, _ transpose: Bool, _ value: mat4) {
 		glUniformMatrix4fv(location, GLsizei(count), GLboolean(transpose ? GL_TRUE : GL_FALSE), toUnsafePointer(value.array))
 	}

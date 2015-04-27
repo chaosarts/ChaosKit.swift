@@ -35,7 +35,7 @@ public enum GLUniformAlias : String {
 	case GlowMap = "GlowMap"
 	case EnviromentMap = "EnviromentMap"
 	
-	static let cases : [GLUniformAlias] = [
+	public static let cases : [GLUniformAlias] = [
 		.ModelViewMatrix,
 		.ProjectionViewMatrix,
 		

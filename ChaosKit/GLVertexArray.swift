@@ -21,8 +21,10 @@ public class GLVertexArray : GLBase, GLBindable {
 	}
 	
 	
-	public func draw () {
-		
+	public func attribPointer (index: GLuint, block: GLBufferBlock) {
+		var pointer : UnsafeMutablePointer<UnsafeMutablePointer<Void>> = UnsafeMutablePointer<UnsafeMutablePointer<Void>>.alloc(1)
+		glGetVertexAttribPointerv(index, GLenum(GL_VERTEX_ATTRIB_ARRAY_POINTER), pointer)
+		glVertexAttribPointer(index, block.size, GLenum(GL_FLOAT), GLboolean(GL_TRUE), block.stride, pointer.memory)
 	}
 	
 	

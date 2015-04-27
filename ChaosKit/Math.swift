@@ -16,12 +16,11 @@ public func polar2cartesian (radius: GLfloat, theta: GLfloat, phi: GLfloat) -> v
 
 
 public protocol ArrayRepresentable {
-	static var byteSize : Int {get}
 	var array : [GLfloat] {get}
 }
 
 
-public protocol ListType : ArrayRepresentable, ArrayLiteralConvertible {
+public protocol ListType : ArrayRepresentable {
 	static var elementCount : Int {get}
 	init (_ list: [GLfloat])
 	init ()

@@ -8,7 +8,7 @@
 
 import Cocoa
 
-public class GLLight {
+public class GLLight : GLDisplayObject {
 	
 	public var color : vec3
 	
@@ -21,29 +21,9 @@ public class GLLight {
 	}
 	
 	
-	public convenience init () {
+	public convenience override init () {
 		self.init(color: [255, 255, 255], intensity: 1)
 	}
-}
-
-
-public class GLDiffuselight : GLLight {
-	
-	public var position : vec3
-	
-	public init (position p: vec3, color c: vec3, intensity i: GLfloat) {
-		position = c
-		super.init(color: c, intensity: i)
-	}
-	
-	public convenience init () {
-		self.init(position: [0, 0, 0], color: [255, 255, 255], intensity: 1)
-	}
-}
-
-
-public class GLSpecularlight : GLDisplayObject {
-	
 }
 
 

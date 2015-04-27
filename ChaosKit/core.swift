@@ -10,6 +10,24 @@ import Foundation
 
 prefix operator * {}
 
+/**
+Cases to indicate how to fetch an attribute value for an index, which is not
+between 0 and the the count of vertices in an vertex attribute object
+*/
+public enum CKIndexWrapType {	
+	/// Indicates to use modulo
+	case Repeat
+}
+
+/// Type alias for a function to
+public typealias CKIndexWrapper = (index: Int, min: Int, max: Int) -> Int
+
+func repeatIndex (index: Int, min: Int, max: Int) -> Int {
+	var count : Int = max + 1
+	return index < 0 ? count + (index % count) : index % count
+}
+
+
 public enum CKLogType : String {
 	case Info = "Info"
 	case Warning = "Warning"

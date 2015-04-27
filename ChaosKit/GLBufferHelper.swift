@@ -1,5 +1,5 @@
 //
-//  GLBuffer.swift
+//  GLBufferHelper.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 23.04.15.
@@ -8,6 +8,9 @@
 
 import Foundation
 
-public class GLBufferBase {
-
+public class GLBufferHelper {
+	
+	public init () {
+		
+	}
 }

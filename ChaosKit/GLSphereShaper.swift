@@ -34,45 +34,20 @@ public class GLSphereShaper : GLShaper {
 		
 		for lat in 0..<grain {
 			for lng in 0..<grain {
-				var vertex : GLVertex = GLVertex()
-				
 				var phi : GLfloat = GLfloat(lat) * steps
 				var rho : GLfloat = GLfloat(lng) * steps
 				
 				var position : vec3 = polar2cartesian(radius, phi, rho)
 				shape.color = getColor(phi: phi, rho: rho)
-				shape.createVertex(position: position, normal: position.normalized)
+				shape.normal = position.normalized
+				
+				shape.createVertex(position)
 				
 				if lat == 0 || lat == grain {break}
 			}
 		}
 		
 		return shape
-	}
-	
-	
-	private func createVertice () -> [GLVertex]{
-		var vertice : [GLVertex] = []
-		var steps : GLfloat = GLfloat(M_2_PI) / GLfloat(grain - 1)
-		
-		for lat in 0..<grain {
-			for lng in 0..<grain {
-				var vertex : GLVertex = GLVertex()
-
-				var phi : GLfloat = GLfloat(lat) * steps
-				var rho : GLfloat = GLfloat(lng) * steps
-
-				vertex[.Position] = GLVertexAttributeData<vec3>(polar2cartesian(radius, phi, rho))
-				vertex[.Color] = GLVertexAttributeData<vec4>(getColor(phi: phi, rho: rho))
-				vertex[.Normal] = GLVertexAttributeData<vec3>(vertex[.Position]!.array)
-				vertex[.TexCoord] = GLVertexAttributeData<vec2>(getTexCoord(phi: phi, rho: rho))
-				vertice.append(vertex)
-				
-				if lat == 0 || lat == grain {break}
-			}
-		}
-		
-		return vertice
 	}
 	
 	

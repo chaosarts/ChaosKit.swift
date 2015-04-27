@@ -10,27 +10,28 @@ import Cocoa
 import OpenGL
 
 /**
-The base class for a 3d object in open gl
+The base class for a 3d object in OpenGL. A shape is described by different 
+types of attributes (Position, Color, Normals) as lists of vectors contained 
+in corresponding GLVertexAttribute objects.
 */
 public class GLShape : GLDisplayObject {
 	
 	// STORED VALUES
 	// *************
 	
-	/// Provides the vertice of the shape
-	private var _vertice : [GLVertex] = []
+	/// Provides a attribute-alias-attribute-map
+	private var _attributes : [GLAttribAlias : GLVertexAttribute] = [GLAttribAlias : GLVertexAttribute]()
 	
-	/// Contains the color to use for next vertex to create
+	/// indexWrapper functions for the attributes values in case
+	/// their values count won't match the position count
+	private var _indexWrappers : [GLAttribAlias : CKIndexWrapper] = [GLAttribAlias : CKIndexWrapper]()
+	
+	/// Provides the color to use for next vertex, if provided
 	private var _color : vec4?
 	
-	/// Indicates if the shape has already been buffered or not
-	private var _buffered : Bool = false
-	
-	/// Provides the buffers of this shape
-	private var _buffers : [GLBuffer] = [] {
-		didSet {_buffered = false}
-	}
-	
+	/// Provides the normal to use for next vertex, if provided
+	private var _normal : vec3?
+
 	/// The draw mode of the shape
 	public var mode : GLenum = GLenum(GL_TRIANGLES)
 	
@@ -38,60 +39,71 @@ public class GLShape : GLDisplayObject {
 	// DERIVED VALUES
 	// **************
 	
-	/// Color to use for next vertex
+	/// Provides the color to use for next vertex
 	public var color : vec4? {
 		get {return _color}
-		set {if vertice.count == 0 || newValue != nil {_color = newValue}}
+		set {if !canSetForAlias(.Color) || newValue == nil {return}}
 	}
 	
-	/// Provides the vertice of the shape
-	public var vertice : [GLVertex] {
-		get {return _vertice}
-	}
-	
-	
-	/// Provide the buffers of this shape
-	public var buffers : [GLBuffer] {
-		get {compile(); return _buffers}
-		set {_buffers = newValue}
+	/// Provides the normal to use for next vertex, if provided
+	public var normal : vec3? {
+		get {return _normal}
+		set {if !canSetForAlias(.Normal) && newValue != nil {_normal = newValue}}
 	}
 	
 	// SUBSCRIPTS 
 	// **********
-	
-	/// Access to a single vertex of the shape
-	public subscript (index: Int) -> GLVertex? {
-		get {return _vertice[index]}
-	}
-	
-	
+
 	/** Initialzes the Shape */
-	public override init () {}
-	
-	
-	/**
-	Creates a new vertex of the shape at given position with given normal
-	
-	:param: position The position of the vertex
-	:param: normal The normal at this vertex position
-	*/
-	public func createVertex (position p: vec3, normal n: vec3) {
-		var vertex : GLVertex = GLVertex()
-		vertex[.Position] = GLVertexAttributeData<vec3>(p)
-		vertex[.Normal] = GLVertexAttributeData<vec3>(n)
+	public override init () {
+		super.init()
+		_attributes[.Position] = GLVertexAttributeArray<vec3>()
 		
-		if color != nil {
-			vertex[.Color] = GLVertexAttributeData<vec4>(color!)
+		_attributes[.Color] = GLVertexAttributeArray<vec4>()
+		_indexWrappers[.Color] = repeatIndex
+		
+		_attributes[.Normal] = GLVertexAttributeArray<vec3>()
+		_indexWrappers[.Normal] = repeatIndex
+	}
+	
+	
+	public func createVertex (position: vec3) {
+		_attributes[.Position]!.append(position.array)
+		
+		if canSetForAlias(.Color) && _color != nil {
+			_attributes[.Color]!.append(_color!.array)
+		}
+		
+		if canSetForAlias(.Normal) && _normal != nil {
+			_attributes[.Normal]!.append(_normal!.array)
 		}
 	}
 	
 	
-	private func compile () {
-		if _buffered {return}
+	public func getColor (index: Int) -> [GLfloat] {
+		var attribute : GLVertexAttribute = _attributes[.Color]!
+		if attribute.count == 0 {return []}
+
+		var wrapper : CKIndexWrapper = _indexWrappers[.Color]!
+		var newindex : Int = wrapper(index: index, min: 0, max: attribute.count - 1)
 		
-		for buffer in _buffers {
-			buffer.buffer(vertice)
-		}
+		return attribute[newindex]
+	}
+	
+	
+	public func getNormal (index: Int) -> [GLfloat] {
+		var attribute : GLVertexAttribute = _attributes[.Normal]!
+		if attribute.count == 0 {return []}
+		
+		var wrapper : CKIndexWrapper = _indexWrappers[.Normal]!
+		var newindex : Int = wrapper(index: index, min: 0, max: attribute.count - 1)
+		
+		return attribute[newindex]
+	}
+	
+	
+	private func canSetForAlias (alias: GLAttribAlias) -> Bool {
+		return _attributes[alias] != nil && _attributes[alias]!.count == _attributes[.Position]!.count
 	}
 }
 
