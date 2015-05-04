@@ -13,30 +13,22 @@ internal var _currentProgram : GLProgram?
 public final class GLProgram: GLBase {
 	
 	/// Provides a list of uniforms
-	private var _uniformvars : [String : GLUniformLocation] =
-		[String : GLUniformLocation]()
+	private var _uniformvars : [String : GLUniformLocation] = [String : GLUniformLocation]()
 	
 	/// Provides the vertex attributes
-	private var _attribvars : [String : GLAttribLocation] =
-		[String : GLAttribLocation]()
+	private var _attribvars : [String : GLAttribLocation] = [String : GLAttribLocation]()
 	
 	/// Contains a uniform alias to variable name map
-	private var _uniformaliases : [GLUniformAlias : String] = [GLUniformAlias : String]()
+	private var _uniformaliasmap : [String : String] = [String : String]()
 	
 	/// Contains a attribute alias to variable name map
-	private var _attribaliases : [GLAttribAlias : String] = [GLAttribAlias : String]()
+	private var _attribaliasmap : [String : String] = [String : String]()
 	
 	/// Provides the uniform
 	public var uniformvars : [GLUniformLocation] {get {return _uniformvars.values.array}}
 	
 	/// Provides the uniform
 	public var attribvars : [GLAttribLocation] {get {return _attribvars.values.array}}
-	
-	/// Provides all alias set for uniforms
-	public var uniformaliases : [GLUniformAlias] {get {return _uniformaliases.keys.array}}
-	
-	/// Provides all alias set for attributes aliases
-	public var attribaliases : [GLAttribAlias] {get {return _attribaliases.keys.array}}
 	
 	/// Determines whether the program is valid or not
 	public var valid : Bool {get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS) == GL_TRUE}}
@@ -56,7 +48,7 @@ public final class GLProgram: GLBase {
 	*/
 	public subscript (alias: GLAttribAlias) -> GLAttribLocation? {
 		get {
-			if let varname = _attribaliases[alias] {return getAttribLocation(varname)}
+			if let varname = _attribaliasmap[alias.rawValue] {return getAttribLocation(varname)}
 			return nil
 		}
 	}
@@ -70,7 +62,7 @@ public final class GLProgram: GLBase {
 	*/
 	public subscript (alias: GLUniformAlias) -> GLUniformLocation? {
 		get {
-			if let varname = _uniformaliases[alias] {return getUniformLocation(varname)}
+			if let varname = _uniformaliasmap[alias.rawValue] {return getUniformLocation(varname)}
 			return nil
 		}
 	}
@@ -185,7 +177,7 @@ public final class GLProgram: GLBase {
 	Returns the attrib location by given alias
 	*/
 	public func getAttribLocation (alias: GLAttribAlias) -> GLAttribLocation? {
-		var varname : String? = _attribaliases[alias]
+		var varname : String? = _attribaliasmap[alias.rawValue]
 		if varname == nil {return nil}
 		return getAttribLocation(varname!)
 	}
@@ -210,7 +202,7 @@ public final class GLProgram: GLBase {
 	Shortcut for getUniformLocation with alias
 	*/
 	public func getUniformLocation (alias: GLUniformAlias) -> GLUniformLocation? {
-		var varname : String? = _uniformaliases[alias]
+		var varname : String? = _uniformaliasmap[alias.rawValue]
 		if varname == nil {return nil}
 		return getUniformLocation(varname!)
 	}
@@ -243,7 +235,19 @@ public final class GLProgram: GLBase {
 	:param: varname The variablename
 	*/
 	public func setAttribAlias (alias: GLAttribAlias, _ varname: String) {
-		_attribaliases[alias] = varname
+		setAttribAlias(alias.rawValue, varname)
+	}
+	
+	
+	/**
+	Sets an attribute alias to grant access to variables in a shader without knowing the
+	concrete name of it
+	
+	:param: alias The symbolic alias
+	:param: varname The variablename
+	*/
+	public func setAttribAlias (alias: String, _ varname: String) {
+		_attribaliasmap[alias] = varname
 	}
 	
 	
@@ -255,29 +259,19 @@ public final class GLProgram: GLBase {
 	:param: varname The variablename
 	*/
 	public func setUniformAlias (alias: GLUniformAlias, _ varname: String) {
-		_uniformaliases[alias] = varname
+		setUniformAlias(alias.rawValue, varname)
 	}
 	
 	
-	public func enableVertexAttribArray (index: GLuint) {
-		glEnableVertexAttribArray(index)
-	}
+	/**
+	Sets an uniform alias to grant access to variables in a shader without knowing the
+	concrete name of it
 	
-	
-	public func enableVertexAttribArray (alias: GLAttribAlias) {
-		var attriblocation : GLAttribLocation? = getAttribLocation(alias)
-		if attriblocation == nil {return}
-		glEnableVertexAttribArray(attriblocation!.id)
-	}
-	
-	
-	public func uniformMatrix4fv (location: GLint, _ count: Int, _ transpose: Bool, _ value: mat4) {
-		glUniformMatrix4fv(location, GLsizei(count), GLboolean(transpose ? GL_TRUE : GL_FALSE), toUnsafePointer(value.array))
-	}
-	
-	
-	public func uniformMatrix4fv (uniform: GLUniformLocation, _ count: Int, _ transpose: Bool, _ value: mat4) {
-		uniformMatrix4fv(GLint(uniform.id), count, transpose, value)
+	:param: alias The symbolic alias
+	:param: varname The variablename
+	*/
+	public func setUniformAlias (alias: String, _ varname: String) {
+		_uniformaliasmap[alias] = varname
 	}
 }
 
