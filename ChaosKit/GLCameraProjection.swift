@@ -8,25 +8,43 @@
 
 import Foundation
 
+/**
+Protocol for camera projection
+*/
 public protocol GLCameraProjection {
+	
+	/// Provides the projection view matrix
 	var viewMatrix : mat4 {get}
 	
+	/// Provides the view volume of the camera
 	var viewVolume : GLViewVolume {get set}
 }
 
 
+/** 
+Struct that represents orthographic projection
+*/
 public struct GLOrthographicProjection : GLCameraProjection {
 	
+	/// Provides the projection view matrix
 	private var _viewMatrix : mat4
 	
+	/// Provides the projection view matrix
 	public var viewMatrix : mat4 {get {return _viewMatrix}}
 	
+	/// Provides the view volume of the camera
 	public var viewVolume : GLViewVolume {
 		didSet {
 			_viewMatrix = mat4.makeOrtho(left: viewVolume.left, right: viewVolume.right, bottom: viewVolume.bottom, top: viewVolume.top, near: viewVolume.near, far: viewVolume.far)
 		}
 	}
 	
+	
+	/**
+	Initializes the projection with given view volume
+	
+	:param: viewVolume The view colume object
+	*/
 	public init (viewVolume: GLViewVolume) {
 		_viewMatrix = mat4.identity
 		self.viewVolume = viewVolume
@@ -34,17 +52,30 @@ public struct GLOrthographicProjection : GLCameraProjection {
 }
 
 
+/**
+Struct that represents perspective projection
+*/
 public struct GLPerspectiveProjection : GLCameraProjection {
+	
+	/// Provides the projection view matrix
 	private var _viewMatrix : mat4
 	
+	/// Provides the projection view matrix
 	public var viewMatrix : mat4 {get {return _viewMatrix}}
 	
+	/// Provides the view volume of the camera
 	public var viewVolume : GLViewVolume {
 		didSet {
 			_viewMatrix = mat4.makeFrustum(left: viewVolume.left, right: viewVolume.right, bottom: viewVolume.bottom, top: viewVolume.top, near: viewVolume.near, far: viewVolume.far)
 		}
 	}
 	
+	
+	/**
+	Initializes the projection with given view volume
+	
+	:param: viewVolume The view colume object
+	*/
 	public init (viewVolume: GLViewVolume) {
 		_viewMatrix = mat4.identity
 		self.viewVolume = viewVolume
