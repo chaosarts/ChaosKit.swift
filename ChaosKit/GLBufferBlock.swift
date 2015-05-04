@@ -9,13 +9,15 @@
 import Foundation
 
 /**
+Sturct that hold data for a block within a buffer to serve information
+to glVertexAttribPointer()
 */
 public struct GLBufferBlock {
 	
 	/// Contains the size of the block. Must be either 1, 2, 3 or 4
 	public let size : GLint
 	
-	/// Contains the data type of the data set
+	/// Contains the data type of the data set (GL_FLOAT)
 	public let type : GLenum
 	
 	/// Indicates if containing data is normalized or not
@@ -27,13 +29,16 @@ public struct GLBufferBlock {
 	/// Provides the offset of the buffer block in bytes
 	public let offset : GLint
 	
+	public let attribute : GLAttribAlias
+	
 	/**
 	Initializes the block
 	
 	:param: attribute The target symbol which represents an attribute in the shader
 	:param: size The size of the block per vertex. Mus be either 1, 2, 3 or 4
 	*/
-	public init (_ size: Int, _ type : Int32, _ normalized: Bool, _ stride: Int, _ offset: Int) {
+	public init (_ attribute: GLAttribAlias, _ size: Int, _ type : Int32, _ normalized: Bool, _ stride: Int, _ offset: Int) {
+		self.attribute = attribute
 		self.size = GLint(size)
 		self.type = GLenum(type)
 		self.normalized = GLboolean(normalized ? GL_TRUE : GL_FALSE)
