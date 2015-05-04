@@ -25,7 +25,7 @@ public class GLCamera {
 	/// Contains the position of the camera
 	public var position : vec3 = vec3() {didSet {_cache = nil}}
 	
-	/// Provides the vector (global) in which the camera is directed
+	/// Contains the rotation
 	public var rotation : vec3 = vec3 () {didSet {_cache = nil}}
 	
 	/// Provides the vector (global) in which the camera is directed
