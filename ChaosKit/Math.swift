@@ -8,12 +8,54 @@
 
 import Foundation
 
+/*
+|--------------------------------------------------------------------------
+| Operators
+|--------------------------------------------------------------------------
+*/
+
 infix operator • {}
 
+/*
+|--------------------------------------------------------------------------
+| Functions
+|--------------------------------------------------------------------------
+*/
+
+/**
+Converts polar to cartesian coordinates
+
+:param: radius The radius of the sphere
+:param: theta The angel between the vector and the y-axis
+:param: phi The angel between the vector and the x-axis
+*/
 public func polar2cartesian (radius: GLfloat, theta: GLfloat, phi: GLfloat) -> vec3 {
 	return vec3(radius * sin(theta) * sin(phi), radius * cos(theta), radius * sin(theta) * cos(phi))
 }
 
+
+/** 
+Converts cartesian coordinates into polar coordinates around the zero vector
+*/
+public func cartesian2polar (position: vec3) -> (radius: GLfloat, theta: GLfloat, phi: GLfloat) {
+	var radius : GLfloat = position.magnitude
+	var theta : GLfloat = GLfloat(M_PI / 2) - atan(position.z / sqrt(position.x * position.x + position.y * position.y))
+	var phi : GLfloat = atan2(position.x, position.y)
+	
+	return (radius, theta, phi)
+}
+
+
+public func restrict<C: Comparable> (value: C, minValue: C, maxValue: C) -> C {
+	return max(minValue, min(maxValue, value))
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Protocols
+|--------------------------------------------------------------------------
+*/
 
 public protocol ArrayRepresentable {
 	var array : [GLfloat] {get}
@@ -40,4 +82,6 @@ public protocol QuadraticMatrix : Matrix {
 
 public protocol Vector : Matrix {
 	var magnitude : GLfloat {get}
+//	subscript (index: Int) -> GLfloat {get}
+//	init<T: Vector> (_ vec: T)
 }
