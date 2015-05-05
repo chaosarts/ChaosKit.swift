@@ -13,8 +13,6 @@ public protocol GLRenderpass {
 	/// The GLProgram to use for rendering
 	var program : GLProgram {get set}
 	
-	var config : GLRenderpassConfig {get set}
-	
 	var camera : GLCamera {get set}
 }
 
