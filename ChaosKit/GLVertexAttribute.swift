@@ -29,7 +29,7 @@ public protocol GLVertexAttribute {
 	*/
 	subscript (index: Int) -> [GLfloat] {get set}
 	
-	mutating func append(data: [GLfloat])
+	mutating func append (data: [GLfloat])
 }
 
 
@@ -56,6 +56,14 @@ public struct GLVertexAttributeArray<T: Vector> : GLVertexAttribute {
 	public subscript (index: Int) -> [GLfloat] {
 		get {return values[index].array}
 		set {values[index] = T(newValue)}
+	}
+	
+	
+	public init () {}
+	
+	
+	public mutating func append(data: T) {
+		values.append(data)
 	}
 	
 	
