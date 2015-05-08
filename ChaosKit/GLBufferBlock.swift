@@ -27,7 +27,7 @@ public struct GLBufferBlock {
 	public let stride : GLint
 	
 	/// Provides the offset of the buffer block in bytes
-	public let offset : GLint
+	public let offset : Int
 	
 	public let attribute : GLAttribAlias
 	
@@ -43,6 +43,6 @@ public struct GLBufferBlock {
 		self.type = GLenum(type)
 		self.normalized = GLboolean(normalized ? GL_TRUE : GL_FALSE)
 		self.stride = GLint(stride)
-		self.offset = GLint(offset)
+		self.offset = offset
 	}
 }
