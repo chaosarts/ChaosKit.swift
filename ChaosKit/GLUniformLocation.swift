@@ -74,16 +74,9 @@ public struct GLUniformLocation {
 	/// The name of the uniform variable within the program
 	public let name : String
 	
-	/// The type of the uniform
-	public let type : GLenum
-	
-	public let size : GLint
-	
-	public init (index: GLuint, name: String, type: GLenum, size: GLint) {
+	public init (index: GLuint, name: String) {
 		self.id = index
 		self.name = name
-		self.type = type
-		self.size = size
 	}
 
 	
