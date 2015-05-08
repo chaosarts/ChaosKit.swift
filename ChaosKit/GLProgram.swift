@@ -158,17 +158,11 @@ public final class GLProgram: GLBase {
 		var location : GLint = glGetAttribLocation(id, varname)
 		if location < 0 {warn("GLAttribute \(varname) not found in program."); return nil}
 		
-		var index : GLuint = GLuint(location)
-		var bufSize : GLsizei = GLsizei(iv(GL_ACTIVE_ATTRIBUTE_MAX_LENGTH))
-		var length : UnsafeMutablePointer<GLsizei> = UnsafeMutablePointer<GLsizei>.alloc(1)
-		var size : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
-		var type : UnsafeMutablePointer<GLenum> = UnsafeMutablePointer<GLenum>.alloc(1)
-		var name : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
+		var pointer : UnsafeMutablePointer<UnsafeMutablePointer<Void>> = UnsafeMutablePointer<UnsafeMutablePointer<Void>>.alloc(1)
+		glGetVertexAttribPointerv(GLuint(location), GLenum(GL_VERTEX_ATTRIB_ARRAY_POINTER), pointer)
 		
-		glGetActiveAttrib(id, index, bufSize, length, size, type, name)
-		validateAction("getAttribLocation")
+		var attribvar : GLAttribLocation = GLAttribLocation(index: GLuint(location), name: varname, pointer: pointer.memory)
 		
-		var attribvar : GLAttribLocation = GLAttribLocation(index: index, name: varname, type: type.memory, size: size.memory)
 		_attribvars[varname] = attribvar
 		return attribvar
 	}
@@ -192,10 +186,12 @@ public final class GLProgram: GLBase {
 		if _uniformvars[varname] != nil {return _uniformvars[varname]}
 		
 		var location : GLint = glGetUniformLocation(id, varname)
-		validateAction("getUniformLocation:\(__LINE__)")
 		if location < 0 {println("GLUniform \(varname) not found in program."); return nil}
 		
-		return getActiveUniform(location)
+		var uniformvar : GLUniformLocation = GLUniformLocation(index: GLuint(location), name: varname)
+		_uniformvars[varname] = uniformvar
+		
+		return uniformvar
 	}
 	
 	/**
@@ -205,25 +201,6 @@ public final class GLProgram: GLBase {
 		var varname : String? = _uniformaliasmap[alias.rawValue]
 		if varname == nil {return nil}
 		return getUniformLocation(varname!)
-	}
-	
-	
-	public func getActiveUniform (location: GLint) -> GLUniformLocation {
-		var index : GLuint = GLuint(location)
-		var bufSize : GLsizei = GLsizei(iv(GL_ACTIVE_UNIFORM_MAX_LENGTH))
-		var length : UnsafeMutablePointer<GLsizei> = UnsafeMutablePointer<GLsizei>.alloc(1)
-		var size : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
-		var type : UnsafeMutablePointer<GLenum> = UnsafeMutablePointer<GLenum>.alloc(1)
-		var name : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(1)
-		
-		glGetActiveUniform(id, index, bufSize, length, size, type, name)
-		validateAction("getActiveUniform:\(__LINE__)")
-		
-		var varname : String = String.fromCString(name)!
-		var uniformvar : GLUniformLocation = GLUniformLocation(index: index, name: varname, type: type.memory, size: size.memory)
-		
-		_uniformvars[varname] = uniformvar
-		return uniformvar
 	}
 	
 	
