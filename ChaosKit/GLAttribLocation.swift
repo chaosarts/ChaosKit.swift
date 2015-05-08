@@ -52,17 +52,15 @@ public enum GLAttribAlias : String {
 
 public struct GLAttribLocation {
 	
+	private let ptr : UnsafeMutablePointer<Void>
+	
 	/// The representative attribute location
 	public let id : GLuint
 	
 	/// The variable name of the attribute
 	public let name : String
 	
-	/// The glsl data type of the attribute
-	public let type : GLenum
 	
-	/// The size of the attribute
-	public let size : GLint
 	
 	/**
 	Initializes the attribute location
@@ -72,11 +70,10 @@ public struct GLAttribLocation {
 	:param: type The glsl data type
 	:param: size The size of the variable
 	*/
-	public init (index: GLuint, name: String, type: GLenum, size: GLint) {
+	public init (index: GLuint, name: String, pointer: UnsafeMutablePointer<Void>) {
 		self.id = index
 		self.name = name
-		self.type = type
-		self.size = size
+		self.ptr = pointer
 	}
 	
 	
@@ -96,10 +93,19 @@ public struct GLAttribLocation {
 	
 	:return: The pointer to the attribute
 	*/
-	public func getVertexAttribPointer () -> UnsafeMutablePointer<Void> {
-		var pointer : UnsafeMutablePointer<UnsafeMutablePointer<Void>> = UnsafeMutablePointer<UnsafeMutablePointer<Void>>.alloc(1)
-		glGetVertexAttribPointerv(id, GLenum(GL_VERTEX_ATTRIB_ARRAY_POINTER), pointer)
-		return pointer.memory
+	public mutating func getVertexAttribPointer () -> UnsafeMutablePointer<Void> {
+		return ptr
+	}
+	
+	
+	/**
+	Shortcut for glVertexAttribPointer
+	
+	:param: block The buffer block that holds the information for the attribute within the accroding buffer
+	*/
+	public func setVertexAttribPointer (block: GLBufferBlock, pointer: UnsafeMutablePointer<Void>) {
+		var floatSize : Int = sizeof(GLfloat)
+		setVertexAttribPointer(block.size, block.type, block.normalized, GLsizei(floatSize) * block.stride, pointer)
 	}
 	
 	
@@ -108,22 +114,9 @@ public struct GLAttribLocation {
 	
 	:param: block The buffer block that holds the information for the attribute within the accroding buffer
 	*/
-	public func setVertexAttribPointer (block: GLBufferBlock) {
-		setVertexAttribPointer(block.size, block.type, block.normalized, block.stride)
-	}
-	
-	
-	/**
-	Shortcut for glVertexAttribPointer
-	
-	:param: size The size of the attribute value per vertex in the buffer
-	:param: type The data type of an element of an attribute values
-	:param: normalized
-	:param: stride
-	*/
-	public func setVertexAttribPointer (size: GLint, _ type: GLenum, _ normalized: GLboolean, _ stride: GLsizei) {
-		var pointer : UnsafeMutablePointer<Void> = getVertexAttribPointer()
-		setVertexAttribPointer(size, type, normalized, stride, pointer)
+	public mutating func setVertexAttribPointer (block: GLBufferBlock) {
+		var floatSize : Int = sizeof(GLfloat)
+		setVertexAttribPointer(block, pointer: ptr.advancedBy(floatSize * block.offset))
 	}
 	
 	
