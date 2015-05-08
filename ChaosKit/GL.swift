@@ -54,3 +54,35 @@ public let GL_TEXTURES : [Int32] = [
 ]
 
 public typealias DisplayObjectID = UInt32
+
+
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Functions
+|--------------------------------------------------------------------------
+*/
+
+public func toUnsafePointer<T> (value: [T]) -> UnsafePointer<T> {
+	var mptr : UnsafeMutablePointer<T> = UnsafeMutablePointer<T>.alloc(value.count)
+	mptr.initializeFrom(value)
+	var ptr = UnsafePointer<T>(mptr)
+	return ptr
+}
+
+public func toUnsafePointer<T>(value: T) -> UnsafePointer<T> {
+	var ptr : UnsafeMutablePointer<T> = UnsafeMutablePointer<T>.alloc(1)
+	ptr.initialize(value)
+	return UnsafePointer<T>(ptr)
+}
+
+
+public func toUnsafeVoidPointer<T> (value: T) -> UnsafePointer<Void> {
+	return UnsafePointer<Void>(toUnsafePointer(T))
+}
+
+public func toUnsafeVoidPointer<T> (value: [T]) -> UnsafePointer<Void> {
+	return UnsafePointer<Void>(toUnsafePointer([T]))
+}
