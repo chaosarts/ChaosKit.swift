@@ -30,6 +30,11 @@ public class GLBuffer {
 	/// Contains the usage of the buffer
 	private var _usage : GLenum
 	
+	/// Provides the target of the buffer. This is used for glBindBuffer or glBufferData
+	private var _target : GLenum
+	
+	private lazy var _bindingPname : Int32 = self._target == GLenum(GL_ARRAY_BUFFER) ? GL_ARRAY_BUFFER_BINDING : GL_ELEMENT_ARRAY_BUFFER_BINDING
+	
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -49,6 +54,12 @@ public class GLBuffer {
 	/// Provides the usage of this buffer (GL_STATIC_DRAW, GL_DYNMAIC_DRAW)
 	public var usage : GLenum {get {return _usage}}
 	
+	/// Provides the target of the buffer. This is used for glBindBuffer or glBufferData
+	public var target : GLenum {get {return _target}}
+	
+	/// Indicates if the buffer is bound or not
+	public var bound : Bool {get {return GLuint(GLBase.getIntegerv(_bindingPname)) == name}}
+
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -56,17 +67,31 @@ public class GLBuffer {
 	|--------------------------------------------------------------------------
 	*/
 	
+	
+	/** 
+	Initalizes the buffer
+	*/
+	public init (target: GLenum, usage: GLenum, blocks: [GLBufferBlock] = []) {
+		_target = target
+		_usage = usage
+		_blocks = blocks
+		_bindingPname = target == GLenum(GL_ARRAY_BUFFER) ? GL_ARRAY_BUFFER_BINDING : GL_ELEMENT_ARRAY_BUFFER_BINDING
+		glGenBuffers(1, _ptr)
+	}
+	
+	
 	/**
 	Initilaizes the data buffer
 	
 	:param: usage The usage of this buffer (GL_STATIC_DRAW, GL_DYNAMIC_DRAW)
 	*/
-	public init (usage: Int32, blocks: [GLBufferBlock]) {
-		_usage = GLenum(usage)
-		_blocks = blocks
-		glGenBuffers(1, _ptr)
+	public convenience init (target: Int32, usage: Int32, blocks: [GLBufferBlock] = []) {
+		self.init(target: GLenum(target), usage: GLenum(usage), blocks: blocks)
 	}
 	
+	public convenience init (blocks: [GLBufferBlock] = []) {
+		self.init(target: GLenum(GL_ARRAY_BUFFER), usage: GLenum(GL_STATIC_DRAW), blocks: blocks)
+	}
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -74,24 +99,23 @@ public class GLBuffer {
 	|--------------------------------------------------------------------------
 	*/
 	
+	
+	public func iv (pname: Int32) -> GLint {
+		var params : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		glGetBufferParameteriv(target, GLenum(pname), params)
+		return params.memory
+	}
+	
 	/**
 	Buffers the buffer to the targeted buffer
 	
 	:param: target The targeted buffer (GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER)
 	:param: data The data to buffer
 	*/
-	public func buffer (target: Int32, _ data: [GLfloat]) {
-		buffer(GLenum(target), data)
-	}
-	
-	
-	public func buffer (target: GLenum, _ data: [GLfloat]) {
-		bind(target)
+	public func buffer (data: [GLfloat]) {
 		_count = data.count
 		glBufferData(target, data.count * sizeof(GLfloat), data, usage)
-		unbind(target)
 	}
-	
 	
 	/**
 	Updates sub data in the buffer
@@ -99,21 +123,8 @@ public class GLBuffer {
 	:param: target The targeted buffer type
 	:param: data The sub data to buffer
 	*/
-	public func update (target: Int32, data: [GLfloat], offset: Int) {
-		update(GLenum(target), data: data, offset: offset)
-	}
-	
-	
-	/**
-	Updates sub data in the buffer
-	
-	:param: target The targeted buffer type
-	:param: data The sub data to buffer
-	*/
-	public func update (target: GLenum, data: [GLfloat], offset: Int) {
-		bind(target)
+	public func update (data: [GLfloat], offset: Int) {
 		glBufferSubData(target, GLintptr(offset) , data.count * sizeof(GLfloat), data)
-		unbind(target)
 	}
 	
 	
@@ -122,28 +133,8 @@ public class GLBuffer {
 	
 	:param: target The targeted buffer
  	*/
-	public func bind (target: Int32) {
-		bind(GLenum(target))
-	}
-	
-	
-	/**
-	Binds the buffer with passed target
-	
-	:param: target The targeted buffer
-	*/
-	public func bind (target: GLenum) {
+	public func bind () {
 		glBindBuffer(target, name)
-	}
-	
-
-	/**
-	Binds the buffer with passed target
-	
-	:param: target The targeted buffer
-	*/
-	public func unbind (target: Int32) {
-		unbind(GLenum(target))
 	}
 	
 	
@@ -152,7 +143,7 @@ public class GLBuffer {
 	
 	:param: target
 	*/
-	public func unbind (target: GLenum) {
+	public func unbind () {
 		glBindBuffer(target, 0)
 	}
 	
