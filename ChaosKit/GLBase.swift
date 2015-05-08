@@ -35,6 +35,82 @@ public class GLBase: NSObject, GLIdentifiable {
 		self.id = id
 	}
 	
+	
+	/** 
+	Return the value or values of a selected parameter 
+	
+	:param: pname The name of the paramater to get
+	*/
+	public class func getBooleanv (pname: Int32) -> GLboolean {
+		var params : UnsafeMutablePointer<GLboolean> = UnsafeMutablePointer<GLboolean>.alloc(1)
+		glGetBooleanv(GLenum(pname), params)
+		return params.memory
+	}
+	
+	
+	/**
+	Return the value or values of a selected parameter
+	
+	:param: pname The name of the paramater to get
+	*/
+	public class func getBool (pname: Int32) -> Bool {
+		return getBooleanv(pname) == GLboolean(GL_TRUE)
+	}
+	
+	
+	/**
+	Return the value or values of a selected parameter
+	
+	:param: pname The name of the paramater to get
+	*/
+	public class func getDoublev (pname: Int32) -> GLdouble {
+		var params : UnsafeMutablePointer<GLdouble> = UnsafeMutablePointer<GLdouble>.alloc(1)
+		glGetDoublev(GLenum(pname), params)
+		return params.memory
+	}
+	
+	
+	/**
+	Return the value or values of a selected parameter
+	
+	:param: pname The name of the paramater to get
+	*/
+	public class func getFloatv (pname: Int32) -> GLfloat {
+		var params : UnsafeMutablePointer<GLfloat> = UnsafeMutablePointer<GLfloat>.alloc(1)
+		glGetFloatv(GLenum(pname), params)
+		return params.memory
+	}
+	
+	
+	/**
+	Return the value or values of a selected parameter
+	
+	:param: pname The name of the paramater to get
+	*/
+	public class func getIntegerv (pname: Int32) -> GLint {
+		var params : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		glGetIntegerv(GLenum(pname), params)
+		return params.memory
+	}
+	
+	
+	/**
+	Return the value or values of a selected parameter
+	
+	:param: pname The name of the paramater to get
+	*/
+	public class func getInteger64v (pname: Int32) -> GLint64 {
+		var params : UnsafeMutablePointer<GLint64> = UnsafeMutablePointer<GLint64>.alloc(1)
+		glGetInteger64v(GLenum(pname), params)
+		return params.memory
+	}
+	
+	
+	/**
+	Return the value or values of a selected parameter
+	
+	:param: pname The name of the paramater to get
+	*/
 	public func validateAction (funcname: String) {
 		var error : GLenum = glGetError()
 		
@@ -92,35 +168,6 @@ public protocol Rotateable {
 
 public protocol Orientable {
 	var orientation : vec3 {get}
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-*/
-
-public func toUnsafePointer<T> (value: [T]) -> UnsafePointer<T> {
-	var mptr : UnsafeMutablePointer<T> = UnsafeMutablePointer<T>.alloc(value.count)
-	mptr.initializeFrom(value)
-	var ptr = UnsafePointer<T>(mptr)
-	return ptr
-}
-
-public func toUnsafePointer<T>(value: T) -> UnsafePointer<T> {
-	var ptr : UnsafeMutablePointer<T> = UnsafeMutablePointer<T>.alloc(1)
-	ptr.initialize(value)
-	return UnsafePointer<T>(ptr)
-}
-
-
-public func toUnsafeVoidPointer<T> (value: T) -> UnsafePointer<Void> {
-	return UnsafePointer<Void>(toUnsafePointer(T))
-}
-
-public func toUnsafeVoidPointer<T> (value: [T]) -> UnsafePointer<Void> {
-	return UnsafePointer<Void>(toUnsafePointer([T]))
 }
 
 
