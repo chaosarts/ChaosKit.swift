@@ -60,6 +60,8 @@ public class GLContainer: GLDisplayObject {
 	Adds a new child to the container 
 	*/
 	public func addChild (child: GLDisplayObject) {
+		if isAncestor(child) {return println("Ancestor cannot be child of its own descendants.")}
+		
 		child.parent = self
 		if stage != nil {child.stage = stage}
 		
@@ -117,5 +119,20 @@ public class GLContainer: GLDisplayObject {
 				_lightCache!.extend(container.lights)
 			}
 		}
+	}
+	
+	
+	public func isAncestor (displayObject: GLDisplayObject) -> Bool {
+		var queue : CKQueue<GLDisplayObject> = CKQueue<GLDisplayObject>(children)
+		while !queue.empty {
+			var child : GLDisplayObject = queue.dequeue()!
+			if let container = child as? GLContainer {
+				if container ===  displayObject {return true}
+				queue.enqueue(container.children)
+			}
+			
+			if child === displayObject {return true}
+		}
+		return false
 	}
 }
