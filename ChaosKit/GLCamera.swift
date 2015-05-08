@@ -57,9 +57,9 @@ public class GLCamera {
 	public var modelViewMatrix : mat4 {
 		get {
 			if _cache == nil {
-				_cache = mat4.makeRotationX(-rotation.x)
-				_cache!.rotateY(alpha: -rotation.y)
-				_cache!.rotateZ(alpha: -rotation.z)
+				_cache = mat4.makeRotationX(deg: -rotation.x)
+				_cache!.rotateY(deg: -rotation.y)
+				_cache!.rotateZ(deg: -rotation.z)
 				_cache!.translate(-position)
 			}
 			
