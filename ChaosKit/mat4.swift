@@ -88,11 +88,12 @@ public struct mat4 : QuadraticMatrix {
 		}
 		
 		set {
-		assert(valid(index), "Invalid mat4 index access.")
-		_mat[index * 4] = newValue.x
-		_mat[index * 4 + 1] = newValue.y
-		_mat[index * 4 + 2] = newValue.z
-		_mat[index * 4 + 3] = newValue.w
+			assert(valid(index), "Invalid mat4 index access.")
+			var i : Int = index * 4
+			_mat[i] = newValue.x
+			_mat[i + 1] = newValue.y
+			_mat[i + 2] = newValue.z
+			_mat[i + 3] = newValue.w
 		}
 	}
 	
@@ -142,8 +143,19 @@ public struct mat4 : QuadraticMatrix {
 	:param: alpha The angle to rotate about
 	:param: vec The axis to rotate around
 	*/
-	mutating public func rotate (alpha a: GLfloat, vec: vec3) {
-		rotate(alpha: a, x: vec.x, y: vec.y, z: vec.z)
+	mutating public func rotate (deg degree: GLfloat, vec: vec3) {
+		rotate(deg: degree, x: vec.x, y: vec.y, z: vec.z)
+	}
+	
+	
+	/**
+	Rotates the matrix around an arbitrary axis, given by vec
+	
+	:param: alpha The angle to rotate about
+	:param: vec The axis to rotate around
+	*/
+	mutating public func rotate (rad radian: GLfloat, vec: vec3) {
+		rotate(rad: radian, x: vec.x, y: vec.y, z: vec.z)
 	}
 	
 	
@@ -153,28 +165,41 @@ public struct mat4 : QuadraticMatrix {
 	:param: alpha The angle to rotate about
 	:param: vec The axis to rotate around
 	*/
-	mutating public func rotate (alpha a: GLfloat, x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) {
+	mutating public func rotate (deg degree: GLfloat, x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) {
+		let radian : GLfloat = degree * GLfloat(M_PI / 180.0)
+		rotate(rad: radian, x: dx, y: dy, z: dz)
+	}
+	
+	
+	/**
+	Rotates the matrix around an arbitrary axis, given by the vector components
+	
+	:param: alpha The angle to rotate about
+	:param: vec The axis to rotate around
+	*/
+	mutating public func rotate (rad radian: GLfloat, x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) {
 		var m00 = _mat[0], m10 = _mat[1], m20 = _mat[2], m30 = _mat[3]
 		var m01 = _mat[4], m11 = _mat[5], m21 = _mat[6], m31 = _mat[7]
 		var m02 = _mat[8], m12 = _mat[9], m22 = _mat[10], m32 = _mat[11]
 		var m03 = _mat[12], m13 = _mat[13], m23 = _mat[14], m33 = _mat[15]
-			
-		var cosAngle = cos(a)
-		var sinAngle = sin(a)
+		
+		var cosAngle = cos(radian)
+		var sinAngle = sin(radian)
 		var diffCosAngle = 1 - cosAngle
+		
 		var r00 = dx * dx * diffCosAngle + cosAngle
 		var r10 = dx * dy * diffCosAngle + dz * sinAngle
 		var r20 = dx * dz * diffCosAngle - dy * sinAngle
-			
+		
 		var r01 = dx * dy * diffCosAngle - dz * sinAngle
 		var r11 = dy * dy * diffCosAngle + cosAngle
 		var r21 = dy * dz * diffCosAngle + dx * sinAngle
-			
+		
 		var r02 = dx * dz * diffCosAngle + dy * sinAngle
 		var r12 = dy * dz * diffCosAngle - dx * sinAngle
 		var r22 = dz * dz * diffCosAngle + cosAngle
-			
-
+		
+		
 		_mat[0]  = m00 * r00 + m01 * r10 + m02 * r20
 		_mat[1]  = m10 * r00 + m11 * r10 + m12 * r20
 		_mat[2]  = m20 * r00 + m21 * r10 + m22 * r20
@@ -184,12 +209,12 @@ public struct mat4 : QuadraticMatrix {
 		_mat[5]  = m10 * r01 + m11 * r11 + m12 * r21
 		_mat[6]  = m20 * r01 + m21 * r11 + m22 * r21
 		_mat[7]  = m30 * r01 + m31 * r11 + m32 * r21
-
+		
 		_mat[8]  = m00 * r02 + m01 * r12 + m02 * r22
 		_mat[9]  = m10 * r02 + m11 * r12 + m12 * r22
 		_mat[10] = m20 * r02 + m21 * r12 + m22 * r22
 		_mat[11] = m30 * r02 + m31 * r12 + m32 * r22
-
+		
 		_mat[12] = m03
 		_mat[13] = m13
 		_mat[14] = m23
@@ -202,13 +227,24 @@ public struct mat4 : QuadraticMatrix {
 	
 	:param: alpha The angle
 	*/
-	mutating public func rotateX (alpha a: GLfloat) {
+	mutating public func rotateX (deg degree: GLfloat) {
+		let rad : GLfloat = degree * GLfloat(M_PI / 180.0)
+		rotateX(rad: rad)
+	}
+	
+	
+	/**
+	Rotates the matrix around the x axis
+	
+	:param: alpha The angle
+	*/
+	mutating public func rotateX (rad radian: GLfloat) {
 		var m01 = _mat[4], m11 = _mat[5], m21 = _mat[6], m31 = _mat[7]
 		var m02 = _mat[8], m12 = _mat[9], m22 = _mat[10], m32 = _mat[11]
-			
-		var c = cos(a)
-		var s = sin(a)
-			
+		
+		var c = cos(radian)
+		var s = sin(radian)
+		
 		_mat[4] = m01 * c + m02 * s
 		_mat[5] = m11 * c + m12 * s
 		_mat[6] = m21 * c + m22 * s
@@ -220,6 +256,12 @@ public struct mat4 : QuadraticMatrix {
 	}
 	
 	
+	mutating public func rotateY (deg degree: GLfloat) {
+		let rad : GLfloat = degree * GLfloat(M_PI / 180.0)
+		rotateY(rad: rad)
+	}
+	
+	
 	/**
 	Rotates the matrix around the y axis
 	
@@ -228,12 +270,13 @@ public struct mat4 : QuadraticMatrix {
 	:param: y Component of the rotation vector
 	:param: z Component of the rotation vector
 	*/
-	mutating public func rotateY (alpha a: GLfloat) {
+	mutating public func rotateY (rad radian: GLfloat) {
+		
 		let m00 = _mat[0], m10 = _mat[4], m20 = _mat[8], m30 = _mat[12]
 		let m02 = _mat[2], m12 = _mat[6], m22 = _mat[10], m32 = _mat[14]
 		
-		let c = cos(a)
-		let s = sin(a)
+		let c = cos(radian)
+		let s = sin(radian)
 		
 		_mat[0] = m00 * c + m02 * -s
 		_mat[4] = m10 * c + m12 * -s
@@ -249,14 +292,24 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Rotates the matrix around the z axis
 	
-	:param: alpha The angle
+	:param: deg The angle in degrees
 	*/
-	mutating public func rotateZ (alpha a: GLfloat) {
+	mutating public func rotateZ (deg degree: GLfloat) {
+		let rad : GLfloat = degree * GLfloat(M_PI / 180.0)
+		rotateZ(rad: rad)
+	}
+	
+	/**
+	Rotates the matrix around the z axis
+	
+	:param: rad The angle in radians
+	*/
+	mutating public func rotateZ (rad radian: GLfloat) {
 		let m00 = _mat[0], m10 = _mat[4], m20 = _mat[8], m30 = _mat[12]
 		let m01 = _mat[1], m11 = _mat[5], m21 = _mat[7], m31 = _mat[13]
 		
-		let c = cos(a)
-		let s = sin(a)
+		let c = cos(radian)
+		let s = sin(radian)
 		
 		_mat[0] = m00 * c + m01 * s
 		_mat[4] = m10 * c + m11 * s
@@ -303,8 +356,7 @@ public struct mat4 : QuadraticMatrix {
 		let bw : GLfloat = _mat[7] * dy
 		let cw : GLfloat = _mat[11] * dz + _mat[15]
 		
-		var m = self
-		m[col: 3] = vec4(ax + bx + cx, ay + by + cy, az + bz + cz, aw + bw + cw)
+		self[col: 3] = vec4(ax + bx + cx, ay + by + cy, az + bz + cz, aw + bw + cw)
 	}
 	
 	
@@ -401,9 +453,15 @@ extension mat4 {
 	:param: alpha The rotation angle
 	:returns: The rotation matrix
 	*/
-	public static func makeRotationX (alpha: GLfloat) -> mat4 {
-		let cosine = cos(alpha)
-		let sinus = sin(alpha)
+	public static func makeRotationX (deg degree: GLfloat) -> mat4 {
+		let radian : GLfloat = degree * GLfloat(M_PI / 180)
+		return makeRotationX(rad: radian)
+	}
+	
+	
+	public static func makeRotationX (rad radian: GLfloat) -> mat4 {
+		let cosine = cos(radian)
+		let sinus = sin(radian)
 		
 		return [
 			1.0, 0.0, 0.0, 0.0,
@@ -421,9 +479,9 @@ extension mat4 {
 	:param: alpha The rotation angle
 	:returns: The rotation matrix
 	*/
-	public static func makeRotationY (alpha: GLfloat) -> mat4 {
-		let cosine = cos(alpha)
-		let sinus = sin(alpha)
+	public static func makeRotationY (rad radian: GLfloat) -> mat4 {
+		let cosine = cos(radian)
+		let sinus = sin(radian)
 		return [
 			cosine, 0.0, -sinus, 0.0,
 			0.0, 1.0, 0.0, 0.0,
@@ -439,9 +497,9 @@ extension mat4 {
 	:param: alpha The rotation angle
 	:returns: The rotation matrix
 	*/
-	public static func makeRotationZ (alpha: GLfloat) -> mat4 {
-		let cosine = cos(alpha)
-		let sinus = sin(alpha)
+	public static func makeRotationZ (rad radian: GLfloat) -> mat4 {
+		let cosine = cos(radian)
+		let sinus = sin(radian)
 		return [
 			cosine, sinus, 0.0, 0.0,
 			-sinus, cosine, 0.0, 0.0,
