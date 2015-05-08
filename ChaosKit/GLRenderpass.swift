@@ -19,19 +19,10 @@ public protocol GLRenderpass {
 public class GLRenderpassBase {
 	
 	/// Contains a capability map
-	private var _capabilities : [GLenum : Bool] = [GLenum : Bool]()
+	private var _capabilities : [GLenum : GLCapability] = [GLenum : GLCapability]()
 	
 	/// Contains the bitfield for clearing the buffers
-	private var _clearBitMask : [Int32 : Bool] = [Int32 : Bool]()
-	
-	/// Contains the color, with which to clear
-	public var clearColor : RGBAColor = (0, 0, 0, 0)
-	
-	/// Contains the depth value to clear
-	public var clearDepth : Double = 1.0
-	
-	/// Contains the stencil value to clear
-	public var clearStencil : Int = 0
+	private var _clearmasks : [Int32 : GLClearMask] = [Int32 : GLClearMask]()
 	
 	/// The GLProgram to use for rendering
 	public var program : GLProgram
@@ -47,7 +38,6 @@ public class GLRenderpassBase {
 	*/
 	public init (program: GLProgram) {
 		self.program = program
-		_prepare()
 	}
 	
 	
@@ -56,26 +46,30 @@ public class GLRenderpassBase {
 	*/
 	public func render () {
 		program.use()
-	}
-	
-	
-	/**
-	Enables clear masks
-	*/
-	public func enableClear (masks: Int32...) {
-		for mask in masks {
-			_clearBitMask[mask] = true
+		_prepare()
+		
+		var stage : GLStage = camera.stage
+		var queue : CKQueue<GLDisplayObject> = CKQueue<GLDisplayObject>(stage.children)
+		
+		var projection : GLUniformLocation? = program.getUniformLocation(.ProjectionViewMatrix)
+		projection?.assign(camera.projection.viewMatrix)
+		
+		while !queue.empty {
+			var child : GLDisplayObject = queue.dequeue()!
+			
+			if let container = child as? GLContainer {
+				queue.enqueue(container.children)
+			}
+			
+			if let shape = child as? GLShape {
+				shape.draw(program)
+			}
 		}
 	}
 	
 	
-	/**
-	Disables clear masks
-	*/
-	public func disableClear (masks: Int32...) {
-		for mask in masks {
-			_clearBitMask[mask] = false
-		}
+	public func setClear (mask: GLClearMask) {
+		_clearmasks[mask.bitmask] = mask
 	}
 	
 	
@@ -86,7 +80,7 @@ public class GLRenderpassBase {
 	*/
 	public func enableCapabilities (caps: Int32...) {
 		for cap in caps {
-			_capabilities[GLenum(cap)] = true
+			_capabilities[GLenum(cap)] = GLCapability(cap, true)
 		}
 	}
 	
@@ -98,38 +92,21 @@ public class GLRenderpassBase {
 	*/
 	public func disableCapabilities (caps: Int32...) {
 		for cap in caps {
-			_capabilities[GLenum(cap)] = false
+			_capabilities[GLenum(cap)] = GLCapability(cap, false)
 		}
 	}
 	
 	private func _prepare () {
 		for name in _capabilities.keys {
-			var enabled : Bool = _capabilities[name]!
-			if enabled {glEnable(name)}
-			else {glDisable(name)}
+			_capabilities[name]?.apply()
 		}
 		
-		
-		if _clearBitMask[GL_COLOR_BUFFER_BIT] != nil {
-			glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a)
+		var bitmask : Int32 = 0
+		for flag in _clearmasks.keys {
+			_clearmasks[flag]?.clear()
+			bitmask = bitmask | _clearmasks[flag]!.bitmask
 		}
 		
-		if _clearBitMask[GL_STENCIL_BUFFER_BIT] != nil {
-			glClearStencil(GLint(clearStencil))
-		}
-		
-		if _clearBitMask[GL_DEPTH_BUFFER_BIT] != nil {
-			glClearDepth(GLclampd(clearDepth))
-		}
-		
-		
-		var mask : Int32 = 0
-		for name in _clearBitMask.keys {
-			var enabled : Bool = _clearBitMask[name]!
-			if !enabled {continue}
-			mask = mask | name
-		}
-		
-		if mask != 0 {glClear(GLbitfield(mask))}
+		if bitmask != 0 {glClear(GLbitfield(bitmask))}
 	}
 }
