@@ -52,7 +52,7 @@ public class GLVertexBufferBase {
 	public let target : GLenum
 	
 	/// Provides the draw mode
-	public var mode : GLenum = GLenum(GL_ARRAY_BUFFER)
+	public var mode : GLenum = GLenum(GL_TRIANGLES)
 	
 	
 	/*
@@ -95,22 +95,16 @@ public class GLVertexBufferBase {
 	*/
 	public func buffer (shape: GLShape) {
 		for buffer in buffers {
-			
+			buffer.bind()
 			var data : [GLfloat] = []
 			for index in 0..<shape.count {
 				for block in buffer.blocks {
 					data += shape[block.attribute, index]
 				}
 			}
-			
-			buffer.buffer(target, data)
+			buffer.buffer(data)
 		}
 		
 		_count = shape.count
-	}
-	
-	
-	public func enableAttribPointer () {
-		
 	}
 }
