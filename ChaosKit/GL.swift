@@ -78,6 +78,7 @@ public func glHasError_CK () -> Bool {
 Prints the OpenGL error as human readable text
 */
 public func glPrintError_CK () {
+	#if DEBUG
 	var error : GLenum = glGetError()
 	
 	if error != GLenum(GL_NO_ERROR) {
@@ -101,4 +102,5 @@ public func glPrintError_CK () {
 		
 		warn(message)
 	}
+	#endif
 }
