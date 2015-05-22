@@ -33,7 +33,7 @@ public class GLShader: GLBase {
 	:param: sources The source codes as string
 	*/
 	public init? (type : GLenum, sources : [String]) {
-		super.init(id: glCreateShader(type))
+		super.init(glCreateShader(type))
 		setSources(sources)
 	}
 	
@@ -119,12 +119,9 @@ public class GLShader: GLBase {
 	:returns: The unsafe mutable pointer that has been passed to glShaderiv within this method. Contains the result of the request
 	*/
 	public func iv (pname : Int32) -> GLint {
-		if _ivCache[pname] == nil {
-			var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
-			glGetShaderiv(id, GLenum(pname), param)
-			_ivCache[pname] = param.memory
-		}
-		return _ivCache[pname]!
+		var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		glGetShaderiv(id, GLenum(pname), param)
+		return param.memory
 	}
 	
 	
@@ -151,9 +148,9 @@ public class GLShader: GLBase {
 		length.initialize(GLint(cstring.count))
 		
 		glShaderSource(id, GLsizei(1), cstrings, length)
-		glCompileShader(id)
+		glPrintError_CK()
 		
-		validateAction("setSources:\(__LINE__)")
+		glCompileShader(id)
 		
 		if (iv(GL_COMPILE_STATUS) != GL_TRUE) {
 			print(String.fromCString(infolog())!)
