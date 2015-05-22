@@ -24,6 +24,10 @@ public final class GLProgram: GLBase {
 	/// Contains a attribute alias to variable name map
 	private var _attribaliasmap : [String : String] = [String : String]()
 	
+	
+	// Derived properties
+	// ******************
+	
 	/// Provides the uniform
 	public var uniformvars : [GLUniformLocation] {get {return _uniformvars.values.array}}
 	
@@ -34,7 +38,9 @@ public final class GLProgram: GLBase {
 	public var valid : Bool {get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS) == GL_TRUE}}
 	
 	/// Determines if the program is linked or not
-	public var linked : Bool {get {return iv(GL_LINK_STATUS) == GL_TRUE}}
+	public var linked : Bool {get {return iv(GL_LINK_STATUS) == GLint(GL_TRUE)}}
+	
+	public var deleted : Bool {get {return iv(GL_DELETE_STATUS) == GLint(GL_TRUE)}}
 	
 	/// Indicates if program is current
 	public var isCurrent : Bool {get {return self == _currentProgram}}
@@ -72,8 +78,7 @@ public final class GLProgram: GLBase {
 	Initializes the object
 	*/
 	public init () {
-		var id = glCreateProgram()
-		super.init(id: id)
+		super.init(glCreateProgram())
 	}
 	
 	
@@ -108,7 +113,6 @@ public final class GLProgram: GLBase {
 	*/
 	public func attach (shader s: GLShader) -> GLProgram {
 		glAttachShader(id, s.id)
-		validateAction("attach")
 		return self
 	}
 	
@@ -119,16 +123,19 @@ public final class GLProgram: GLBase {
 	
 	:returns:
 	*/
-	public func link () -> Bool {
-		if linked {return true}
+	public func link () -> GLenum {
+		if linked {return GLenum(GL_NO_ERROR)}
 		
 		glLinkProgram(id)
-		validateAction("link")
-		
-		_attribvars.removeAll(keepCapacity: false)
-		_uniformvars.removeAll(keepCapacity: false)
+		_attribvars.removeAll()
+		_uniformvars.removeAll()
 
-		return linked
+		var error : GLenum = glGetError()
+		
+		if error != GLenum(GL_NO_ERROR) {
+			warn("Program could not be linked. Did you make OpenGL context current?")
+		}
+		return error
 	}
 	
 	
@@ -137,14 +144,14 @@ public final class GLProgram: GLBase {
 	
 	:returns:
 	*/
-	public func use () -> Bool {
-		if !linked && !link() {return false}
-		if !isCurrent {
-			_currentProgram = self
-			glUseProgram(id)
-			validateAction("use")
+	public func use () {
+		link()
+		if !linked {
+			warn("Cannot use program.")
+			return
 		}
-		return true
+		_currentProgram = self
+		glUseProgram(id)
 	}
 	
 	/** 
