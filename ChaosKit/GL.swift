@@ -65,24 +65,40 @@ public typealias DisplayObjectID = UInt32
 |--------------------------------------------------------------------------
 */
 
-public func toUnsafePointer<T> (value: [T]) -> UnsafePointer<T> {
-	var mptr : UnsafeMutablePointer<T> = UnsafeMutablePointer<T>.alloc(value.count)
-	mptr.initializeFrom(value)
-	var ptr = UnsafePointer<T>(mptr)
-	return ptr
+/**
+Determines if an error has occured or not
+
+:return: True, when an opengl error has occured
+*/
+public func glHasError_CK () -> Bool {
+	return glGetError() != GLenum(GL_NO_ERROR)
 }
 
-public func toUnsafePointer<T>(value: T) -> UnsafePointer<T> {
-	var ptr : UnsafeMutablePointer<T> = UnsafeMutablePointer<T>.alloc(1)
-	ptr.initialize(value)
-	return UnsafePointer<T>(ptr)
-}
-
-
-public func toUnsafeVoidPointer<T> (value: T) -> UnsafePointer<Void> {
-	return UnsafePointer<Void>(toUnsafePointer(T))
-}
-
-public func toUnsafeVoidPointer<T> (value: [T]) -> UnsafePointer<Void> {
-	return UnsafePointer<Void>(toUnsafePointer([T]))
+/**
+Prints the OpenGL error as human readable text
+*/
+public func glPrintError_CK () {
+	var error : GLenum = glGetError()
+	
+	if error != GLenum(GL_NO_ERROR) {
+		
+		var message : String = ""
+		
+		switch error {
+		case GLenum(GL_INVALID_ENUM):
+			message = "Invalid enum"
+		case GLenum(GL_INVALID_FRAMEBUFFER_OPERATION):
+			message = "Invalid framebuffer operation"
+		case GLenum(GL_INVALID_INDEX):
+			message = "Invalid index"
+		case GLenum(GL_INVALID_OPERATION):
+			message = "Invalid operation"
+		case GLenum(GL_INVALID_VALUE):
+			message = "Invalid value"
+		default:
+			message = "Something is invalid "
+		}
+		
+		warn(message)
+	}
 }
