@@ -11,7 +11,7 @@ import Cocoa
 public class GLVertexShader: GLShader {
 	
 	
-	public convenience init?(source: String) {
+	public convenience init? (source: String) {
 		self.init(sources: [source])
 	}
 	
