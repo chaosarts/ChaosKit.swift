@@ -12,7 +12,7 @@ import OpenGL
 /**
 The base class for a 3d object in OpenGL. A shape is described by different 
 types of attributes (Position, Color, Normals) as lists of vectors contained 
-in corresponding GLVertexAttribute objects.
+in corresponding GLAttribute objects.
 */
 public class GLShape : GLDisplayObject {
 	
@@ -22,10 +22,17 @@ public class GLShape : GLDisplayObject {
 	|--------------------------------------------------------------------------
 	*/
 	
-	private var _attributes : [GLAttribAlias : GLVertexAttribute] = [GLAttribAlias : GLVertexAttribute]()
+	/// Contains the vertex attributes of the shape
+	private var _attributes : [GLAttribAlias : GLAttribute] = [GLAttribAlias : GLAttribute]()
+	
+	///
+	private var _textureMaps : [GLTextureMap] = []
 	
 	/// Provides a list of indices for GL_ELEMENT_ARRAY_BUFFER
-	private var _indexlist : [Int]?
+	private var _indices : [Int]?
+	
+	/// Maps positions to indeces
+	private var _indexmap : [String : Int] = [String : Int]()
 	
 	/// indexWrapper functions for the attributes values in case
 	/// their values count won't match the position count
@@ -72,7 +79,7 @@ public class GLShape : GLDisplayObject {
 	
 	/// Provides a map of vertex attribute values, where key is the
 	/// targeted attribute and value the vertex attribute values
-	public var attributes : [GLAttribAlias : GLVertexAttribute] {get {return _attributes}}
+	public var attributes : [GLAttribAlias : GLAttribute] {get {return _attributes}}
 	
 	
 	/*
@@ -82,12 +89,13 @@ public class GLShape : GLDisplayObject {
 	*/
 	
 	/**
-	Returns the according vertex attribute values as GLVertexAttribute object
+	Returns the according vertex attribute values as GLAttribute object
 	
 	:param: attribute An attribute alias
 	*/
-	public subscript (attribute: GLAttribAlias) -> GLVertexAttribute? {
+	public subscript (attribute: GLAttribAlias) -> GLAttribute? {
 		get {return _attributes[attribute]}
+		set {_attributes[attribute] = newValue}
 	}
 	
 	
@@ -99,7 +107,7 @@ public class GLShape : GLDisplayObject {
 	*/
 	public subscript (alias: GLAttribAlias, index: Int) -> [GLfloat] {
 		get {
-			var attribute : GLVertexAttribute? = (self)[alias]
+			var attribute : GLAttribute? = (self)[alias]
 			if attribute == nil || attribute!.count == 0 {return []}
 			
 			var newIndex : Int = index
@@ -127,15 +135,19 @@ public class GLShape : GLDisplayObject {
 	
 	public init (useIndex: Bool) {
 		
-		_attributes[.Position] = GLVertexAttributeArray<vec3>()
-		_attributes[.Color] = GLVertexAttributeArray<vec4>()
-		_attributes[.Normal] = GLVertexAttributeArray<vec3>()
+		_attributes[.Position] = GLAttributeArray(size: 3)
+		_attributes[.Color] = GLAttributeArray(size: 4)
+		_attributes[.Normal] = GLAttributeArray(size: 3)
 		
 		_indexWrappers[.Color] = repeatIndex
 		_indexWrappers[.Normal] = repeatIndex
 		
-		if useIndex {_vertexBuffer = GLVertexElementBuffer()}
-		else {_vertexBuffer = GLVertexArrayBuffer()}
+		if useIndex {
+			_vertexBuffer = GLVertexElementBuffer()
+		}
+		else {
+			_vertexBuffer = GLVertexArrayBuffer()
+		}
 	}
 	
 	
@@ -145,26 +157,24 @@ public class GLShape : GLDisplayObject {
 	|--------------------------------------------------------------------------
 	*/
 	
-	
-	public func draw (program: GLProgram) {
-		for buffer in vertexBuffer.buffers {
-			buffer.bind()
-			for block in buffer.blocks {
-				var attribute : GLAttribLocation? = program.getAttribLocation(block.attribute)
-				attribute?.enable()
-				attribute?.setVertexAttribPointer(block)
-			}
-			
-			glDrawArrays(mode, 0, GLsizei(count))
-		}
-	}
-	
 	/**
 	Creates a vertex with given position and set color and normal if set
 	
 	:param: position The position where the vertex will be set
  	*/
 	public func createVertex (position: vec3) {
+		
+		if _indices != nil {
+			var key : String = position.x.description + "-" + position.y.description + "-" + position.z.description
+			var index : Int? = _indexmap[key]
+
+			if index != nil {
+				_indices!.append(index!)
+				return
+			}
+			
+			_indexmap[key] = self[.Position]!.count
+		}
 		
 		if canSetForAlias(.Color) && color != nil {
 			_attributes[.Color]!.append(color!.array)
@@ -175,83 +185,84 @@ public class GLShape : GLDisplayObject {
 		}
 		
 		_attributes[.Position]!.append(position.array)
+		
 		_compiled = false
 	}
 	
 	
+	/** 
+	Creates a vertex with x, y, and z-coordinates
+	
+	:param: x
+	:param: y
+	:param: z
+	*/
+	public func createVertex (x: GLfloat, _ y: GLfloat, _ z: GLfloat) {
+		createVertex(vec3(x, y, z))
+	}
+	
+	
+	/**
+	*/
+	public func setAttribute(alias: GLAttribAlias, attribute: GLAttribute) {
+		_attributes[alias] = attribute
+	}
+	
+	
+	/**
+	*/
+	public func setAttributeDynamic (alias: GLAttribAlias, bool: Bool = false) {
+		_attributes[alias]?.dynamic = bool
+	}
+	
+	
+	/**
+	Compiles the shape by converting shape vertex data to buffer
+	*/
 	public func compile () {
 		if _compiled {return}
-		setupBuffer()
+		_vertexBuffer.setup(_attributes)
 		_vertexBuffer.buffer(self)
 	}
 	
 	
-	private func setupBuffer () {
+	/**
+	Draws the shape with passed program
+	
+	:param: program The gl program to use for drawing
+	*/
+	public override func draw (program: GLProgram) {
+		var modelViewUniform : GLUniformLocation? = program.getUniformLocation(.ModelViewMatrix)
+		modelViewUniform?.assign(modelViewMatrix)
 		
-		if _setup {return}
-		
-		// Group by dynmaic and static attributes
-		// **************************************
-		
-		// Assign all attribute values to dynamic group and filter one by one to static
-		var dynamicAttributes : [GLAttribAlias : GLVertexAttribute] = _attributes
-		var staticAttributes : [GLAttribAlias : GLVertexAttribute] = [GLAttribAlias : GLVertexAttribute]()
-		
-		// Memorize the stride for static attributes
-		var stride : Int = 0
-		var buffers : [GLBuffer] = []
-		
-		// This loop iterates through the dynamic attribute group, configures
-		// the buffers and moves the static attributes to a separate group
-		for key in dynamicAttributes.keys {
-			var attribute : GLVertexAttribute = dynamicAttributes[key]!
-			
-			// Handle only non-dynmaic buffers
-			if attribute.dynamic {
-				/// Creates one buffer per dynamic
-				var block : GLBufferBlock = GLBufferBlock(key, attribute.size, GL_FLOAT, true, 0, 0)
-				var buffer : GLBuffer = GLBuffer(target: _vertexBuffer.target, usage: GLenum(GL_DYNAMIC_DRAW), blocks: [block])
-				buffers.append(buffer)
-				continue
+		for buffer in vertexBuffer.buffers {
+			buffer.bind()
+			for block in buffer.blocks {
+				var attribute : GLAttribLocation? = program.getAttribLocation(block.attribute)
+				attribute?.enable()
+				attribute?.setVertexAttribPointer(block)
 			}
 			
-			// Do not add empty attributes
-			if attribute.count == 0 {continue}
+			glDrawArrays(mode, 0, GLsizei(count))
 			
-			// Append attribute to static group and remove it from dynamic
-			staticAttributes[key] = attribute
-			dynamicAttributes.removeValueForKey(key)
-			
-			// Increase stride with new appended static attribute
-			stride += attribute.size
+			// Disable all attributes that has been used
+			for block in buffer.blocks {
+				var attribute : GLAttribLocation? = program.getAttribLocation(block.attribute)
+				attribute?.disable()
+			}
 		}
-		
-		// Configure the static buffer
-		var offset : Int = 0
-		var sBlocks : [GLBufferBlock] = []
-		for key in staticAttributes.keys {
-			var attribute : GLVertexAttribute = staticAttributes[key]!
-			var block : GLBufferBlock = GLBufferBlock(key, attribute.size, GL_FLOAT, true, stride, offset)
-			sBlocks.append(block)
-			offset += Int(block.size)
-		}
-		
-		buffers.append(GLBuffer(target: _vertexBuffer.target, usage: GLenum(GL_STATIC_DRAW), blocks: sBlocks))
-		_vertexBuffer.buffers = buffers
-		
-		_setup = true
 	}
 	
 	
+	/**
+	Determines if an attribute data can be set on createVertex()
+	
+	:param: alias The alias to check
+	*/
 	private func canSetForAlias (alias: GLAttribAlias) -> Bool {
-		var attribute : GLVertexAttribute? = _attributes[alias]
+		var attribute : GLAttribute? = _attributes[alias]
 		var isset : Bool = attribute != nil
 		var sameCount : Bool = attribute!.count == self.count
 		return isset && sameCount
 	}
-}
-
-
-public protocol GLShaper {
-	func form () -> GLShape
 }

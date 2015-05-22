@@ -24,7 +24,7 @@ public class GLVertexArray : GLBase {
 		_ptr = UnsafeMutablePointer<GLuint>.alloc(1)
 		glGenVertexArrays(1, _ptr)
 		
-		super.init(id: _ptr.memory)
+		super.init(_ptr.memory)
 	}
 	
 	

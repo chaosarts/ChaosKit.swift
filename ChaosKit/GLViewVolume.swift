@@ -26,10 +26,10 @@ public struct GLViewVolume {
 	public var top : GLfloat = 1
 	
 	/// Provides the near component of the view volume
-	public var near : GLfloat = -1
+	public var near : GLfloat = 1
 	
 	/// Provides the far component of the view volume
-	public var far : GLfloat = 1
+	public var far : GLfloat = 3
 	
 	/// Provides the center coordinate of the view volume
 	public var center : vec3 {
@@ -57,5 +57,32 @@ public struct GLViewVolume {
 	/// Provides the width-height-aspect
 	public var aspect : GLfloat {
 		get {return width / height}
+	}
+	
+	
+	public init () {}
+	
+	
+	public init (left: GLfloat, right: GLfloat, bottom: GLfloat, top: GLfloat, near: GLfloat, far: GLfloat) {
+		self.left = left
+		self.right = right
+		self.bottom = bottom
+		self.top = top
+		self.near = near
+		self.far = far
+	}
+	
+	
+	public init (width: GLfloat, height: GLfloat, depth: GLfloat, center: vec3 = vec3(0, 0, 0.1)) {
+		let halfWidth : GLfloat = width / 2
+		let halfHeight : GLfloat = height / 2
+		let z : GLfloat = center.z <= 0 ? 0.1 : center.z
+		
+		self.left = center.x - halfWidth
+		self.right = center.x + halfWidth
+		self.bottom = center.y - halfHeight
+		self.top = center.y + halfHeight
+		self.near = z
+		self.far = z + depth
 	}
 }

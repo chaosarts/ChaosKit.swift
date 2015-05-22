@@ -17,7 +17,7 @@ public class GLCamera {
 	private var _cache : mat4?
 	
 	/// Contains the stage which the camera captures
-	public var stage : GLStage = GLStage()
+	public var stage : GLStage?
 	
 	/// Contains the projection matrix of the camera
 	public var projection : GLCameraProjection

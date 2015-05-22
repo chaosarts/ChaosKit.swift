@@ -10,10 +10,14 @@ import Foundation
 
 
 public protocol GLRenderpass {
+	
 	/// The GLProgram to use for rendering
 	var program : GLProgram {get set}
 	
+	/// 
 	var camera : GLCamera {get set}
+	
+	func execute ()
 }
 
 public class GLRenderpassBase {
@@ -38,33 +42,6 @@ public class GLRenderpassBase {
 	*/
 	public init (program: GLProgram) {
 		self.program = program
-	}
-	
-	
-	/**
-	Renders the stage
-	*/
-	public func render () {
-		program.use()
-		_prepare()
-		
-		var stage : GLStage = camera.stage
-		var queue : CKQueue<GLDisplayObject> = CKQueue<GLDisplayObject>(stage.children)
-		
-		var projection : GLUniformLocation? = program.getUniformLocation(.ProjectionViewMatrix)
-		projection?.assign(camera.projection.viewMatrix)
-		
-		while !queue.empty {
-			var child : GLDisplayObject = queue.dequeue()!
-			
-			if let container = child as? GLContainer {
-				queue.enqueue(container.children)
-			}
-			
-			if let shape = child as? GLShape {
-				shape.draw(program)
-			}
-		}
 	}
 	
 	
@@ -96,7 +73,7 @@ public class GLRenderpassBase {
 		}
 	}
 	
-	private func _prepare () {
+	internal func _prepare () {
 		for name in _capabilities.keys {
 			_capabilities[name]?.apply()
 		}

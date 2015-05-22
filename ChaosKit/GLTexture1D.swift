@@ -10,7 +10,6 @@ import Foundation
 
 
 public class GLTexture1D : GLTextureBase, GLTexture {
-
 	
 	public init (_ level: Int, _ internalFormat: Int32, _ width: Int, _ border: Int, _ format: Int32, _ type: Int32, _ pixels: UnsafePointer<Void>) {
 		

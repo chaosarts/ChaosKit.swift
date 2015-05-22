@@ -45,6 +45,8 @@ public class GLDisplayObject : NSObject, Equatable {
 	/// Caches the transformation matrix
 	private var _cache : mat4?
 	
+	/// Provides the anchor to rotate around
+	public var anchor : vec3 = vec3()
 	
 	/// Provides the position of the object as vector
 	public var position : vec3 = vec3() {
@@ -118,6 +120,11 @@ public class GLDisplayObject : NSObject, Equatable {
 	internal override init () {
 		_id = GLDisplayObjectManager.getInstance().generateId()
 	}
+	
+	
+	///
+	public func draw (program: GLProgram) {}
+	
 	
 	/// Resets all transformations
 	public func resetTransformation () {

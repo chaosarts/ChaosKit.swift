@@ -35,7 +35,7 @@ public class GLFrameBufferBase : GLBase {
 		
 		_ptr = UnsafeMutablePointer<GLuint>.alloc(1)
 		glGenFramebuffers(1, _ptr)
-		super.init(id: _ptr.memory)
+		super.init(_ptr.memory)
 	}
 	
 	

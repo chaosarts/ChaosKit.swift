@@ -11,7 +11,18 @@ import OpenGL
 
 
 public protocol GLTexture : GLIdentifiable, GLBindable {
+	
+	/// The texture target such as (GL_TEXTURE_1D)
 	var target : GLenum {get}
+	
+	/// Sets a integer paramerter for this texture
+	func setParameteri (pname: GLenum, _ param: GLint)
+	
+	/// Sets a float paramerter for this texture
+	func setParameterf (pname: GLenum, _ param: GLfloat)
+	
+	/// Gets value of the passed texture parameter
+	func iv (pname: Int32) -> GLint
 }
 
 /** 
@@ -22,8 +33,10 @@ public class GLTextureBase : GLBase {
 	/// Contains the texture target like GL_TEXTURE_2D
 	public let target : GLenum
 	
+	/// Provides the level of detail to use
 	public let level : GLint
 	
+	/// Provides the internal format
 	public let internalFormat : GLint
 	
 	public let border : GLint
@@ -50,7 +63,7 @@ public class GLTextureBase : GLBase {
 		self.format = GLenum(format)
 		self.type = GLenum(type)
 		
-		super.init(id: textures.memory)
+		super.init(textures.memory)
 	}
 	
 	
@@ -70,24 +83,49 @@ public class GLTextureBase : GLBase {
 	}
 	
 	
-	public func active () {
-		
-	}
-	
-	
 	/** 
 	Sets an paramter for the texture
+	
+	:param: pname The name of the parameter to set
+	:param: param The parameter value
 	*/
-	public func parameteri (pname: Int32, _ param: Int32) {
-		glTexParameteri(id, GLenum(pname), GLint(param))
+	public func setParameteri (pname: GLenum, _ param: GLint) {
+		glTexParameteri(id, pname, param)
 	}
 	
 	
 	/**
 	Sets an paramter for the texture
+	
+	:param: pname The name of the paramater
+	:param: param The value of the parameter
 	*/
-	public func parameterf (pname: Int32, _ param: GLfloat) {
-		glTexParameterf(id, GLenum(pname), param)
+	public func setParameterf (pname: GLenum, _ param: GLfloat) {
+		glTexParameterf(id, pname, param)
+	}
+	
+	/** 
+	Specifies the index of the lowest defined mipmap level. This is an integer value. The initial value is 0.
+	
+	:param: value The value of the base level
+	*/
+	public func setBaseLevel (value: GLint) {
+		setParameteri(GLenum(GL_TEXTURE_BASE_LEVEL), value)
+	}
+	
+	
+	public func setMinFilter (value: Int32) {
+		setParameteri(GLenum(GL_TEXTURE_MIN_FILTER), value)
+	}
+	
+	
+	public func setMagFilter (value: Int32) {
+		setParameteri(GLenum(GL_TEXTURE_MAG_FILTER), value)
+	}
+	
+	
+	public func setWrapS (value: Int32) {
+		setParameteri(GLenum(GL_TEXTURE_WRAP_S), value)
 	}
 	
 	

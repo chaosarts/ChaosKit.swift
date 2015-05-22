@@ -56,6 +56,12 @@ public class GLContainer: GLDisplayObject {
 	public override init () {}
 	
 	
+	public override func draw (program: GLProgram) {
+		for child in children {
+			child.draw(program)
+		}
+	}
+	
 	/** 
 	Adds a new child to the container 
 	*/

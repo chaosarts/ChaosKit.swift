@@ -33,6 +33,8 @@ public protocol GLVertexBuffer {
 	:param: shape The shape to buffer
 	*/
 	func buffer (shape: GLShape)
+	
+	func setup (attributes: [GLAttribAlias : GLAttribute])
 }
 
 /**
@@ -106,5 +108,55 @@ public class GLVertexBufferBase {
 		}
 		
 		_count = shape.count
+	}
+	
+	
+	public func setup (attributes: [GLAttribAlias : GLAttribute]) {
+		// Group by dynmaic and static attributes
+		// **************************************
+		
+		// Assign all attribute values to dynamic group and filter one by one to static
+		var dynamicAttributes : [GLAttribAlias : GLAttribute] = attributes
+		var staticAttributes : [GLAttribAlias : GLAttribute] = [GLAttribAlias : GLAttribute]()
+		
+		// Memorize the stride for static attributes
+		var stride : Int = 0
+		
+		// This loop iterates through the dynamic attribute group, configures
+		// the buffers and moves the static attributes to a separate group
+		for key in dynamicAttributes.keys {
+			var attribute : GLAttribute = dynamicAttributes[key]!
+			
+			// Handle only non-dynmaic buffers
+			if attribute.dynamic {
+				/// Creates one buffer per dynamic
+				var block : GLBufferBlock = GLBufferBlock(key, attribute.size, GL_FLOAT, true, 0, 0)
+				var buffer : GLBuffer = GLBuffer(target: target, usage: GLenum(GL_DYNAMIC_DRAW), blocks: [block])
+				buffers.append(buffer)
+				continue
+			}
+			
+			// Do not add empty attributes
+			if attribute.count == 0 {continue}
+			
+			// Append attribute to static group and remove it from dynamic
+			staticAttributes[key] = attribute
+			dynamicAttributes.removeValueForKey(key)
+			
+			// Increase stride with new appended static attribute
+			stride += attribute.size
+		}
+		
+		// Configure the static buffer
+		var offset : Int = 0
+		var sBlocks : [GLBufferBlock] = []
+		for key in staticAttributes.keys {
+			var attribute : GLAttribute = staticAttributes[key]!
+			var block : GLBufferBlock = GLBufferBlock(key, attribute.size, GL_FLOAT, true, stride, offset)
+			sBlocks.append(block)
+			offset += Int(block.size)
+		}
+		
+		buffers.append(GLBuffer(target: target, usage: GLenum(GL_STATIC_DRAW), blocks: sBlocks))
 	}
 }
