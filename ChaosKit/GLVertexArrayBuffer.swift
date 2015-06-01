@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class GLVertexArrayBuffer : GLVertexBufferBase, GLVertexBuffer {
+public class GLVertexArrayBuffer : GLShapeBufferBase, GLShapeBuffer {
 	
 	public init () {
 		super.init(target: GL_ARRAY_BUFFER)
@@ -16,8 +16,6 @@ public class GLVertexArrayBuffer : GLVertexBufferBase, GLVertexBuffer {
 	
 	
 	public func draw () {
-		
 		glDrawArrays(mode, 0, GLsizei(count))
-		
 	}
 }

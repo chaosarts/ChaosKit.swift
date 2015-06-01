@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol GLVertexBuffer {
+public protocol GLShapeBuffer {
 	
 	/// Provides the buffer target such as GL_ARRAY_BUFFER
 	var target : GLenum {get}
@@ -39,7 +39,7 @@ public protocol GLVertexBuffer {
 
 /**
 */
-public class GLVertexBufferBase {
+public class GLShapeBufferBase {
 	
 	/*
 	|--------------------------------------------------------------------------

@@ -10,11 +10,23 @@ import Foundation
 
 
 public protocol GLAttribute {
+	
+	/// Provides the size of an attribute value per vertex
 	var size : Int {get}
+	
+	/// Provides the count of vertices
 	var count : Int {get}
+	
+	/// Contains all vertex attribute data as array
 	var array : [GLfloat] {get}
+	
+	/// Indicates if the attribute is dynamic or not
 	var dynamic : Bool {get set}
+	
+	/// Subscript access to an attribute value of one vertex at given index
 	subscript (index: Int) -> [GLfloat] {get}
+	
+	/// Appends data to the attribute
 	func append (data: [GLfloat])
 }
 

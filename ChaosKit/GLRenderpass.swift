@@ -10,11 +10,6 @@ import Foundation
 
 
 public protocol GLRenderpass {
-	
-	/// The GLProgram to use for rendering
-	var program : GLProgram {get set}
-	
-	/// 
 	var camera : GLCamera {get set}
 	
 	func execute ()
@@ -28,23 +23,15 @@ public class GLRenderpassBase {
 	/// Contains the bitfield for clearing the buffers
 	private var _clearmasks : [Int32 : GLClearMask] = [Int32 : GLClearMask]()
 	
-	/// The GLProgram to use for rendering
-	public var program : GLProgram
-	
-	/// The camera to use for renderpass
+	/// Provides the camera of the render pass
 	public var camera : GLCamera = GLCamera()
 	
 	
-	/**
-	Initializes the render pass with an gl program
+	/** 
+	Sets a clear mask for this render pass
 	
-	:param: program The program to use for this render pass
+	:param: mask
 	*/
-	public init (program: GLProgram) {
-		self.program = program
-	}
-	
-	
 	public func setClear (mask: GLClearMask) {
 		_clearmasks[mask.bitmask] = mask
 	}
@@ -73,12 +60,23 @@ public class GLRenderpassBase {
 		}
 	}
 	
-	internal func _prepare () {
+	
+	/**
+	Applies set rendering capabilities
+	*/
+	internal func _applyCapabilities () {
 		for name in _capabilities.keys {
 			_capabilities[name]?.apply()
 		}
-		
+	}
+	
+	
+	/** 
+	Clears opengl buffers
+	*/
+	internal func _clear () {
 		var bitmask : Int32 = 0
+		
 		for flag in _clearmasks.keys {
 			_clearmasks[flag]?.clear()
 			bitmask = bitmask | _clearmasks[flag]!.bitmask

@@ -1,5 +1,5 @@
 //
-//  CKCollectionType.swift
+//  CCCollectionType.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 20.02.15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol CKCollectionType {
+public protocol CCCollectionType {
 	typealias T = AnyObject
 	
 	var array : [T] {get}
@@ -19,7 +19,7 @@ public protocol CKCollectionType {
 }
 
 
-public protocol CKCountLimited {
+public protocol CCCountLimited {
 	typealias T = AnyObject
 	
 	var max : Int {get}
@@ -29,7 +29,7 @@ public protocol CKCountLimited {
 	mutating func removeAll () -> [T]
 }
 
-public struct CKStack<T> : CKCollectionType, CKCountLimited {
+public struct CCStack<T> : CCCollectionType, CCCountLimited {
 	
 	private var _array : [T] = []
 	
@@ -85,7 +85,7 @@ public struct CKStack<T> : CKCollectionType, CKCountLimited {
 }
 
 
-extension CKStack : ArrayLiteralConvertible {
+extension CCStack : ArrayLiteralConvertible {
 	public init(arrayLiteral elements: T...) {
 		_array = elements
 		max = Int.max
@@ -94,7 +94,7 @@ extension CKStack : ArrayLiteralConvertible {
 
 
 
-public struct CKQueue<T> : CKCollectionType, CKCountLimited {
+public struct CCQueue<T> : CCCollectionType, CCCountLimited {
 	private var _array : [T] = []
 	
 	public var count : Int {get {return _array.count}}
@@ -155,7 +155,7 @@ public struct CKQueue<T> : CKCollectionType, CKCountLimited {
 }
 
 
-extension CKQueue : ArrayLiteralConvertible {
+extension CCQueue : ArrayLiteralConvertible {
 	public init(arrayLiteral elements: T...) {
 		_array = elements
 		max = Int.max

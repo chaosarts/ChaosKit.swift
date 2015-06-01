@@ -21,27 +21,55 @@ the name of the variable. With the help of GLAttributeInfo objects
 this a GLProgram object establishes the connection between a 
 concrete variable in a shader program with this enumeration cases.
 
-- Color: Stands for the color attribute variable
-- Normal: Stands for the normal attribute variable
-- Position: Stands for the position attribute variable
-- TexCoord: Stands for the texture coordinate attribute variable
 */
 public enum GLAttribAlias : String {
 	
-	/// Stands for the color attribute variable
+	/// Represents the color attribute variable
 	case Color = "Color"
 	
-	/// Stands for the normal attribute variable
+	/// Represents the normal attribute variable
 	case Normal = "Normal"
 	
-	/// Stands for the position attribute variable
+	/// Represents the position attribute variable
 	case Position = "Position"
 	
-	/// Stands for the texture coordinate attribute variable
+	/// Represents the texture coordinate attribute variable
 	case TexCoord = "TexCoord"
 	
-	static let cases : [GLAttribAlias] = [.Color, .Normal, .Position, .TexCoord]
+	case ColorMapCoord = "ColorMapCoord"
+	
+	case DiffuseMapCoord = "DiffuseMapCoord"
+	
+	case NormalMapCoord = "NormalMapCoord"
+	
+	case BumpMapCoord = "BumpMapCoord"
+	
+	case HeightMapCoord = "HeightMapCoord"
+	
+	case DisplacementMapCoord = "DisplacementMapCoord"
+	
+	case SpecularMapCoord = "SpecularMapCoord"
+	
+	case GlowMapCoord = "GlowMapCoord"
+
+	
+	static let all : [GLAttribAlias] = [
+		.Color,
+		.Normal,
+		.Position,
+		.TexCoord,
+		.ColorMapCoord,
+		.DiffuseMapCoord,
+		.NormalMapCoord,
+		.BumpMapCoord,
+		.HeightMapCoord,
+		.DisplacementMapCoord,
+		.SpecularMapCoord,
+		.GlowMapCoord
+	]
 }
+
+typealias GLVertexAttribType = GLAttribAlias
 
 
 /*
@@ -52,7 +80,7 @@ public enum GLAttribAlias : String {
 
 public struct GLAttribLocation {
 	
-	private let ptr : UnsafeMutablePointer<Void>
+	private let _ptr : UnsafeMutablePointer<Void>
 	
 	/// The representative attribute location
 	public let id : GLuint
@@ -73,7 +101,7 @@ public struct GLAttribLocation {
 	public init (index: GLuint, name: String, pointer: UnsafeMutablePointer<Void>) {
 		self.id = index
 		self.name = name
-		self.ptr = pointer
+		_ptr = pointer
 	}
 	
 	
@@ -94,7 +122,7 @@ public struct GLAttribLocation {
 	:return: The pointer to the attribute
 	*/
 	public mutating func getVertexAttribPointer () -> UnsafeMutablePointer<Void> {
-		return ptr
+		return _ptr
 	}
 	
 	
@@ -116,7 +144,7 @@ public struct GLAttribLocation {
 	*/
 	public mutating func setVertexAttribPointer (block: GLBufferBlock) {
 		var floatSize : Int = sizeof(GLfloat)
-		setVertexAttribPointer(block, pointer: ptr.advancedBy(floatSize * block.offset))
+		setVertexAttribPointer(block, pointer: _ptr.advancedBy(floatSize * block.offset))
 	}
 	
 	

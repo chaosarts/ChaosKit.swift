@@ -13,10 +13,10 @@ internal var _currentProgram : GLProgram?
 public final class GLProgram: GLBase {
 	
 	/// Provides a list of uniforms
-	private var _uniformvars : [String : GLUniformLocation] = [String : GLUniformLocation]()
+	private var _uniformLocations : [String : GLUniformLocation] = [String : GLUniformLocation]()
 	
 	/// Provides the vertex attributes
-	private var _attribvars : [String : GLAttribLocation] = [String : GLAttribLocation]()
+	private var _attribLocations : [String : GLAttribLocation] = [String : GLAttribLocation]()
 	
 	/// Contains a uniform alias to variable name map
 	private var _uniformaliasmap : [String : String] = [String : String]()
@@ -29,10 +29,10 @@ public final class GLProgram: GLBase {
 	// ******************
 	
 	/// Provides the uniform
-	public var uniformvars : [GLUniformLocation] {get {return _uniformvars.values.array}}
+	public var uniformvars : [GLUniformLocation] {get {return _uniformLocations.values.array}}
 	
 	/// Provides the uniform
-	public var attribvars : [GLAttribLocation] {get {return _attribvars.values.array}}
+	public var attribvars : [GLAttribLocation] {get {return _attribLocations.values.array}}
 	
 	/// Determines whether the program is valid or not
 	public var valid : Bool {get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS) == GL_TRUE}}
@@ -127,8 +127,8 @@ public final class GLProgram: GLBase {
 		if linked {return GLenum(GL_NO_ERROR)}
 		
 		glLinkProgram(id)
-		_attribvars.removeAll()
-		_uniformvars.removeAll()
+		_attribLocations.removeAll()
+		_uniformLocations.removeAll()
 
 		var error : GLenum = glGetError()
 		
@@ -144,15 +144,47 @@ public final class GLProgram: GLBase {
 	
 	:returns:
 	*/
-	public func use () {
+	public func use () -> GLProgram {
 		link()
 		if !linked {
 			warn("Cannot use program.")
-			return
+			return self
 		}
+		
 		_currentProgram = self
 		glUseProgram(id)
+		
+		return self
 	}
+	
+	
+	/**
+	Draws the shape
+	*/
+	public func draw (buffer: GLShapeBuffer) {
+		for buffer in buffer.buffers {bind(buffer)}
+		buffer.draw()
+		for buffer in buffer.buffers {
+			for block in buffer.blocks {
+				var attribLocation : GLAttribLocation? = getAttribLocation(block.attribute)
+				attribLocation?.disable()
+			}
+		}
+	}
+	
+	
+	/**
+	Binds and setups
+	*/
+	public func bind (buffer: GLBuffer) {
+		buffer.bind()
+		for block in buffer.blocks {
+			var attribLocation : GLAttribLocation? = getAttribLocation(block.attribute)
+			attribLocation?.enable()
+			attribLocation?.setVertexAttribPointer(block)
+		}
+	}
+	
 	
 	/** 
 	Retrieves information about an attribute variable in this shader program
@@ -160,7 +192,7 @@ public final class GLProgram: GLBase {
 	:param: varname the variable name in the vertex shader
 	*/
 	public func getAttribLocation (varname: String) -> GLAttribLocation? {
-		if _attribvars[varname] != nil {return _attribvars[varname]}
+		if _attribLocations[varname] != nil {return _attribLocations[varname]}
 		
 		var location : GLint = glGetAttribLocation(id, varname)
 		if location < 0 {warn("GLAttribute \(varname) not found in program."); return nil}
@@ -170,7 +202,7 @@ public final class GLProgram: GLBase {
 		
 		var attribvar : GLAttribLocation = GLAttribLocation(index: GLuint(location), name: varname, pointer: pointer.memory)
 		
-		_attribvars[varname] = attribvar
+		_attribLocations[varname] = attribvar
 		return attribvar
 	}
 	
@@ -190,13 +222,13 @@ public final class GLProgram: GLBase {
 	:param: varname the variable name in the shader program
 	*/
 	public func getUniformLocation (varname: String) -> GLUniformLocation? {
-		if _uniformvars[varname] != nil {return _uniformvars[varname]}
+		if _uniformLocations[varname] != nil {return _uniformLocations[varname]}
 		
 		var location : GLint = glGetUniformLocation(id, varname)
 		if location < 0 {println("GLUniform \(varname) not found in program."); return nil}
 		
 		var uniformvar : GLUniformLocation = GLUniformLocation(index: GLuint(location), name: varname)
-		_uniformvars[varname] = uniformvar
+		_uniformLocations[varname] = uniformvar
 		
 		return uniformvar
 	}

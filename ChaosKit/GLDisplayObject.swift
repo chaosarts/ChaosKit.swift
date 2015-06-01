@@ -122,10 +122,6 @@ public class GLDisplayObject : NSObject, Equatable {
 	}
 	
 	
-	///
-	public func draw (program: GLProgram) {}
-	
-	
 	/// Resets all transformations
 	public func resetTransformation () {
 		_cache = nil

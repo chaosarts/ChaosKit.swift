@@ -9,7 +9,7 @@
 import Foundation
 
 
-public class GLVertexElementBuffer : GLVertexBufferBase, GLVertexBuffer {
+public class GLVertexElementBuffer : GLShapeBufferBase, GLShapeBuffer {
 	
 	public init () {
 		super.init (target: GL_ELEMENT_ARRAY_BUFFER)

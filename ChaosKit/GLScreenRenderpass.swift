@@ -13,21 +13,14 @@ public class GLScreenRenderpass : GLRenderpassBase, GLRenderpass {
 	Renders the stage
 	*/
 	public func execute () {
-		if camera.stage == nil {
-			log("Camera has no stage yet.")
-			return
-		}
+		if camera.stage == nil {return}
 		
-		program.link()
-		program.use()
-		
-		_prepare()
+		_applyCapabilities()
+		_clear()
 		
 		var stage : GLStage = camera.stage!
-		var queue : CKQueue<GLDisplayObject> = CKQueue<GLDisplayObject>(stage.children)
+		var queue : CCQueue<GLDisplayObject> = CCQueue<GLDisplayObject>(stage.children)
 		
-		var projection : GLUniformLocation? = program.getUniformLocation(.ProjectionViewMatrix)
-		projection?.assign(camera.projection.viewMatrix)
 		
 		while !queue.empty {
 			var child : GLDisplayObject = queue.dequeue()!
@@ -37,7 +30,11 @@ public class GLScreenRenderpass : GLRenderpassBase, GLRenderpass {
 			}
 			
 			if let shape = child as? GLShape {
-				shape.draw(program)
+				if shape.program == nil {continue}
+				
+				shape.program?.use()
+				shape.program?.getUniformLocation(.ProjectionViewMatrix)?.assign(camera.projection.viewMatrix)
+				shape.program?.draw(shape)
 			}
 		}
 		

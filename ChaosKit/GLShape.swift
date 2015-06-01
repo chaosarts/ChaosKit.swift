@@ -25,9 +25,6 @@ public class GLShape : GLDisplayObject {
 	/// Contains the vertex attributes of the shape
 	private var _attributes : [GLAttribAlias : GLAttribute] = [GLAttribAlias : GLAttribute]()
 	
-	///
-	private var _textureMaps : [GLTextureMap] = []
-	
 	/// Provides a list of indices for GL_ELEMENT_ARRAY_BUFFER
 	private var _indices : [Int]?
 	
@@ -39,13 +36,19 @@ public class GLShape : GLDisplayObject {
 	private var _indexWrappers : [GLAttribAlias : CKIndexWrapper] = [GLAttribAlias : CKIndexWrapper]()
 		
 	/// Provides the vertex buffer object for this shape
-	private var _vertexBuffer : GLVertexBuffer
+	private var _buffer : GLShapeBuffer
 	
 	/// Indicates if the shape is dirty according to the vertex buffer
 	private var _setup : Bool = false
 	
 	/// Indicates if the shape has been compile or not
 	private var _compiled : Bool = false
+	
+	/// Provides the program for default rendering process
+	public var program : GLProgram?
+	
+	/// Provides a list of textures to apply
+	private var _textures : [GLUniformAlias : GLTexture] = [GLUniformAlias : GLTexture]()
 	
 	
 	/*
@@ -67,14 +70,14 @@ public class GLShape : GLDisplayObject {
 	public var normal : vec3?
 	
 	/// Provides the vertex buffer object for this shape
-	public var vertexBuffer : GLVertexBuffer {
-		get {compile(); return _vertexBuffer}
+	public var buffer : GLShapeBuffer {
+		get {compile(); return _buffer}
 	}
 	
 	/// Provides the draw mode
 	public var mode : GLenum {
-		get {return _vertexBuffer.mode}
-		set {_vertexBuffer.mode = newValue}
+		get {return _buffer.mode}
+		set {_buffer.mode = newValue}
 	}
 	
 	/// Provides a map of vertex attribute values, where key is the
@@ -143,10 +146,10 @@ public class GLShape : GLDisplayObject {
 		_indexWrappers[.Normal] = repeatIndex
 		
 		if useIndex {
-			_vertexBuffer = GLVertexElementBuffer()
+			_buffer = GLVertexElementBuffer()
 		}
 		else {
-			_vertexBuffer = GLVertexArrayBuffer()
+			_buffer = GLVertexArrayBuffer()
 		}
 	}
 	
@@ -221,36 +224,8 @@ public class GLShape : GLDisplayObject {
 	*/
 	public func compile () {
 		if _compiled {return}
-		_vertexBuffer.setup(_attributes)
-		_vertexBuffer.buffer(self)
-	}
-	
-	
-	/**
-	Draws the shape with passed program
-	
-	:param: program The gl program to use for drawing
-	*/
-	public override func draw (program: GLProgram) {
-		var modelViewUniform : GLUniformLocation? = program.getUniformLocation(.ModelViewMatrix)
-		modelViewUniform?.assign(modelViewMatrix)
-		
-		for buffer in vertexBuffer.buffers {
-			buffer.bind()
-			for block in buffer.blocks {
-				var attribute : GLAttribLocation? = program.getAttribLocation(block.attribute)
-				attribute?.enable()
-				attribute?.setVertexAttribPointer(block)
-			}
-			
-			glDrawArrays(mode, 0, GLsizei(count))
-			
-			// Disable all attributes that has been used
-			for block in buffer.blocks {
-				var attribute : GLAttribLocation? = program.getAttribLocation(block.attribute)
-				attribute?.disable()
-			}
-		}
+		_buffer.setup(_attributes)
+		_buffer.buffer(self)
 	}
 	
 	

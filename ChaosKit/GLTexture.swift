@@ -15,14 +15,57 @@ public protocol GLTexture : GLIdentifiable, GLBindable {
 	/// The texture target such as (GL_TEXTURE_1D)
 	var target : GLenum {get}
 	
-	/// Sets a integer paramerter for this texture
+	/// Contains the pixels of the texture
+	var pixels : UnsafeMutablePointer<Void> {get}
+
+	/**
+	Sets an paramter for the texture
+	
+	:param: pname The name of the parameter to set
+	:param: param The parameter value
+	*/
 	func setParameteri (pname: GLenum, _ param: GLint)
 	
-	/// Sets a float paramerter for this texture
+	
+	/**
+	Sets an paramter for the texture
+	
+	:param: pname The name of the parameter to set
+	:param: param The parameter value
+	*/
 	func setParameterf (pname: GLenum, _ param: GLfloat)
 	
-	/// Gets value of the passed texture parameter
+	
+	/**
+	Returns information about the current bound texture
+	
+	:param: pname The paramater name
+	:return: The value of the parameter
+	*/
 	func iv (pname: Int32) -> GLint
+	
+	
+	/**
+	Specifies the index of the lowest defined mipmap level. This is an integer value. The initial value is 0.
+	
+	:param: value The value of the base level
+	*/
+	func setBaseLevel (value: GLint)
+	
+	/**
+	Specifies the filter for minifying
+	
+	:param: value
+	*/
+	func setMinFilter (value: Int32)
+	
+	
+	/**
+	Specifies the filter for magnifying
+	
+	:param: value
+	*/
+	func setMagFilter (value: Int32)
 }
 
 /** 
@@ -30,40 +73,31 @@ Base class for texture objects
 */
 public class GLTextureBase : GLBase {
 	
+	/// Provides the pointer with which the texture has been created
+	private var _ptr : UnsafeMutablePointer<GLuint>
+	
+	/// Contains the pixels of the texture
+	internal var _pixels : UnsafeMutablePointer<Void>
+	
 	/// Contains the texture target like GL_TEXTURE_2D
 	public let target : GLenum
 	
-	/// Provides the level of detail to use
-	public let level : GLint
-	
-	/// Provides the internal format
-	public let internalFormat : GLint
-	
-	public let border : GLint
-	
-	public let format : GLenum
-	
-	public let type : GLenum
+	/// Provides the pixel of the texture
+	public var pixels : UnsafeMutablePointer<Void> {get {return _pixels}}
 	
 	
-	/** 
+	/**
 	Initializes the texture with passed target
 	
 	:param: target Texture target like GL_TEXTURE_2D
 	*/
-	internal init (_ target: Int32, _ level: Int, _ internalFormat: Int32, _ border: Int, _ format: Int32, _ type: Int32) {
-		var textures : UnsafeMutablePointer<GLuint> = UnsafeMutablePointer<GLuint>.alloc(1)
-		glGenTextures(1, textures)
+	internal init (_ target: GLenum, pixels: UnsafeMutablePointer<Void>) {
+		_pixels = pixels
+		_ptr = UnsafeMutablePointer<GLuint>.alloc(1)
+		glGenTextures(1, _ptr)
 		
-		self.target = GLenum(target)
-		
-		self.level = GLint(level)
-		self.internalFormat = GLint(internalFormat)
-		self.border = GLint(border)
-		self.format = GLenum(format)
-		self.type = GLenum(type)
-		
-		super.init(textures.memory)
+		self.target = target
+		super.init(_ptr.memory)
 	}
 	
 	
@@ -114,23 +148,31 @@ public class GLTextureBase : GLBase {
 	}
 	
 	
+	/**
+	Specifies the filter for minifying
+	
+	:param: value
+	*/
 	public func setMinFilter (value: Int32) {
 		setParameteri(GLenum(GL_TEXTURE_MIN_FILTER), value)
 	}
 	
 	
+	/**
+	Specifies the filter for minifying
+	
+	:param: value
+	*/
 	public func setMagFilter (value: Int32) {
 		setParameteri(GLenum(GL_TEXTURE_MAG_FILTER), value)
 	}
 	
 	
-	public func setWrapS (value: Int32) {
-		setParameteri(GLenum(GL_TEXTURE_WRAP_S), value)
-	}
-	
-	
 	/**
 	Returns information about the current bound texture
+	
+	:param: pname The paramater name
+	:return: The value of the parameter
  	*/
 	public func iv (pname: Int32) -> GLint {
 		var params : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)

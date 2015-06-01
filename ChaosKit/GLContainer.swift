@@ -56,12 +56,6 @@ public class GLContainer: GLDisplayObject {
 	public override init () {}
 	
 	
-	public override func draw (program: GLProgram) {
-		for child in children {
-			child.draw(program)
-		}
-	}
-	
 	/** 
 	Adds a new child to the container 
 	*/
@@ -129,7 +123,7 @@ public class GLContainer: GLDisplayObject {
 	
 	
 	public func isAncestor (displayObject: GLDisplayObject) -> Bool {
-		var queue : CKQueue<GLDisplayObject> = CKQueue<GLDisplayObject>(children)
+		var queue : CCQueue<GLDisplayObject> = CCQueue<GLDisplayObject>(children)
 		while !queue.empty {
 			var child : GLDisplayObject = queue.dequeue()!
 			if let container = child as? GLContainer {
