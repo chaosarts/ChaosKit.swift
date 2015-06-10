@@ -11,7 +11,7 @@ import Foundation
 /**
 Struct to en- or disable OpenGL rendering capabilities
 */
-public struct GLCapability {
+public struct GLcapability {
 	
 	/// Contains the capability type such as GL_DEPTH_TEST
 	public let type : GLenum

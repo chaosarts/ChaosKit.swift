@@ -145,7 +145,7 @@ public func *(l: GLfloat, r: vec3) -> vec3 {
 }
 
 
-public func •(l: vec3, r: vec3) -> vec3 {
+public func dot(l: vec3, r: vec3) -> vec3 {
 	return vec3(
 		l.y * r.z - l.z * r.y,
 		l.z * r.x - l.x * r.z,

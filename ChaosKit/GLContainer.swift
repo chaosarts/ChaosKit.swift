@@ -16,9 +16,6 @@ public class GLContainer: GLDisplayObject {
 	/// Caches the shapes contained in this container
 	private var _shapeCache : [GLShape]?
 	
-	/// Caches the shapes contained in this container
-	private var _lightCache : [GLLight]?
-	
 	/// Contains the scene to which the object belongs to
 	public override var stage : GLStage? {
 		didSet {
@@ -42,14 +39,6 @@ public class GLContainer: GLDisplayObject {
 	}
 	
 	
-	public var lights : [GLLight] {
-		get {
-			if _lightCache == nil {updateLightCache()}
-			return _lightCache!
-		}
-	}
-	
-	
 	/**
 	Initializes the container
 	*/
@@ -66,7 +55,6 @@ public class GLContainer: GLDisplayObject {
 		if stage != nil {child.stage = stage}
 		
 		_shapeCache = nil
-		_lightCache = nil
 		_children.append(child)
 	}
 	
@@ -88,7 +76,6 @@ public class GLContainer: GLDisplayObject {
 		child.parent = nil
 		
 		_shapeCache = nil
-		_lightCache = nil
 		
 		return child
 	}
@@ -103,20 +90,6 @@ public class GLContainer: GLDisplayObject {
 			
 			if let container = child as? GLContainer {
 				_shapeCache!.extend(container.shapes)
-			}
-		}
-	}
-	
-	
-	private func updateLightCache () {
-		_lightCache = []
-		for child in _children {
-			if let light = child as? GLLight {
-				_lightCache!.append(light)
-			}
-			
-			if let container = child as? GLContainer {
-				_lightCache!.extend(container.lights)
 			}
 		}
 	}

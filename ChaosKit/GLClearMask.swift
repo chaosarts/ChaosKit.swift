@@ -1,5 +1,5 @@
 //
-//  GLClearMask.swift
+//  GLclearmask.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 08.05.15.
@@ -8,14 +8,14 @@
 
 import Foundation
 
-public protocol GLClearMask {
+public protocol GLclearmask {
 	var bitmask : Int32 {get}
 	
 	func clear ()
 }
 
 
-public struct GLColorClearMask : GLClearMask {
+public struct GLColorClearMask : GLclearmask {
 	public let bitmask : Int32 = GL_COLOR_BUFFER_BIT
 	
 	public var value : RGBAColor = (0, 0, 0, 0)
@@ -33,7 +33,7 @@ public struct GLColorClearMask : GLClearMask {
 
 
 
-public struct GLDepthClearMask : GLClearMask {
+public struct GLDepthClearMask : GLclearmask {
 	
 	public let bitmask : Int32 = GL_DEPTH_BUFFER_BIT
 	
@@ -51,7 +51,7 @@ public struct GLDepthClearMask : GLClearMask {
 }
 
 
-public struct GLStencilClearMask : GLClearMask {
+public struct GLStencilClearMask : GLclearmask {
 	
 	public let bitmask : Int32 = GL_STENCIL_BUFFER_BIT
 	

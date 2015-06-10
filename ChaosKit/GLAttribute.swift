@@ -1,62 +1,36 @@
 //
-//  GLAttributeData.swift
+//  GLAttribute.swift
 //  ChaosKit
 //
-//  Created by Fu Lam Diep on 12.05.15.
+//  Created by Fu Lam Diep on 09.06.15.
 //  Copyright (c) 2015 Fu Lam Diep. All rights reserved.
 //
 
 import Foundation
 
+public protocol GLAttribute : GLBufferable {}
 
-public protocol GLAttribute {
+public class GLAttributeDataArray : GLAttribute {
 	
-	/// Provides the size of an attribute value per vertex
-	var size : Int {get}
+	private var _data : [GLfloat] = []
 	
-	/// Provides the count of vertices
-	var count : Int {get}
+	public var attribute : GLAttributeType
 	
-	/// Contains all vertex attribute data as array
-	var array : [GLfloat] {get}
+	public var count : Int {get {return _data.count / size}}
 	
-	/// Indicates if the attribute is dynamic or not
-	var dynamic : Bool {get set}
-	
-	/// Subscript access to an attribute value of one vertex at given index
-	subscript (index: Int) -> [GLfloat] {get}
-	
-	/// Appends data to the attribute
-	func append (data: [GLfloat])
-}
-
-
-public class GLAttributeArray : GLAttribute {
-	
-	public var _array : [GLfloat] = []
-	
-	public let size : Int
-	
-	public var count : Int {get {return _array.count / size}}
-	
-	public var array : [GLfloat] {get {return _array}}
+	public var size : Int
 	
 	public var dynamic : Bool = false
 	
-	public subscript (index: Int) -> [GLfloat]{
-		get {return Array<GLfloat>(_array[(size * index)..<((index + 1) * size)])}
-	}
-	
-	public init (size: Int) {
-		self.size = size
-	}
-	
-	public func append (data: [GLfloat]) {
-		var modulo : Int = data.count % size
-		var fillCount : Int = modulo == 0 ? 0 : size - modulo
-		
-		for index in 0..<(data.count + fillCount) {
-			_array.append(data.count > index ? data[index] : 0.0)
+	public subscript (index: Int) -> [GLfloat] {
+		get {
+			var i = (index * size)
+			return Array(_data[i..<(i + size)])
 		}
+	}
+	
+	public init (attribute: GLAttributeType, size: Int) {
+		self.size = size
+		self.attribute = attribute
 	}
 }

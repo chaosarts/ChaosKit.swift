@@ -18,10 +18,10 @@ public protocol GLRenderpass {
 public class GLRenderpassBase {
 	
 	/// Contains a capability map
-	private var _capabilities : [GLenum : GLCapability] = [GLenum : GLCapability]()
+	private var _capabilities : [GLenum : GLcapability] = [GLenum : GLcapability]()
 	
 	/// Contains the bitfield for clearing the buffers
-	private var _clearmasks : [Int32 : GLClearMask] = [Int32 : GLClearMask]()
+	private var _clearmasks : [Int32 : GLclearmask] = [Int32 : GLclearmask]()
 	
 	/// Provides the camera of the render pass
 	public var camera : GLCamera = GLCamera()
@@ -32,7 +32,7 @@ public class GLRenderpassBase {
 	
 	:param: mask
 	*/
-	public func setClear (mask: GLClearMask) {
+	public func setClear (mask: GLclearmask) {
 		_clearmasks[mask.bitmask] = mask
 	}
 	
@@ -44,7 +44,7 @@ public class GLRenderpassBase {
 	*/
 	public func enableCapabilities (caps: Int32...) {
 		for cap in caps {
-			_capabilities[GLenum(cap)] = GLCapability(cap, true)
+			_capabilities[GLenum(cap)] = GLcapability(cap, true)
 		}
 	}
 	
@@ -56,7 +56,7 @@ public class GLRenderpassBase {
 	*/
 	public func disableCapabilities (caps: Int32...) {
 		for cap in caps {
-			_capabilities[GLenum(cap)] = GLCapability(cap, false)
+			_capabilities[GLenum(cap)] = GLcapability(cap, false)
 		}
 	}
 	

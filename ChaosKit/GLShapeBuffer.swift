@@ -8,38 +8,10 @@
 
 import Foundation
 
-public protocol GLShapeBuffer {
-	
-	/// Provides the buffer target such as GL_ARRAY_BUFFER
-	var target : GLenum {get}
-	
-	/// Provides the draw modes
-	var mode : GLenum {get set}
-	
-	/// Provides a list of buffers of one shape
-	var buffers : [GLBuffer] {get set}
-	
-	/// Countains the count of vertices
-	var count : Int {get}
-	
-	/**
-	Draws the buffer with given program
-	*/
-	func draw ()
-	
-	/**
-	Buffers the shape
-	
-	:param: shape The shape to buffer
-	*/
-	func buffer (shape: GLShape)
-	
-	func setup (attributes: [GLAttribAlias : GLAttribute])
-}
 
 /**
 */
-public class GLShapeBufferBase {
+public class GLShapeBuffer {
 	
 	/*
 	|--------------------------------------------------------------------------
@@ -47,11 +19,14 @@ public class GLShapeBufferBase {
 	|--------------------------------------------------------------------------
 	*/
 	
+	/// Provides a list of buffer objects, which are to use when configuring this vertex array
+	private var _buffers : [GLBuffer] = []
+	
 	/// Provides the count of vertice, this buffer provides
 	private var _count : Int = 0
 	
 	/// Provides the target
-	public let target : GLenum
+	public var target : GLBufferTarget = GLArrayBufferTarget()
 	
 	/// Provides the draw mode
 	public var mode : GLenum = GLenum(GL_TRIANGLES)
@@ -64,7 +39,7 @@ public class GLShapeBufferBase {
 	*/
 	
 	/// Provides a list of buffer objects, which are to use when configuring this vertex array
-	public var buffers : [GLBuffer] = []
+	public var buffers : [GLBuffer] { get {return _buffers}}
 	
 	/// Provides the count of vertice, this buffer provides
 	public var count : Int {get {return _count}}
@@ -81,82 +56,83 @@ public class GLShapeBufferBase {
 	
 	:param: target The buffer target (GL_ARRAY_BUFFER, GL_ARRAY_ELEMENT_BUFFER)
 	*/
-	internal init (target: Int32) {
-		self.target = GLenum(target)
+	public init (target: GLBufferTarget) {
+		self.target = target
 	}
 	
 	
 	/*
 	|--------------------------------------------------------------------------
-	| Derived properties
+	| Methods
 	|--------------------------------------------------------------------------
 	*/
 	
-	/**
-	Buffers a shape
-	*/
+	
 	public func buffer (shape: GLShape) {
+		var bufferables : [GLAttributeSelector : GLBufferable] = shape.bufferables
+		
+		_configure(bufferables)
 		for buffer in buffers {
-			buffer.bind()
 			var data : [GLfloat] = []
-			for index in 0..<shape.count {
+			
+			for index in 0..<shape.geometry.count {
 				for block in buffer.blocks {
-					data += shape[block.attribute, index]
+					var bufferable : GLBufferable = bufferables[block.selector]!
+					data += bufferable[index]
 				}
 			}
+			
+			buffer.bind()
 			buffer.buffer(data)
 		}
-		
-		_count = shape.count
 	}
 	
 	
-	public func setup (attributes: [GLAttribAlias : GLAttribute]) {
+	private func _configure (bufferables: [GLAttributeSelector : GLBufferable]) {
+		
 		// Group by dynmaic and static attributes
 		// **************************************
 		
-		// Assign all attribute values to dynamic group and filter one by one to static
-		var dynamicAttributes : [GLAttribAlias : GLAttribute] = attributes
-		var staticAttributes : [GLAttribAlias : GLAttribute] = [GLAttribAlias : GLAttribute]()
+		// Store static bufferables in this array to configure static buffer later
+		var staticBufferables : [GLAttributeSelector : GLBufferable] = [GLAttributeSelector : GLBufferable]()
 		
-		// Memorize the stride for static attributes
+		// Store the stride
 		var stride : Int = 0
 		
-		// This loop iterates through the dynamic attribute group, configures
-		// the buffers and moves the static attributes to a separate group
-		for key in dynamicAttributes.keys {
-			var attribute : GLAttribute = dynamicAttributes[key]!
+		// Configure dynamic buffers and preconfigure static buffer
+		for selector in bufferables.keys {
+			
+			var bufferable : GLBufferable = bufferables[selector]!
+			
+			if bufferable.count == 0 {continue}
 			
 			// Handle only non-dynmaic buffers
-			if attribute.dynamic {
+			if bufferable.dynamic {
 				/// Creates one buffer per dynamic
-				var block : GLBufferBlock = GLBufferBlock(key, attribute.size, GL_FLOAT, true, 0, 0)
-				var buffer : GLBuffer = GLBuffer(target: target, usage: GLenum(GL_DYNAMIC_DRAW), blocks: [block])
-				buffers.append(buffer)
+				var block : GLBufferBlock = GLBufferBlock(selector, bufferable.size, GL_FLOAT, true, 0, 0)
+				var buffer : GLBuffer = GLBuffer(target: target.value, usage: GLenum(GL_DYNAMIC_DRAW), blocks: [block])
+				_buffers.append(buffer)
 				continue
 			}
 			
-			// Do not add empty attributes
-			if attribute.count == 0 {continue}
-			
-			// Append attribute to static group and remove it from dynamic
-			staticAttributes[key] = attribute
-			dynamicAttributes.removeValueForKey(key)
+			// Append buffer to static group
+			staticBufferables[selector] = bufferable
 			
 			// Increase stride with new appended static attribute
-			stride += attribute.size
+			stride += bufferable.size
 		}
+		
 		
 		// Configure the static buffer
 		var offset : Int = 0
-		var sBlocks : [GLBufferBlock] = []
-		for key in staticAttributes.keys {
-			var attribute : GLAttribute = staticAttributes[key]!
-			var block : GLBufferBlock = GLBufferBlock(key, attribute.size, GL_FLOAT, true, stride, offset)
-			sBlocks.append(block)
+		var blocks : [GLBufferBlock] = []
+		for selector in staticBufferables.keys {
+			var bufferable : GLBufferable = bufferables[selector]!
+			var block : GLBufferBlock = GLBufferBlock(selector, bufferable.size, GL_FLOAT, true, stride, offset)
+			blocks.append(block)
 			offset += Int(block.size)
 		}
 		
-		buffers.append(GLBuffer(target: target, usage: GLenum(GL_STATIC_DRAW), blocks: sBlocks))
+		_buffers.append(GLBuffer(target: target.value, usage: GLenum(GL_STATIC_DRAW), blocks: blocks))
 	}
 }

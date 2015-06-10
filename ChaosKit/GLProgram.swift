@@ -19,20 +19,14 @@ public final class GLProgram: GLBase {
 	private var _attribLocations : [String : GLAttribLocation] = [String : GLAttribLocation]()
 	
 	/// Contains a uniform alias to variable name map
-	private var _uniformaliasmap : [String : String] = [String : String]()
+	private var _uniformSelectors : [String : String] = [String : String]()
 	
 	/// Contains a attribute alias to variable name map
-	private var _attribaliasmap : [String : String] = [String : String]()
+	private var _attributeSelectors : [GLAttributeSelector : String] = [GLAttributeSelector : String]()
 	
 	
 	// Derived properties
 	// ******************
-	
-	/// Provides the uniform
-	public var uniformvars : [GLUniformLocation] {get {return _uniformLocations.values.array}}
-	
-	/// Provides the uniform
-	public var attribvars : [GLAttribLocation] {get {return _attribLocations.values.array}}
 	
 	/// Determines whether the program is valid or not
 	public var valid : Bool {get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS) == GL_TRUE}}
@@ -44,34 +38,6 @@ public final class GLProgram: GLBase {
 	
 	/// Indicates if program is current
 	public var isCurrent : Bool {get {return self == _currentProgram}}
-	
-	
-	/** 
-	Subscript acces to associated attribute alias
-	
-	:param: alias The GLAttribAlias
-	:returns: Some GLAttribLocation object
-	*/
-	public subscript (alias: GLAttribAlias) -> GLAttribLocation? {
-		get {
-			if let varname = _attribaliasmap[alias.rawValue] {return getAttribLocation(varname)}
-			return nil
-		}
-	}
-	
-	
-	/**
-	Subscript acces to associated attribute alias
-	
-	:param: alias The GLAttribAlias
-	:returns: Some GLAttribLocation object
-	*/
-	public subscript (alias: GLUniformAlias) -> GLUniformLocation? {
-		get {
-			if let varname = _uniformaliasmap[alias.rawValue] {return getUniformLocation(varname)}
-			return nil
-		}
-	}
 	
 	
 	/**
@@ -159,29 +125,28 @@ public final class GLProgram: GLBase {
 	
 	
 	/**
-	Draws the shape
+	Uploads buffer data to opengl
+	
+	:param: buffers The buffers to upload
 	*/
-	public func draw (buffer: GLShapeBuffer) {
-		for buffer in buffer.buffers {bind(buffer)}
-		buffer.draw()
-		for buffer in buffer.buffers {
-			for block in buffer.blocks {
-				var attribLocation : GLAttribLocation? = getAttribLocation(block.attribute)
-				attribLocation?.disable()
-			}
+	public func upload (buffers: [GLBuffer]) {
+		for buffer in buffers {
+			upload(buffer)
 		}
 	}
 	
 	
 	/**
-	Binds and setups
+	Uploads data buffer to opengl
+	
+	:param: buffer The buffer to upload
 	*/
-	public func bind (buffer: GLBuffer) {
+	public func upload (buffer: GLBuffer) {
 		buffer.bind()
 		for block in buffer.blocks {
-			var attribLocation : GLAttribLocation? = getAttribLocation(block.attribute)
-			attribLocation?.enable()
-			attribLocation?.setVertexAttribPointer(block)
+			var attribute : GLAttribLocation? = getAttribLocation(block.selector)
+			attribute?.enable()
+			attribute?.setVertexAttribPointer(block)
 		}
 	}
 	
@@ -190,12 +155,13 @@ public final class GLProgram: GLBase {
 	Retrieves information about an attribute variable in this shader program
 	
 	:param: varname the variable name in the vertex shader
+	:return: The attribute location object
 	*/
 	public func getAttribLocation (varname: String) -> GLAttribLocation? {
 		if _attribLocations[varname] != nil {return _attribLocations[varname]}
 		
 		var location : GLint = glGetAttribLocation(id, varname)
-		if location < 0 {warn("GLAttribute \(varname) not found in program."); return nil}
+		if location < 0 {warn("GLAttribData \(varname) not found in program."); return nil}
 		
 		var pointer : UnsafeMutablePointer<UnsafeMutablePointer<Void>> = UnsafeMutablePointer<UnsafeMutablePointer<Void>>.alloc(1)
 		glGetVertexAttribPointerv(GLuint(location), GLenum(GL_VERTEX_ATTRIB_ARRAY_POINTER), pointer)
@@ -206,13 +172,27 @@ public final class GLProgram: GLBase {
 		return attribvar
 	}
 	
+	
 	/**
-	Returns the attrib location by given alias
+	Returns the attribute location by given variable name
+	
+	:param: varname The varname string as it is used in the shader
+	:return: The attribute location struct
 	*/
-	public func getAttribLocation (alias: GLAttribAlias) -> GLAttribLocation? {
-		var varname : String? = _attribaliasmap[alias.rawValue]
+	public func getAttribLocation (selector: GLAttributeSelector) -> GLAttribLocation? {
+		var varname : String? = _attributeSelectors[selector]
 		if varname == nil {return nil}
 		return getAttribLocation(varname!)
+	}
+	
+	
+	/**
+	Associates a attribute selector with a varname in the shader
+	
+	:param: selector The attribute selector
+	*/
+	public func setAttributeSelector (selector: GLAttributeSelector, forLocation varname: String) {
+		_attributeSelectors[selector] = varname
 	}
 	
 	
@@ -233,37 +213,36 @@ public final class GLProgram: GLBase {
 		return uniformvar
 	}
 	
+	
 	/**
 	Shortcut for getUniformLocation with alias
 	*/
 	public func getUniformLocation (alias: GLUniformAlias) -> GLUniformLocation? {
-		var varname : String? = _uniformaliasmap[alias.rawValue]
+		var varname : String? = _uniformSelectors[alias.rawValue]
 		if varname == nil {return nil}
 		return getUniformLocation(varname!)
 	}
 	
 	
 	/**
-	Sets an attribute alias to grant access to variables in a shader without knowing the
-	concrete name of it
-	
-	:param: alias The symbolic alias
-	:param: varname The variablename
+	Shortcut for getUniformLocation with alias
 	*/
-	public func setAttribAlias (alias: GLAttribAlias, _ varname: String) {
-		setAttribAlias(alias.rawValue, varname)
+	public func getUniformLocation (alias: GLTextureMapType) -> GLUniformLocation? {
+		var varname : String? = _uniformSelectors[alias.rawValue]
+		if varname == nil {return nil}
+		return getUniformLocation(varname!)
 	}
 	
 	
 	/**
-	Sets an attribute alias to grant access to variables in a shader without knowing the
+	Sets an uniform alias to grant access to variables in a shader without knowing the
 	concrete name of it
 	
 	:param: alias The symbolic alias
 	:param: varname The variablename
 	*/
-	public func setAttribAlias (alias: String, _ varname: String) {
-		_attribaliasmap[alias] = varname
+	public func setUniformAlias (alias: String, _ varname: String) {
+		_uniformSelectors[alias] = varname
 	}
 	
 	
@@ -286,8 +265,8 @@ public final class GLProgram: GLBase {
 	:param: alias The symbolic alias
 	:param: varname The variablename
 	*/
-	public func setUniformAlias (alias: String, _ varname: String) {
-		_uniformaliasmap[alias] = varname
+	public func setUniformAlias (alias: GLTextureMapType, _ varname: String) {
+		setUniformAlias(alias.rawValue, varname)
 	}
 }
 

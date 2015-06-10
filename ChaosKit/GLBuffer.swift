@@ -58,7 +58,7 @@ public class GLBuffer {
 	public var target : GLenum {get {return _target}}
 	
 	/// Indicates if the buffer is bound or not
-	public var bound : Bool {get {return GLuint(GLBase.getIntegerv(_bindingPname)) == name}}
+	public var bound : Bool {get {return GLuint(GL.getIntegerv(_bindingPname).memory) == name}}
 
 	
 	/*
