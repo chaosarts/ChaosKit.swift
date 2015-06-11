@@ -8,9 +8,11 @@
 
 import Foundation
 
-public protocol GLShapeProperty : GLBufferable {}
+public protocol GLShapeProperty : GLBufferable {
+	var indexed : Bool {get}
+}
 
-public class GLShapePropertyArray<V: Vector> : GLShapeProperty, ArrayLiteralConvertible  {
+public struct GLShapePropertyArray<V: Vector> : GLShapeProperty, ArrayLiteralConvertible  {
 	
 	public var values : [V] = []
 	
@@ -19,6 +21,8 @@ public class GLShapePropertyArray<V: Vector> : GLShapeProperty, ArrayLiteralConv
 	public var size : Int {get {return V.elementCount}}
 	
 	public var dynamic : Bool = false
+	
+	public let indexed : Bool = false
 	
 	public subscript () -> V {
 		get {return V()}
@@ -30,16 +34,50 @@ public class GLShapePropertyArray<V: Vector> : GLShapeProperty, ArrayLiteralConv
 	}
 	
 	
-	public convenience init () {
+	public init () {
 		self.init(values: [])
 	}
+	
 	
 	public init (values: [V]) {
 		self.values = values
 	}
 	
 	
-	public convenience required init(arrayLiteral elements: V...) {
+	public init(arrayLiteral elements: V...) {
 		self.init(values: elements)
+	}
+}
+
+
+public struct GLShapePropertySingleValue<V: Vector> : GLShapeProperty, ArrayLiteralConvertible {
+	
+	public var value : V
+	
+	public var count : Int {get {return 1}}
+	
+	public var size : Int {get {return V.elementCount}}
+	
+	public var dynamic : Bool = false
+	
+	public let indexed : Bool = false
+	
+	public subscript (index: Int) -> [GLfloat] {
+		get {return value.array}
+	}
+	
+	
+	public init () {
+		self.init(value: V())
+	}
+	
+	
+	public init (value: V) {
+		self.value = value
+	}
+	
+	
+	public init(arrayLiteral elements: GLfloat...) {
+		self.init(value: V(elements))
 	}
 }

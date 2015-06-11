@@ -14,6 +14,7 @@ The base class for a 3d object in OpenGL. A shape is described by different
 types of attributes (Position, Color, Normals) as lists of vectors contained 
 in corresponding GLAttribData objects.
 */
+@objc
 public class GLShape : GLDisplayObject {
 	
 	/*
@@ -21,6 +22,8 @@ public class GLShape : GLDisplayObject {
 	| Stored properties
 	|--------------------------------------------------------------------------
 	*/
+	
+	private var _buffer : GLShapeBuffer?
 
 	/// Provides the geometry
 	public var geometry : GLShapeProperty
@@ -44,14 +47,17 @@ public class GLShape : GLDisplayObject {
 	public var mode : GLenum = GLenum(GL_TRIANGLES)
 	
 	/// Provides the bufferables
-	public var bufferables : [GLAttributeSelector : GLBufferable] {
+	public var bufferables : [GLLocationSelector : GLBufferable] {
 		get {
-			var output : [GLAttributeSelector : GLBufferable] = surface.bufferables
-			var selector : GLAttributeSelector = GLAttributeSelector(type: .Position)
+			var output : [GLLocationSelector : GLBufferable] = surface.bufferables
+			var selector : GLLocationSelector = GLLocationSelector(type: .Position)
 			output[selector] = geometry
 			return output
 		}
 	}
+	
+	
+	public var buffer : GLShapeBuffer {get {compile(); return _buffer!}}
 
 	
 	/*
@@ -75,6 +81,13 @@ public class GLShape : GLDisplayObject {
 	*/
 	
 	public func compile () {
+		if _buffer != nil {return}
+		var target : GLBufferTarget
 		
+		if geometry.indexed {target = GLArrayBufferTarget()}
+		else {target = GLElementBufferTarget()}
+		
+		_buffer = GLShapeBuffer(target: target)
+		_buffer!.buffer(self)
 	}
 }

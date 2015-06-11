@@ -8,60 +8,7 @@
 
 import Cocoa
 
-public enum GLUniformAlias : String {
-	case ModelViewMatrix = "ModelViewMatrix"
-	case ProjectionViewMatrix = "ProjectionViewMatrix"
-	
-	case AmbientLightColor = "AmbientLightColor"
-	case AmbientLightIntensity = "AmbientLightIntensity"
-	
-	case DiffuseLightColor = "DiffuseLightColor"
-	case DiffuseLightPosition = "DiffuseLightPosition"
-	case DiffuseLightIntensity = "DiffuseLightIntensity"
-	
-	case SpecularLightColor = "SpecularLightColor"
-	case SpecularLightPosition = "SpecularLightPosition"
-	case SpecularLightIntensity = "SpecularLightIntensity"
-	case SpecularLightShininess = "SpecularLightShininess"
-	
-	case ImageMap = "ImageMap"
-	case DiffuseMap = "DiffuseMap"
-	case ShadowMap = "ShadowMap"
-	case BumpMap = "BumpMap"
-	case DisplacementMap = "DisplacementMap"
-	case HeightMap = "HeightMap"
-	case NormalMap = "NormalMap"
-	case SpecularMap = "SpecularMap"
-	case GlowMap = "GlowMap"
-	case EnviromentMap = "EnviromentMap"
-	
-	public static let cases : [GLUniformAlias] = [
-		.ModelViewMatrix,
-		.ProjectionViewMatrix,
-		
-		.AmbientLightColor,
-		.AmbientLightIntensity,
-		
-		.DiffuseLightColor,
-		.DiffuseLightPosition,
-		.DiffuseLightIntensity,
-		
-		.SpecularLightColor,
-		.SpecularLightPosition,
-		.SpecularLightIntensity,
-		.SpecularLightShininess,
-		
-		.ImageMap,
-		.ShadowMap,
-		.BumpMap,
-		.NormalMap,
-		.DisplacementMap,
-		.HeightMap,
-		.SpecularMap,
-		.GlowMap,
-		.EnviromentMap
-	]
-}
+
 
 
 /**
@@ -71,4 +18,22 @@ public class GLUniformLocation : GLLocation {
 	public init (index: GLuint, name: String) {
 		super.init(index, name)
 	}
+}
+
+public enum GLUniformType : String {
+	
+	case ModelViewMatrix = "ModelViewMatrix"
+	case ProjectionViewMatrix = "ProjectionViewMatrix"
+	case Sampler = "Sampler"
+	case Light = "Light"
+	case LightPosition = "LightPosition"
+	case LightIntensity = "LightIntensity"
+	
+	public static let cases : [GLUniformType] = [
+		.ModelViewMatrix,
+		.ProjectionViewMatrix,
+		.Sampler,
+		.LightPosition,
+		.LightIntensity
+	]
 }

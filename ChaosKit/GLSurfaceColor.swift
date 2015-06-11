@@ -10,3 +10,6 @@ import Foundation
 
 public typealias GLSurfaceRGBColorArray = GLShapePropertyArray<vec3>
 public typealias GLSurfaceRGBAColorArray = GLShapePropertyArray<vec4>
+
+public typealias GLSurfaceSingleRGBColor = GLShapePropertySingleValue<vec3>
+public typealias GLSurfaceSingleRGBAColor = GLShapePropertySingleValue<vec4>

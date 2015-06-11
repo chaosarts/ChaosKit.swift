@@ -74,7 +74,7 @@ public class GLCamera {
 	
 	
 	public convenience init () {
-		self.init(projection: GLOrthographicProjection(viewVolume: GLViewVolume()))
+		self.init(projection: GLOrthographicProjection(GLViewVolume()))
 	}
 	
 	

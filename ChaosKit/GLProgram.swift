@@ -16,13 +16,13 @@ public final class GLProgram: GLBase {
 	private var _uniformLocations : [String : GLUniformLocation] = [String : GLUniformLocation]()
 	
 	/// Provides the vertex attributes
-	private var _attribLocations : [String : GLAttribLocation] = [String : GLAttribLocation]()
+	private var _attribLocations : [String : GLAttributeLocation] = [String : GLAttributeLocation]()
 	
 	/// Contains a uniform alias to variable name map
-	private var _uniformSelectors : [String : String] = [String : String]()
+	private var _uniformSelectors : [GLLocationSelector : String] = [GLLocationSelector : String]()
 	
 	/// Contains a attribute alias to variable name map
-	private var _attributeSelectors : [GLAttributeSelector : String] = [GLAttributeSelector : String]()
+	private var _attributeSelectors : [GLLocationSelector : String] = [GLLocationSelector : String]()
 	
 	
 	// Derived properties
@@ -144,10 +144,49 @@ public final class GLProgram: GLBase {
 	public func upload (buffer: GLBuffer) {
 		buffer.bind()
 		for block in buffer.blocks {
-			var attribute : GLAttribLocation? = getAttribLocation(block.selector)
+			var attribute : GLAttributeLocation? = getAttribLocation(block.selector)
 			attribute?.enable()
 			attribute?.setVertexAttribPointer(block)
 		}
+	}
+	
+	
+	/**
+	Disable all attributes that has been used for these buffers
+	
+	:param: buffers The buffers to unload
+	*/
+	public func unload (buffers: [GLBuffer]) {
+		for buffer in buffers {
+			unload(buffer)
+		}
+	}
+	
+	
+	/**
+	Disable all attributes that has been used for this buffer
+	
+	:param: buffer The buffer to unload
+	*/
+	public func unload (buffer: GLBuffer) {
+		buffer.bind()
+		for block in buffer.blocks {
+			var attribute : GLAttributeLocation? = getAttribLocation(block.selector)
+			attribute?.disable()
+		}
+	}
+	
+	
+	/**
+	Draws the shape by compiling and uploading the data first
+	
+	:param: shape The shape to draw
+ 	*/
+	public func draw (shape: GLShape) {
+		var shapeBuffer : GLShapeBuffer = shape.buffer
+		upload(shapeBuffer.buffers)
+		shapeBuffer.target.draw(mode: shape.mode, count: GLsizei(shapeBuffer.count))
+		unload(shapeBuffer.buffers)
 	}
 	
 	
@@ -157,7 +196,7 @@ public final class GLProgram: GLBase {
 	:param: varname the variable name in the vertex shader
 	:return: The attribute location object
 	*/
-	public func getAttribLocation (varname: String) -> GLAttribLocation? {
+	public func getAttribLocation (varname: String) -> GLAttributeLocation? {
 		if _attribLocations[varname] != nil {return _attribLocations[varname]}
 		
 		var location : GLint = glGetAttribLocation(id, varname)
@@ -166,7 +205,7 @@ public final class GLProgram: GLBase {
 		var pointer : UnsafeMutablePointer<UnsafeMutablePointer<Void>> = UnsafeMutablePointer<UnsafeMutablePointer<Void>>.alloc(1)
 		glGetVertexAttribPointerv(GLuint(location), GLenum(GL_VERTEX_ATTRIB_ARRAY_POINTER), pointer)
 		
-		var attribvar : GLAttribLocation = GLAttribLocation(index: GLuint(location), name: varname, pointer: pointer.memory)
+		var attribvar : GLAttributeLocation = GLAttributeLocation(index: GLuint(location), name: varname, pointer: pointer.memory)
 		
 		_attribLocations[varname] = attribvar
 		return attribvar
@@ -179,7 +218,7 @@ public final class GLProgram: GLBase {
 	:param: varname The varname string as it is used in the shader
 	:return: The attribute location struct
 	*/
-	public func getAttribLocation (selector: GLAttributeSelector) -> GLAttribLocation? {
+	public func getAttribLocation (selector: GLLocationSelector) -> GLAttributeLocation? {
 		var varname : String? = _attributeSelectors[selector]
 		if varname == nil {return nil}
 		return getAttribLocation(varname!)
@@ -191,7 +230,7 @@ public final class GLProgram: GLBase {
 	
 	:param: selector The attribute selector
 	*/
-	public func setAttributeSelector (selector: GLAttributeSelector, forLocation varname: String) {
+	public func setAttributeSelector (selector: GLLocationSelector, forLocation varname: String) {
 		_attributeSelectors[selector] = varname
 	}
 	
@@ -215,58 +254,25 @@ public final class GLProgram: GLBase {
 	
 	
 	/**
-	Shortcut for getUniformLocation with alias
+	Returns a uniform location associated with the passed selector
+	
+	:param: selector The selector, which is associated with the target uniform variable
 	*/
-	public func getUniformLocation (alias: GLUniformAlias) -> GLUniformLocation? {
-		var varname : String? = _uniformSelectors[alias.rawValue]
+	public func getUniformLocation (selector: GLLocationSelector) -> GLUniformLocation? {
+		var varname : String? = _uniformSelectors[selector]
 		if varname == nil {return nil}
 		return getUniformLocation(varname!)
 	}
 	
 	
 	/**
-	Shortcut for getUniformLocation with alias
-	*/
-	public func getUniformLocation (alias: GLTextureMapType) -> GLUniformLocation? {
-		var varname : String? = _uniformSelectors[alias.rawValue]
-		if varname == nil {return nil}
-		return getUniformLocation(varname!)
-	}
+	Sets a uniform selector to associate with a uniform variable in this program
 	
-	
-	/**
-	Sets an uniform alias to grant access to variables in a shader without knowing the
-	concrete name of it
-	
-	:param: alias The symbolic alias
+	:param: selector The selector vor the associated uniform variable
 	:param: varname The variablename
 	*/
-	public func setUniformAlias (alias: String, _ varname: String) {
-		_uniformSelectors[alias] = varname
-	}
-	
-	
-	/**
-	Sets an uniform alias to grant access to variables in a shader without knowing the
-	concrete name of it
-	
-	:param: alias The symbolic alias
-	:param: varname The variablename
-	*/
-	public func setUniformAlias (alias: GLUniformAlias, _ varname: String) {
-		setUniformAlias(alias.rawValue, varname)
-	}
-	
-	
-	/**
-	Sets an uniform alias to grant access to variables in a shader without knowing the
-	concrete name of it
-	
-	:param: alias The symbolic alias
-	:param: varname The variablename
-	*/
-	public func setUniformAlias (alias: GLTextureMapType, _ varname: String) {
-		setUniformAlias(alias.rawValue, varname)
+	public func setUniformSelector (selector: GLLocationSelector, forLocation varname: String) {
+		_uniformSelectors[selector] = varname
 	}
 }
 

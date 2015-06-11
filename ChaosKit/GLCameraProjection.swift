@@ -45,7 +45,7 @@ public struct GLOrthographicProjection : GLCameraProjection {
 	
 	:param: viewVolume The view colume object
 	*/
-	public init (viewVolume: GLViewVolume = GLViewVolume()) {
+	public init (_ viewVolume: GLViewVolume = GLViewVolume()) {
 		self.viewVolume = viewVolume
 		_viewMatrix = mat4.makeOrtho(left: viewVolume.left, right: viewVolume.right, bottom: viewVolume.bottom, top: viewVolume.top, near: viewVolume.near, far: viewVolume.far)
 	}
@@ -76,7 +76,7 @@ public struct GLPerspectiveProjection : GLCameraProjection {
 	
 	:param: viewVolume The view colume object
 	*/
-	public init (viewVolume: GLViewVolume = GLViewVolume()) {
+	public init (_ viewVolume: GLViewVolume = GLViewVolume()) {
 		self.viewVolume = viewVolume
 		_viewMatrix = mat4.makeFrustum(left: viewVolume.left, right: viewVolume.right, bottom: viewVolume.bottom, top: viewVolume.top, near: viewVolume.near, far: viewVolume.far)
 	}

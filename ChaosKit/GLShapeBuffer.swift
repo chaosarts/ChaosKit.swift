@@ -69,7 +69,7 @@ public class GLShapeBuffer {
 	
 	
 	public func buffer (shape: GLShape) {
-		var bufferables : [GLAttributeSelector : GLBufferable] = shape.bufferables
+		var bufferables : [GLLocationSelector : GLBufferable] = shape.bufferables
 		
 		_configure(bufferables)
 		for buffer in buffers {
@@ -88,13 +88,13 @@ public class GLShapeBuffer {
 	}
 	
 	
-	private func _configure (bufferables: [GLAttributeSelector : GLBufferable]) {
+	private func _configure (bufferables: [GLLocationSelector : GLBufferable]) {
 		
 		// Group by dynmaic and static attributes
 		// **************************************
 		
 		// Store static bufferables in this array to configure static buffer later
-		var staticBufferables : [GLAttributeSelector : GLBufferable] = [GLAttributeSelector : GLBufferable]()
+		var staticBufferables : [GLLocationSelector : GLBufferable] = [GLLocationSelector : GLBufferable]()
 		
 		// Store the stride
 		var stride : Int = 0

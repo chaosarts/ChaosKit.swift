@@ -12,7 +12,7 @@ import Foundation
 public protocol GLBufferTarget {
 	var value : GLenum {get}
 	
-	func draw (mode: GLenum, count: GLsizei)
+	func draw (mode m: GLenum, count c: GLsizei)
 }
 
 
@@ -22,8 +22,8 @@ public struct GLArrayBufferTarget : GLBufferTarget {
 	
 	public var value : GLenum {get {return GLenum(GL_ARRAY_BUFFER)}}
 	
-	public func draw (mode: GLenum, count: GLsizei) {
-		glDrawArrays(mode, first, count)
+	public func draw (mode m: GLenum, count c: GLsizei) {
+		glDrawArrays(m, first, c)
 	}
 }
 
@@ -36,7 +36,7 @@ public struct GLElementBufferTarget : GLBufferTarget {
 	
 	public var value : GLenum {get {return GLenum(GL_ELEMENT_ARRAY_BUFFER)}}
 	
-	public func draw (mode: GLenum, count: GLsizei) {
-		glDrawElements(mode, count, type, indices)
+	public func draw (mode m: GLenum, count c: GLsizei) {
+		glDrawElements(m, c, type, indices)
 	}
 }

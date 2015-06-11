@@ -24,6 +24,8 @@ public class GLSurfaceTextureMap2D : GLSurfaceTexture {
 	
 	public var texture : GLTexture {get {return _texture}}
 	
+	public var indexed : Bool = false
+	
 	
 	public subscript (index: Int) -> [GLfloat] {
 		get {return coords[index].array}

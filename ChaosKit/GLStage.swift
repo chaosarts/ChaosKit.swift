@@ -8,6 +8,7 @@
 
 import Cocoa
 
+@objc
 public class GLStage : GLContainer {
 	
 	public override init () {
@@ -20,8 +21,8 @@ public class GLStage : GLContainer {
 	}
 	
 	
-	public override func removeChild(child: GLDisplayObject) -> Int {
-		var index : Int = super.removeChild(child)
+	public override func removeChild(child: GLDisplayObject) -> Int? {
+		var index : Int? = super.removeChild(child)
 		child.stage = nil
 		return index
 	}

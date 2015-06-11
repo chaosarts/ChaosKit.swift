@@ -17,15 +17,15 @@ public class GLSurface {
 	
 	public var normal : GLShapeProperty = GLSurfaceNormal3DArray()
 	
-	public var bufferables : [GLAttributeSelector : GLBufferable] {
+	public var bufferables : [GLLocationSelector : GLBufferable] {
 		get {
-			var output : [GLAttributeSelector : GLBufferable] = [GLAttributeSelector : GLBufferable]()
-			output[GLAttributeSelector(type: .Normal)] = normal
-			output[GLAttributeSelector(type: .Color)] = color
+			var output : [GLLocationSelector : GLBufferable] = [GLLocationSelector : GLBufferable]()
+			output[GLLocationSelector(type: .Normal)] = normal
+			output[GLLocationSelector(type: .Color)] = color
 			
 			for key in _texturemaps.keys {
 				var map : GLSurfaceTexture = _texturemaps[key]!
-				var selector : GLAttributeSelector = GLAttributeSelector(type: .TexCoord, domain: key.rawValue)
+				var selector : GLLocationSelector = GLLocationSelector(type: .TexCoord, domain: key.rawValue)
 				output[selector] = map
 			}
 			return output

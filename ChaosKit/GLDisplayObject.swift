@@ -1,5 +1,5 @@
 //
-//  GLDisplayObject.swift
+//  GLDisplayObjectBase.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 13.03.15.
@@ -8,42 +8,66 @@
 
 import Cocoa
 
-internal class GLDisplayObjectManager {
-	
-	private static var instance : GLDisplayObjectManager?
-	
-	class func getInstance () -> GLDisplayObjectManager {
-		if instance == nil {
-			instance = GLDisplayObjectManager()
-		}
-		
-		return instance!
-	}
-	
-	private var _id : DisplayObjectID
-	
-	private init () {
-		_id = 0
-	}
-	
-	
-	func generateId () -> UInt32 {
-		return _id++
-	}
-}
+//public protocol GLDisplayObject {
+//	
+//	/// Provides the display object id
+//	var id : GLDisplayObjectId {get set}
+//	
+//	/// Provides the anchor to rotate around
+//	var anchor : vec3 {get set}
+//	
+//	/// Provides the position of the object as vector
+//	var position : vec3 {get set}
+//	
+//	/// Provides the rotation around the x, y and z axis
+//	var rotation : vec3 {get set}
+//	
+//	/// Provides the scale in x, y and z direction
+//	var scaling : vec3 {get set}
+//	
+//	/// Provides the shearing in x, y and z direction
+//	var shearing : vec3 {get set}
+//	
+//	/// Provides the x position
+//	var x : GLfloat {get set}
+//	
+//	/// Provides the y position
+//	var y : GLfloat {get set}
+//	
+//	/// Provides the z position
+//	var z : GLfloat {get set}
+//	
+//	/// Indicates if the displayable is visible or not
+//	var visible : Bool {get set}
+//	
+//	/// Contains the parent element
+//	var parent : GLContainer? {get}
+//	
+//	/// Contains the scene to which the object belongs to
+//	var stage : GLStage? {get set}
+//	
+//	/// Provides the model view matrix of the object
+//	var modelViewMatrix : mat4 {get}
+//	
+//	/// Contains the model view matrix for normals
+//	var normalViewMatrix : mat4 {get}
+//}
 
 /**
 Base class for displayable objects. Does not implement the GLDisplayable
 protocol, since it is 'abstract' and therefore it is unknown what to do in 
 display method.
 */
-public class GLDisplayObject : NSObject, Equatable {
+@objc
+public class GLDisplayObject {
 	
 	/// Provides the id of the display object
-	internal var _id : DisplayObjectID
+	private var _id : GLDisplayObjectId
 	
 	/// Caches the transformation matrix
 	private var _cache : mat4?
+	
+	internal var _parent : GLContainer?
 	
 	/// Provides the anchor to rotate around
 	public var anchor : vec3 = vec3()
@@ -59,12 +83,12 @@ public class GLDisplayObject : NSObject, Equatable {
 	}
 	
 	/// Provides the scale in x, y and z direction
-	public var scale : vec3 = vec3 (1, 1, 1) {
+	public var scaling : vec3 = vec3 (1, 1, 1) {
 		didSet {_cache = nil}
 	}
 	
 	/// Contains the shear in x, y and z direction
-	public var shear : vec3 = vec3 (0, 0, 0) {
+	public var shearing : vec3 = vec3 (0, 0, 0) {
 		didSet {_cache = nil}
 	}
 	
@@ -90,10 +114,18 @@ public class GLDisplayObject : NSObject, Equatable {
 	public var visible : Bool = true
 	
 	/// Contains the parent element
-	public var parent : GLContainer?
+	public var parent : GLContainer? {
+		get {return _parent}
+	}
 
 	/// Contains the scene to which the object belongs to
 	public var stage : GLStage?
+	
+	/// Returns the id of the object
+	public var id : GLDisplayObjectId {
+		get {return _id}
+		set {_id = newValue}
+	}
 	
 	/// Provides the model view matrix of the object
 	public var modelViewMatrix : mat4 {
@@ -117,8 +149,8 @@ public class GLDisplayObject : NSObject, Equatable {
 	}
 	
 	/// Initializes the object
-	internal override init () {
-		_id = GLDisplayObjectManager.getInstance().generateId()
+	internal init () {
+		_id = GLDisplayObjectId()
 	}
 	
 	
@@ -128,9 +160,4 @@ public class GLDisplayObject : NSObject, Equatable {
 		rotation = vec3()
 		position = vec3()
 	}
-}
-
-
-public func ==(l: GLDisplayObject, r: GLDisplayObject) -> Bool {
-	return l === r
 }
