@@ -17,16 +17,16 @@ public class GLContainer: GLDisplayObject {
 	|--------------------------------------------------------------------------
 	*/
 	
-	/// The children, this container contains
-	private var _children : [GLDisplayObject] = []
-	
 	/// Caches the shapes contained in this container
 	private var _shapeCache : [GLShape]?
+	
+	/// The children, this container contains
+	public private(set) var children : [GLDisplayObject] = []
 	
 	/// Contains the scene to which the object belongs to
 	public override var stage : GLStage? {
 		didSet {
-			for child in _children {child.stage = stage!}
+			for child in children {child.stage = stage!}
 		}
 	}
 	
@@ -36,11 +36,6 @@ public class GLContainer: GLDisplayObject {
 	| Derived Properties
 	|--------------------------------------------------------------------------
 	*/
-	
-	/// The children, this container contains
-	public var children : [GLDisplayObject] {
-		get {return _children}
-	}
 	
 	/// Returns all shapes within this container
 	public var shapes : [GLShape] {
@@ -87,7 +82,7 @@ public class GLContainer: GLDisplayObject {
 		child.stage = stage
 		
 		_shapeCache = nil
-		_children.append(child)
+		children.append(child)
 	}
 	
 	
@@ -99,7 +94,7 @@ public class GLContainer: GLDisplayObject {
 	*/
 	public func getChildIndex (child: GLDisplayObject) -> Int? {
 		var index : Int = 0
-		for c in _children {
+		for c in children {
 			if child === c {return index}
 			index++
 		}
@@ -130,10 +125,10 @@ public class GLContainer: GLDisplayObject {
 	:return: The display object child
 	*/
 	public func removeChildAt (index: Int) -> GLDisplayObject? {
-		if index < 0 || index >= _children.count {return nil}
+		if index < 0 || index >= children.count {return nil}
 		
-		var child : GLDisplayObject = _children[index]
-		_children.removeAtIndex(index)
+		var child : GLDisplayObject = children[index]
+		children.removeAtIndex(index)
 		child._parent = nil
 		
 		_shapeCache = nil
@@ -146,7 +141,7 @@ public class GLContainer: GLDisplayObject {
 	Determines if this container is an ancestor of given display object
 	*/
 	public func isAncestorOf (displayObject: GLDisplayObject) -> Bool {
-		var queue : Queue<GLDisplayObject> = Queue(_children)
+		var queue : Queue<GLDisplayObject> = Queue(children)
 		while !queue.isEmpty {
 			var obj : GLDisplayObject = queue.dequeue()!
 			
@@ -168,7 +163,7 @@ public class GLContainer: GLDisplayObject {
 		if _shapeCache != nil {return}
 		
 		_shapeCache = []
-		for child in _children {
+		for child in children {
 			if let shape = child as? GLShape {
 				_shapeCache!.append(child as! GLShape)
 			}
