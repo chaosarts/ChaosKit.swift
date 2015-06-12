@@ -8,10 +8,31 @@
 
 import Foundation
 
-public typealias GLLightState = Bool
-public let ON : GLLightState = true
-public let OFF : GLLightState = true
+/*
+|--------------------------------------------------------------------------
+| Typalias and constants
+|--------------------------------------------------------------------------
+*/
 
+/// Type for light state
+public typealias GLLightState = Bool
+
+/// State to indicate that a light is on
+public let ON : GLLightState = true
+
+/// State to indicate that a light is off
+public let OFF : GLLightState = false
+
+
+/*
+|--------------------------------------------------------------------------
+| Protocols
+|--------------------------------------------------------------------------
+*/
+
+/**
+Protocol for lights
+*/
 public protocol GLLight {
 	/// Provides the state of light
 	var state : GLLightState {get set}
@@ -23,10 +44,17 @@ public protocol GLLight {
 	var uniforms : [GLLightPropertyType : GLUniform] {get}
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| Base Class
+|--------------------------------------------------------------------------
+*/
+
 /**
 Represents a light in opengl
 */
-public class GLLightBase : GLDisplayObject {
+@objc public class GLLightBase : GLDisplayObject {
 	
 	/// Provides a map of light property types
 	internal var _uniforms : [GLLightPropertyType : GLUniform] = [GLLightPropertyType : GLUniform]()
@@ -44,6 +72,13 @@ public class GLLightBase : GLDisplayObject {
 	public var uniforms : [GLLightPropertyType : GLUniform] {get {return _uniforms}}
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| Structs
+|--------------------------------------------------------------------------
+*/
+
 /**
 Light property data type
 */
@@ -60,6 +95,13 @@ public struct GLLightProperty {
 		self.type = type
 	}
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Enumerations
+|--------------------------------------------------------------------------
+*/
 
 /**
 Enumeration of light types
