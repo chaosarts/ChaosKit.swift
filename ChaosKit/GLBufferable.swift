@@ -10,9 +10,6 @@ import Foundation
 
 public protocol GLBufferable {
 	
-	/// Contains the count of elements
-	var count : Int {get}
-	
 	/// Indicates the size per vertex
 	var size : Int {get}
 	
