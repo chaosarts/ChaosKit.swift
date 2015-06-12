@@ -183,10 +183,18 @@ public final class GLProgram: GLBase {
 	:param: shape The shape to draw
  	*/
 	public func draw (shape: GLShape) {
-		var shapeBuffer : GLShapeBuffer = shape.buffer
-		upload(shapeBuffer.buffers)
-		shapeBuffer.target.draw(mode: shape.mode, count: GLsizei(shapeBuffer.count))
-		unload(shapeBuffer.buffers)
+		var uniforms : [GLLocationSelector : GLUniform] = shape.uniforms
+		
+		for selector in uniforms.keys {
+			var location : GLUniformLocation? = getUniformLocation(selector)
+			var uniform : GLUniform = uniforms[selector]!
+			if nil == location {continue}
+			uniform.assign(location!)
+		}
+		
+		upload(shape.buffers)
+		shape.target.draw(mode: shape.mode, count: GLsizei(shape.geometry.count))
+		unload(shape.buffers)
 	}
 	
 	
