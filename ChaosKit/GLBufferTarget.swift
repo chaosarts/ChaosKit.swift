@@ -30,11 +30,17 @@ public struct GLArrayBufferTarget : GLBufferTarget {
 
 public struct GLElementBufferTarget : GLBufferTarget {
 	
-	public var type : GLenum = GLenum(GL_UNSIGNED_BYTE)
+	public var type : GLenum
 	
-	public var indices : [Int] = []
+	public var indices : [Int]
 	
 	public var value : GLenum {get {return GLenum(GL_ELEMENT_ARRAY_BUFFER)}}
+	
+	
+	public init (indices: [Int], type: Int32 = GL_UNSIGNED_BYTE) {
+		self.indices = indices
+		self.type = GLenum(type)
+	}
 	
 	public func draw (mode m: GLenum, count c: GLsizei) {
 		glDrawElements(m, c, type, indices)
