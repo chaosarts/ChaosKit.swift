@@ -8,21 +8,15 @@
 
 import Foundation
 
-public protocol GLShapeProperty : GLBufferable {
-	var indexed : Bool {get}
-}
+public protocol GLShapeProperty : GLBufferable {}
 
 public struct GLShapePropertyArray<V: Vector> : GLShapeProperty, ArrayLiteralConvertible  {
 	
 	public var values : [V] = []
 	
-	public var count : Int {get {return values.count}}
-	
 	public var size : Int {get {return V.elementCount}}
 	
 	public var dynamic : Bool = false
-	
-	public let indexed : Bool = false
 	
 	public subscript () -> V {
 		get {return V()}
@@ -54,13 +48,9 @@ public struct GLShapePropertySingleValue<V: Vector> : GLShapeProperty, ArrayLite
 	
 	public var value : V
 	
-	public var count : Int {get {return 1}}
-	
 	public var size : Int {get {return V.elementCount}}
 	
 	public var dynamic : Bool = false
-	
-	public let indexed : Bool = false
 	
 	public subscript (index: Int) -> [GLfloat] {
 		get {return value.array}
