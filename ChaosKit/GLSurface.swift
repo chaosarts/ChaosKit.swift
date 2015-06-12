@@ -8,27 +8,46 @@
 
 import Foundation
 
-
-public class GLSurface {
+/**
+Surface struct for shapes
+*/
+public struct GLSurface {
 	
+	/// Provides a list of different texture map types
 	private var _texturemaps : [GLTextureMapType : GLSurfaceTexture] = [GLTextureMapType : GLSurfaceTexture]()
 	
+	/// Provides the color of the surface
 	public var color : GLShapeProperty = GLSurfaceRGBAColorArray()
 	
+	/// Provides the surface normal of
 	public var normal : GLShapeProperty = GLSurfaceNormal3DArray()
 	
+	/// Provides the uniforms to apply to program when using this surface
+	public var uniforms : [GLLocationSelector : GLUniform]  {
+		get {
+			var uniforms : [GLLocationSelector : GLUniform] = [GLLocationSelector : GLUniform] ()
+			var count : GLint = 0
+			for key in _texturemaps.keys {
+				var selector : GLLocationSelector = GLLocationSelector(type: .Sampler, domain: key.rawValue)
+				uniforms[selector] = GLUniform1i(GL_TEXTURE0 + count++)
+			}
+			return uniforms
+		}
+	}
+	
+	/// Provides the bufferable properties
 	public var bufferables : [GLLocationSelector : GLBufferable] {
 		get {
-			var output : [GLLocationSelector : GLBufferable] = [GLLocationSelector : GLBufferable]()
-			output[GLLocationSelector(type: .Normal)] = normal
-			output[GLLocationSelector(type: .Color)] = color
+			var bufferables : [GLLocationSelector : GLBufferable] = [GLLocationSelector : GLBufferable]()
+			bufferables[GLLocationSelector(type: .Normal)] = normal
+			bufferables[GLLocationSelector(type: .Color)] = color
 			
 			for key in _texturemaps.keys {
 				var map : GLSurfaceTexture = _texturemaps[key]!
 				var selector : GLLocationSelector = GLLocationSelector(type: .TexCoord, domain: key.rawValue)
-				output[selector] = map
+				bufferables[selector] = map
 			}
-			return output
+			return bufferables
 		}
 	}
 }
