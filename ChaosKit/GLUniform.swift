@@ -87,28 +87,21 @@ public struct GLUniformMatrix3fv : GLUniform {
 	
 	public let transpose : GLboolean
 	
-	public init (value: mat3, transpose: Bool = false) {
-		_value = toUnsafePointer(value.array)
-		self.count = 1
-		self.transpose = GLboolean(transpose ? GL_TRUE : GL_FALSE)
-	}
-	
-	
-	public init (value: [mat3], transpose: Bool = false) {
-		
-		var array : [GLfloat] = []
-		for i in 0..<value.count {array += value[i].array}
-		
-		_value = toUnsafePointer(array)
-		self.count = GLsizei(value.count)
-		self.transpose = GLboolean(transpose ? GL_TRUE : GL_FALSE)
-	}
-	
-	
-	public init (value: [GLfloat], count: GLsizei, transpose: Bool = true) {
+	public init (_ value: [GLfloat], _ count: GLsizei, _ transpose: Bool = true) {
 		_value = toUnsafePointer(value)
 		self.count = count
 		self.transpose = GLboolean(transpose ? GL_TRUE : GL_FALSE)
+	}
+	
+	public init (_ value: mat3, _ transpose: Bool = false) {
+		self.init(value.array, 1, transpose)
+	}
+	
+	
+	public init (_ value: [mat3], _ transpose: Bool = false) {
+		var array : [GLfloat] = []
+		for i in 0..<value.count {array += value[i].array}
+		self.init(array, GLsizei(value.count), transpose)
 	}
 	
 	public func assign (location: GLUniformLocation) {
@@ -146,28 +139,21 @@ public struct GLUniformMatrix4fv : GLUniform {
 	
 	public let transpose : GLboolean
 	
-	public init (value: mat4, transpose: Bool = false) {
-		_value = toUnsafePointer(value.array)
-		self.count = 1
-		self.transpose = GLboolean(transpose ? GL_TRUE : GL_FALSE)
-	}
 	
-	
-	public init (value: [mat4], transpose: Bool = false) {
-		
-		var array : [GLfloat] = []
-		for i in 0..<value.count {array += value[i].array}
-		
-		_value = toUnsafePointer(array)
-		self.count = GLsizei(value.count)
-		self.transpose = GLboolean(transpose ? GL_TRUE : GL_FALSE)
-	}
-	
-	
-	public init (value: [GLfloat], count: GLsizei, transpose: Bool = true) {
+	public init (_ value: [GLfloat], _ count: GLsizei, _ transpose: Bool = true) {
 		_value = toUnsafePointer(value)
 		self.count = count
 		self.transpose = GLboolean(transpose ? GL_TRUE : GL_FALSE)
+	}
+	
+	public init (_ value: [mat4], _ transpose: Bool = false) {
+		var array : [GLfloat] = []
+		for i in 0..<value.count {array += value[i].array}
+		self.init(array, GLsizei(value.count), transpose)
+	}
+	
+	public init (_ value: mat4, _ transpose: Bool = false) {
+		self.init([value], transpose)
 	}
 	
 	public func assign (location: GLUniformLocation) {
