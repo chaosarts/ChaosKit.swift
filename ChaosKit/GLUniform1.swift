@@ -14,12 +14,16 @@ import Foundation
 |--------------------------------------------------------------------------
 */
 
-public struct GLUniform1d : GLUniform {
+public struct GLUniform1d : GLUniform, FloatLiteralConvertible {
 	
 	private let _value : GLdouble
 	
 	public init (_ value: GLdouble) {
 		_value = value
+	}
+	
+	public init (floatLiteral value: GLdouble) {
+		self.init(value)
 	}
 	
 	public func assign (location: GLUniformLocation) {
@@ -28,12 +32,16 @@ public struct GLUniform1d : GLUniform {
 }
 
 
-public struct GLUniform1f : GLUniform {
+public struct GLUniform1f : GLUniform, FloatLiteralConvertible {
 	
 	private let _value : GLfloat
 	
 	public init (_ value: GLfloat) {
 		_value = value
+	}
+	
+	public init (floatLiteral value: GLfloat) {
+		self.init(value)
 	}
 	
 	public func assign (location: GLUniformLocation) {
@@ -42,13 +50,16 @@ public struct GLUniform1f : GLUniform {
 }
 
 
-public struct GLUniform1i : GLUniform {
+public struct GLUniform1i : GLUniform, IntegerLiteralConvertible {
 	
 	private let _value : GLint
 	
-	
 	public init (_ value: GLint) {
 		_value = value
+	}
+	
+	public init (integerLiteral value: GLint) {
+		self.init(value)
 	}
 	
 	public func assign (location: GLUniformLocation) {
@@ -57,7 +68,7 @@ public struct GLUniform1i : GLUniform {
 }
 
 
-public struct GLUniform1ui : GLUniform {
+public struct GLUniform1ui : GLUniform, IntegerLiteralConvertible {
 	
 	private let _value : GLuint
 	
@@ -65,6 +76,11 @@ public struct GLUniform1ui : GLUniform {
 	public init (_ value: GLuint) {
 		_value = value
 	}
+	
+	public init (integerLiteral value: GLuint) {
+		self.init(value)
+	}
+
 	
 	public func assign (location: GLUniformLocation) {
 		glUniform1ui(GLint(location.id), _value)
