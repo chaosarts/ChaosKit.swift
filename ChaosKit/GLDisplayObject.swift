@@ -59,15 +59,18 @@ protocol, since it is 'abstract' and therefore it is unknown what to do in
 display method.
 */
 @objc
-public class GLDisplayObject {
+public class GLDisplayObject : Identifiable {
 	
-	/// Provides the id of the display object
-	private var _id : GLDisplayObjectId
+	// STORED PROPERTIES
+	// +++++++++++++++++
 	
 	/// Caches the transformation matrix
 	private var _cache : mat4?
 	
 	internal var _parent : GLContainer?
+	
+	/// Returns the id of the object
+	public var id : Identifier = ""
 	
 	/// Provides the anchor to rotate around
 	public var anchor : vec3 = vec3()
@@ -91,6 +94,10 @@ public class GLDisplayObject {
 	public var shearing : vec3 = vec3 (0, 0, 0) {
 		didSet {_cache = nil}
 	}
+	
+	
+	// DERIVED PROPERTIES
+	// ++++++++++++++++++
 	
 	/// Provides the x position
 	public var x : GLfloat {
@@ -121,11 +128,6 @@ public class GLDisplayObject {
 	/// Contains the scene to which the object belongs to
 	public var stage : GLStage?
 	
-	/// Returns the id of the object
-	public var id : GLDisplayObjectId {
-		get {return _id}
-		set {_id = newValue}
-	}
 	
 	/// Provides the model view matrix of the object
 	public var modelViewMatrix : mat4 {
@@ -148,16 +150,29 @@ public class GLDisplayObject {
 		}
 	}
 	
-	/// Initializes the object
-	internal init () {
-		_id = GLDisplayObjectId()
-	}
 	
+	/*
+	|--------------------------------------------------------------------------
+	| Initializers
+	|--------------------------------------------------------------------------
+	*/
+	
+	/// Initializes the object
+	internal init () {}
+	
+	
+	/*
+	|--------------------------------------------------------------------------
+	| Methods
+	|--------------------------------------------------------------------------
+	*/
 	
 	/// Resets all transformations
 	public func resetTransformation () {
 		_cache = nil
 		rotation = vec3()
 		position = vec3()
+		shearing = vec3()
+		scaling = vec3()
 	}
 }
