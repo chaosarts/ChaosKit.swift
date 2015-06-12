@@ -33,7 +33,6 @@ public enum GLUniformType : String {
 		.ModelViewMatrix,
 		.ProjectionViewMatrix,
 		.Sampler,
-		.LightPosition,
-		.LightIntensity
+		.Light
 	]
 }
