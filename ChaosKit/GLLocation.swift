@@ -17,10 +17,14 @@ import Foundation
 /**
 Base class for shader program locations
 */
-public class GLLocation : GLBase {
+public class GLLocation : GLBase, Printable {
 	
 	/// The varname string in the shader program
 	public let name : String
+	
+	public var description : String {
+		get {return "\(name) (id: \(id))"}
+	}
 	
 	/**
 	Initializes the location with passed id (index) and varname

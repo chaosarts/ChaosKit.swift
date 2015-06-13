@@ -17,10 +17,10 @@ public struct GLSurface {
 	private var _texturemaps : [GLTextureMapType : GLSurfaceTexture] = [GLTextureMapType : GLSurfaceTexture]()
 	
 	/// Provides the color of the surface
-	public var color : GLShapeProperty = GLSurfaceRGBAColorArray()
+	public var color : GLShapeProperty?
 	
 	/// Provides the surface normal of
-	public var normal : GLShapeProperty = GLSurfaceNormal3DArray()
+	public var normal : GLShapeProperty?
 	
 	/// Provides the uniforms to apply to program when using this surface
 	public var uniforms : [GLLocationSelector : GLUniform]  {
@@ -39,8 +39,8 @@ public struct GLSurface {
 	public var bufferables : [GLLocationSelector : GLBufferable] {
 		get {
 			var bufferables : [GLLocationSelector : GLBufferable] = [GLLocationSelector : GLBufferable]()
-			bufferables[GLLocationSelector(type: .Normal)] = normal
-			bufferables[GLLocationSelector(type: .Color)] = color
+			if nil != normal {bufferables[GLLocationSelector(type: .Normal)] = normal!}
+			if nil != color {bufferables[GLLocationSelector(type: .Color)] = color!}
 			
 			for key in _texturemaps.keys {
 				var map : GLSurfaceTexture = _texturemaps[key]!

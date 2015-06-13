@@ -25,6 +25,7 @@ public protocol GLGeometry : GLShapeProperty {
 	/// Indicates wether the geometry uses shared vertices or not
 	var indexed : Bool {get}
 	
+	///
 	var indexlist : [Int]? {get}
 }
 
@@ -50,7 +51,7 @@ public struct GLGeometryArray<V: Vector> : GLGeometry, ArrayLiteralConvertible {
 	public private(set) var values : [V] = []
 	
 	/// Indicates whether the vertices change often or not
-	public var dynamic : Bool = true
+	public var dynamic : Bool = false
 	
 	
 	// DERIVED PROPERTIES
@@ -66,7 +67,7 @@ public struct GLGeometryArray<V: Vector> : GLGeometry, ArrayLiteralConvertible {
 	public var indexed : Bool {get {return nil != _indexMap}}
 	
 	/// Provides the index list if geometry uses shared vertices
-	public var indexlist : [Int]? {get {return _indexMap?.values.array}}
+	public private(set) var indexlist : [Int]?
 	
 	
 	// SUBSCRIPTS
@@ -75,7 +76,19 @@ public struct GLGeometryArray<V: Vector> : GLGeometry, ArrayLiteralConvertible {
 	///
 	public subscript () -> V {
 		get {return V()}
-		set {values.append(newValue)}
+		set {
+			if !indexed {values.append(newValue); return}
+			if indexlist == nil {indexlist = []}
+			
+			var index : Int? = _indexMap![newValue.description]
+			if index == nil {
+				index = count
+				_indexMap![newValue.description] = count
+				values.append(newValue)
+			}
+			
+			indexlist!.append(index!)
+		}
 	}
 	
 	
@@ -93,7 +106,10 @@ public struct GLGeometryArray<V: Vector> : GLGeometry, ArrayLiteralConvertible {
 	*/
 	public init (_ values: [V], _ indexed: Bool = false) {
 		self.values = values
-		if indexed {_indexMap = [String : Int]()}
+		if indexed {
+			_indexMap = [String : Int]()
+			indexlist = []
+		}
 	}
 	
 	

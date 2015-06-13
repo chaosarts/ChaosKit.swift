@@ -40,7 +40,7 @@ public class GLContainer: GLDisplayObject {
 	/// Returns all shapes within this container
 	public var shapes : [GLShape] {
 		get {
-			updateShapeCache()
+			_updateShapeCache()
 			return _shapeCache!
 		}
 	}
@@ -80,6 +80,8 @@ public class GLContainer: GLDisplayObject {
 		child._parent?.removeChild(child)
 		child._parent = self
 		child.stage = stage
+		
+
 		
 		_shapeCache = nil
 		children.append(child)
@@ -159,7 +161,7 @@ public class GLContainer: GLDisplayObject {
 	/**
 	Updates the shape cache
 	*/
-	private func updateShapeCache () {
+	private func _updateShapeCache () {
 		if _shapeCache != nil {return}
 		
 		_shapeCache = []

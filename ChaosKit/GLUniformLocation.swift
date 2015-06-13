@@ -24,14 +24,14 @@ public enum GLUniformType : String {
 	
 	case ModelViewMatrix = "ModelViewMatrix"
 	case ProjectionViewMatrix = "ProjectionViewMatrix"
+	case CameraViewMatrix = "CameraViewMatrix"
 	case Sampler = "Sampler"
 	case Light = "Light"
-	case LightPosition = "LightPosition"
-	case LightIntensity = "LightIntensity"
 	
 	public static let cases : [GLUniformType] = [
 		.ModelViewMatrix,
 		.ProjectionViewMatrix,
+		.CameraViewMatrix,
 		.Sampler,
 		.Light
 	]

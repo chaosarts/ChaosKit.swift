@@ -11,6 +11,8 @@ import Foundation
 
 public class GLDiffuseLight : GLAmbientLight, GLLight {
 	
+	public override var type : GLLightType {get {return .Diffuse}}
+	
 	public override var position : vec3 {
 		didSet {_uniforms[.Position] = GLUniform3f(position.x, position.y, position.z)}
 	}
@@ -18,7 +20,6 @@ public class GLDiffuseLight : GLAmbientLight, GLLight {
 	public init (intensity: GLfloat, position: vec3) {
 		super.init(intensity: intensity)
 		self.position = position
-		_type = .Diffuse
 		_uniforms[.Position] = GLUniform3f(position.x, position.y, position.z)
 	}
 }

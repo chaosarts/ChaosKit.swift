@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Stack<T> : CollectionType, CountLimited {
+public struct Stack<T> : Collection, CountLimited {
 	
 	public typealias Element = T
 	

@@ -14,7 +14,7 @@ prefix operator * {}
 Cases to indicate how to fetch an attribute value for an index, which is not
 between 0 and the the count of vertices in an vertex attribute object
 */
-public enum CKIndexWrapType {	
+public enum IndexWrapType {	
 	
 	/// Indicates to use modulo
 	case Repeat
@@ -26,7 +26,7 @@ public enum CKIndexWrapType {
 	case Restrict
 }
 
-typealias CKIndexWrapper = (val: Int, minVal: Int, maxVal: Int) -> Int
+typealias IndexWrapper = (val: Int, minVal: Int, maxVal: Int) -> Int
 
 func repeatIndex (val: Int, minVal: Int, maxVal: Int) -> Int {
 	var minimum : Int = min(minVal, maxVal)
@@ -35,7 +35,7 @@ func repeatIndex (val: Int, minVal: Int, maxVal: Int) -> Int {
 	return (val - minimum) % distance + minimum
 }
 
-public enum CKLogType : String {
+public enum LogType : String {
 	case Info = "Info"
 	case Warning = "Warning"
 	case Error = "Error"

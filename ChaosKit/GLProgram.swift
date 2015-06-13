@@ -11,7 +11,7 @@ import Cocoa
 internal var _currentProgram : GLProgram?
 
 public final class GLProgram: GLBase {
-	
+		
 	/// Provides a list of uniforms
 	private var _uniformLocations : [String : GLUniformLocation] = [String : GLUniformLocation]()
 	
@@ -193,7 +193,11 @@ public final class GLProgram: GLBase {
 		}
 		
 		upload(shape.buffers)
-		shape.target.draw(mode: shape.mode, count: GLsizei(shape.geometry.count))
+		for mode in shape.modes {
+			glLineWidth(shape.linewidth)
+			glPointSize(shape.pointsize)
+			shape.target.draw(mode: mode, count: GLsizei(shape.geometry.count))
+		}
 		unload(shape.buffers)
 	}
 	
@@ -268,7 +272,7 @@ public final class GLProgram: GLBase {
 	*/
 	public func getUniformLocation (selector: GLLocationSelector) -> GLUniformLocation? {
 		var varname : String? = _uniformSelectors[selector]
-		if varname == nil {return nil}
+		if varname == nil {println("Selector '\(selector)' hasn't been set for this program."); return nil}
 		return getUniformLocation(varname!)
 	}
 	

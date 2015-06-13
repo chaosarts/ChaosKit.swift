@@ -11,6 +11,8 @@ import Foundation
 
 public class GLSpecularLight : GLDiffuseLight, GLLight {
 	
+	public override var type : GLLightType {get {return .Specular}}
+	
 	public var shinyness : GLfloat {
 		didSet {_uniforms[.Shinyness] = GLUniform1f(shinyness)}
 	}
@@ -18,7 +20,6 @@ public class GLSpecularLight : GLDiffuseLight, GLLight {
 	public init (intensity: GLfloat, position: vec3, shinyness: GLfloat) {
 		self.shinyness = shinyness
 		super.init(intensity: intensity, position: position)
-		_type = .Specular
 		_uniforms[.Shinyness] = GLUniform1f(shinyness)
 	}
 }

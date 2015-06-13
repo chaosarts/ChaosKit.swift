@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Queue<T> : CollectionType, CountLimited {
+public struct Queue<T> : Collection, CountLimited {
 	private var _array : [T] = []
 	
 	public var count : Int {get {return _array.count}}

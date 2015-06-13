@@ -51,27 +51,38 @@ public func restrict<C: Comparable> (value: C, minValue: C, maxValue: C) -> C {
 }
 
 
+public func deg2rad (value: Float) -> Float {
+	return Float(M_PI / 180) * value
+}
+
+
+public func deg2rad (value: Double) -> Double {
+	return M_PI / 180 * value
+}
+
+
+public func rad2deg (value: Float) -> Float {
+	return Float(180 / M_PI) * value
+}
+
+
+public func rad2deg (value: Double) -> Double {
+	return 180 / M_PI * value
+}
+
+
 /*
 |--------------------------------------------------------------------------
 | Protocols
 |--------------------------------------------------------------------------
 */
 
-public protocol ArrayRepresentable {
-	var array : [GLfloat] {get}
-}
 
-
-public protocol ListType : ArrayRepresentable {
-	static var elementCount : Int {get}
-	init (_ list: [GLfloat])
-	init ()
-}
-
-
-public protocol Matrix : ListType {	
+public protocol Matrix : ListType, Printable {
 	static var rows : Int {get}
 	static var cols : Int {get}
+	init (_ list: [GLfloat])
+	init ()
 }
 
 

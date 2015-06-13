@@ -23,7 +23,7 @@ public class GLCamera {
 	public var projection : GLCameraProjection
 	
 	/// Contains the position of the camera
-	public var position : vec3 = vec3() {didSet {_cache = nil}}
+	public var position : vec3 = vec3(0, 0, 1) {didSet {_cache = nil}}
 	
 	/// Contains the rotation
 	public var rotation : vec3 = vec3 () {didSet {_cache = nil}}
@@ -64,6 +64,16 @@ public class GLCamera {
 			}
 			
 			return _cache!
+		}
+	}
+	
+	
+	public var uniforms : [GLLocationSelector : GLUniform] {
+		get {
+			var uniforms = projection.uniforms
+			var selector : GLLocationSelector = GLLocationSelector(type: .CameraViewMatrix)
+			uniforms[selector] = GLUniformMatrix4fv(modelViewMatrix)
+			return uniforms
 		}
 	}
 	

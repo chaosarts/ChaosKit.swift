@@ -8,13 +8,29 @@
 
 import Foundation
 
+/*
+|--------------------------------------------------------------------------
+| Renderpass protocol
+|--------------------------------------------------------------------------
+*/
 
+/** 
+Protocol to describe a render pass
+*/
 public protocol GLRenderpass {
-	var camera : GLCamera {get set}
-	
 	func execute ()
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| Basic class for render passes
+|--------------------------------------------------------------------------
+*/
+
+/**
+Basic class
+*/
 public class GLRenderpassBase {
 	
 	/// Contains a capability map
@@ -23,8 +39,8 @@ public class GLRenderpassBase {
 	/// Contains the bitfield for clearing the buffers
 	private var _clearmasks : [Int32 : GLclearmask] = [Int32 : GLclearmask]()
 	
-	/// Provides the camera of the render pass
-	public var camera : GLCamera = GLCamera()
+	
+	public init () {}
 	
 	
 	/** 
@@ -64,7 +80,7 @@ public class GLRenderpassBase {
 	/**
 	Applies set rendering capabilities
 	*/
-	internal func _applyCapabilities () {
+	public func applyCapabilities () {
 		for name in _capabilities.keys {
 			_capabilities[name]?.apply()
 		}
@@ -74,7 +90,7 @@ public class GLRenderpassBase {
 	/** 
 	Clears opengl buffers
 	*/
-	internal func _clear () {
+	public func clear () {
 		var bitmask : Int32 = 0
 		
 		for flag in _clearmasks.keys {

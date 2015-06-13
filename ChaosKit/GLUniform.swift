@@ -146,14 +146,14 @@ public struct GLUniformMatrix4fv : GLUniform {
 		self.transpose = GLboolean(transpose ? GL_TRUE : GL_FALSE)
 	}
 	
-	public init (_ value: [mat4], _ transpose: Bool = false) {
+	public init (_ value: [mat4]) {
 		var array : [GLfloat] = []
 		for i in 0..<value.count {array += value[i].array}
-		self.init(array, GLsizei(value.count), transpose)
+		self.init(array, GLsizei(value.count), false)
 	}
 	
-	public init (_ value: mat4, _ transpose: Bool = false) {
-		self.init([value], transpose)
+	public init (_ value: mat4) {
+		self.init([value])
 	}
 	
 	public func assign (location: GLUniformLocation) {

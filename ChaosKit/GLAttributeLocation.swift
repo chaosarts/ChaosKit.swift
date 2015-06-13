@@ -58,20 +58,9 @@ public class GLAttributeLocation : GLLocation {
 	
 	:param: block The buffer block that holds the information for the attribute within the accroding buffer
 	*/
-	public func setVertexAttribPointer (block: GLBufferBlock, pointer: UnsafeMutablePointer<Void>) {
-		var floatSize : Int = sizeof(GLfloat)
-		setVertexAttribPointer(block.size, block.type, block.normalized, GLsizei(floatSize) * block.stride, pointer)
-	}
-	
-	
-	/**
-	Shortcut for glVertexAttribPointer
-	
-	:param: block The buffer block that holds the information for the attribute within the accroding buffer
-	*/
 	public func setVertexAttribPointer (block: GLBufferBlock) {
 		var floatSize : Int = sizeof(GLfloat)
-		setVertexAttribPointer(block, pointer: _ptr.advancedBy(floatSize * block.offset))
+		setVertexAttribPointer(block.size, block.type, block.normalized, block.stride, block.offset)
 	}
 	
 	
@@ -84,7 +73,7 @@ public class GLAttributeLocation : GLLocation {
 	:param: stride
 	:param: pointer
 	*/
-	public func setVertexAttribPointer (size: GLint, _ type: GLenum, _ normalized: GLboolean, _ stride: GLsizei) {
+	public func setVertexAttribPointer (size: GLint, _ type: GLenum, _ normalized: Bool, _ stride: Int) {
 		setVertexAttribPointer(size, type, normalized, stride, _ptr)
 	}
 	
@@ -98,7 +87,7 @@ public class GLAttributeLocation : GLLocation {
 	:param: stride
 	:param: pointer
 	*/
-	public func setVertexAttribPointer (size: GLint, _ type: GLenum, _ normalized: GLboolean, _ stride: GLsizei, _ offset: Int) {
+	public func setVertexAttribPointer (size: GLint, _ type: GLenum, _ normalized: Bool, _ stride: Int, _ offset: Int) {
 		setVertexAttribPointer(size, type, normalized, stride, _ptr.advancedBy(sizeof(GLfloat) * offset))
 	}
 	
@@ -112,8 +101,8 @@ public class GLAttributeLocation : GLLocation {
 	:param: stride
 	:param: pointer
 	*/
-	public func setVertexAttribPointer (size: GLint, _ type: GLenum, _ normalized: GLboolean, _ stride: GLsizei, _ pointer: UnsafeMutablePointer<Void>) {
-		glVertexAttribPointer(id, size, type, normalized, stride, pointer)
+	public func setVertexAttribPointer (size: GLint, _ type: GLenum, _ normalized: Bool, _ stride: Int, _ pointer: UnsafeMutablePointer<Void>) {
+		glVertexAttribPointer(id, size, type, GLboolean(normalized ? GL_TRUE : GL_FALSE), GLsizei(stride * sizeof(GLfloat)), pointer)
 	}
 	
 	/**

@@ -34,8 +34,12 @@ public let OFF : GLLightState = false
 Protocol for lights
 */
 public protocol GLLight {
+	
 	/// Provides the state of light
 	var state : GLLightState {get set}
+	
+	/// Provides the light color
+	var color : vec3 {get set}
 	
 	/// The type of the light
 	var type : GLLightType {get}
@@ -59,14 +63,13 @@ Represents a light in opengl
 	/// Provides a map of light property types
 	internal var _uniforms : [GLLightPropertyType : GLUniform] = [GLLightPropertyType : GLUniform]()
 	
-	/// The type of the light
-	internal var _type : GLLightType = .Ambient
-	
-	/// The type of the light
-	public var type : GLLightType {get {return _type}}
-	
 	/// Provides the state of light
 	public var state : GLLightState = ON
+	
+	/// Provides the light color
+	public var color : vec3 = vec3(1, 1, 1) {
+		didSet{_uniforms[.Color] = GLUniform3f(color.x, color.y, color.z)}
+	}
 	
 	/// Provides a map of light property types
 	public var uniforms : [GLLightPropertyType : GLUniform] {get {return _uniforms}}
@@ -117,6 +120,7 @@ public enum GLLightType : String {
 Enumeration of light types
 */
 public enum GLLightPropertyType : String {
+	case Color = "Color"
 	case Position = "Position"
 	case Intensity = "Intensity"
 	case Shinyness = "Shinyness"

@@ -21,10 +21,10 @@ public struct GLBufferBlock {
 	public let type : GLenum
 	
 	/// Indicates if containing data is normalized or not
-	public let normalized : GLboolean
+	public let normalized : Bool
 	
 	/// Contains the stride of the data set in the buffer
-	public let stride : GLint
+	public let stride : Int
 	
 	/// Provides the offset of the buffer block in bytes
 	public let offset : Int
@@ -41,8 +41,8 @@ public struct GLBufferBlock {
 		self.selector = attribute
 		self.size = GLint(size)
 		self.type = GLenum(type)
-		self.normalized = GLboolean(normalized ? GL_TRUE : GL_FALSE)
-		self.stride = GLint(stride)
+		self.normalized = normalized
+		self.stride = stride
 		self.offset = offset
 	}
 }

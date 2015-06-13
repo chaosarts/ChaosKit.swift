@@ -78,11 +78,22 @@ public struct GLViewVolume {
 		let halfHeight : GLfloat = height / 2
 		let z : GLfloat = center.z <= 0 ? 0.1 : center.z
 		
-		self.left = center.x - halfWidth
-		self.right = center.x + halfWidth
-		self.bottom = center.y - halfHeight
-		self.top = center.y + halfHeight
-		self.near = z
-		self.far = z + depth
+		self.init(
+			left: center.x - halfWidth, right: center.x + halfWidth, bottom: center.y - halfHeight,
+			top: center.y + halfHeight, near: z, far: z + depth
+		)
+	}
+}
+
+
+extension GLViewVolume : ArrayLiteralConvertible {
+	public init (arrayLiteral elements: GLfloat...) {
+		var defaults : [GLfloat] = [-1, 1, -1, 1, 1, 3]
+		var count : Int = min(defaults.count, elements.count)
+		for i in 0..<count {
+			defaults[i] = elements[i]
+		}
+		
+		self.init(left: defaults[0], right: defaults[1], bottom: defaults[2], top: defaults[3], near: defaults[4], far: defaults[5])
 	}
 }

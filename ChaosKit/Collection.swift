@@ -11,7 +11,7 @@ import Foundation
 /**
 Protocol for collection types
 */
-public protocol CollectionType {
+public protocol Collection {
 	typealias Element
 	
 	var array : [Element] {get}

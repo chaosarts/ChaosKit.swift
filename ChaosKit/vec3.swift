@@ -103,12 +103,11 @@ extension vec3 : ArrayLiteralConvertible {
 	}
 }
 
-
-extension vec3 : Equatable {}
-
 extension vec3 : Printable {
 	public var description : String {get {return "(\(x), \(y), \(z))"}}
 }
+
+extension vec3 : Equatable {}
 
 public func ==(l: vec3, r: vec3) -> Bool {
 	return l.x == r.x && l.y == r.y && l.z == r.z

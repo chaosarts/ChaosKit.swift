@@ -9,6 +9,12 @@
 import Cocoa
 import OpenGL
 
+/*
+|--------------------------------------------------------------------------
+| Shape class
+|--------------------------------------------------------------------------
+*/
+
 /**
 The base class for a 3d object in OpenGL. A shape is described by different 
 types of attributes (Position, Color, Normals) as lists of vectors contained 
@@ -45,7 +51,7 @@ public class GLShape : GLDisplayObject {
 	public var pointsize : GLfloat = 1
 	
 	/// Provides the draw mode
-	public var mode : GLenum = GLenum(GL_TRIANGLES)
+	public var modes : [GLenum] = [GLenum(GL_TRIANGLES)]
 	
 	
 	// DERIVED PROPERTIES
@@ -66,7 +72,6 @@ public class GLShape : GLDisplayObject {
 		get {
 			var uniforms : [GLLocationSelector : GLUniform] = surface.uniforms
 			uniforms[GLLocationSelector(type: .ModelViewMatrix)] = GLUniformMatrix4fv(modelViewMatrix)
-			uniforms[GLLocationSelector(type: .ProjectionViewMatrix)] = GLUniformMatrix4fv(modelViewMatrix)
 			return uniforms
 		}
 	}
@@ -113,6 +118,7 @@ public class GLShape : GLDisplayObject {
 	
 	// METHODS
 	// +++++++
+	
 	
 	/**
 	Configures the buffers

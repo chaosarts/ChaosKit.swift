@@ -26,6 +26,10 @@ public struct GLColorClearMask : GLclearmask {
 		value = color
 	}
 	
+	public init (_ r: GLfloat, _ g: GLfloat, _ b: GLfloat, _ a: GLfloat) {
+		self.init ((r, g, b, a))
+	}
+	
 	public func clear () {
 		glClearColor(value.r, value.g, value.b, value.a)
 	}

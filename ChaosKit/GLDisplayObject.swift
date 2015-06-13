@@ -95,6 +95,9 @@ public class GLDisplayObject : Identifiable {
 		didSet {_cache = nil}
 	}
 	
+	/// Contains the scene to which the object belongs to
+	public var stage : GLStage?
+	
 	
 	// DERIVED PROPERTIES
 	// ++++++++++++++++++
@@ -124,10 +127,6 @@ public class GLDisplayObject : Identifiable {
 	public var parent : GLContainer? {
 		get {return _parent}
 	}
-
-	/// Contains the scene to which the object belongs to
-	public var stage : GLStage?
-	
 	
 	/// Provides the model view matrix of the object
 	public var modelViewMatrix : mat4 {

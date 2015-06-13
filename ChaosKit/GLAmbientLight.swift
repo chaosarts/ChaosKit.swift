@@ -11,6 +11,8 @@ import Foundation
 
 public class GLAmbientLight : GLLightBase, GLLight {
 	
+	public var type : GLLightType {get {return .Ambient}}
+	
 	public var intensity : GLfloat {
 		didSet {_uniforms[.Intensity] = GLUniform1f(intensity)}
 	}
