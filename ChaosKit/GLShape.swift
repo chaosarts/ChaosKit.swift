@@ -57,22 +57,27 @@ public class GLShape : GLDisplayObject {
 	// DERIVED PROPERTIES
 	// ++++++++++++++++++
 	
+	/// Contains the model view matrix
+	public var normalViewMatrix : mat4 {
+		get {return modelViewMatrix}
+	}
+	
 	/// Provides the bufferables
-	public var bufferables : [GLLocationSelector : GLBufferable] {
+	public var bufferables : [GLUrl : GLBufferable] {
 		get {
-			var output : [GLLocationSelector : GLBufferable] = surface.bufferables
-			var selector : GLLocationSelector = GLLocationSelector(type: .Position)
-			output[selector] = geometry
+			var output : [GLUrl : GLBufferable] = surface.bufferables
+			output[GLUrl(.Vertex, .Position)] = geometry
 			return output
 		}
 	}
 	
 	
-	public var uniforms : [GLLocationSelector : GLUniform] {
+	public var uniforms : [GLUrl : GLUniform] {
 		get {
-			var uniforms : [GLLocationSelector : GLUniform] = surface.uniforms
-			uniforms[GLLocationSelector(type: .ModelViewMatrix)] = GLUniformMatrix4fv(modelViewMatrix)
-			return uniforms
+			return [
+				GLUrl(.Model, .Transformation) : GLUniformMatrix4fv(modelViewMatrix),
+				GLUrl(.Normal, .Transformation): GLUniformMatrix4fv(normalViewMatrix)
+			]
 		}
 	}
 	
@@ -132,7 +137,7 @@ public class GLShape : GLDisplayObject {
 		_buffers = []
 		
 		// Store static bufferables in this array to configure static buffer later
-		var staticBufferables : [GLLocationSelector : GLBufferable] = [GLLocationSelector : GLBufferable]()
+		var staticBufferables : [GLUrl : GLBufferable] = [GLUrl : GLBufferable]()
 		
 		// Store the stride
 		var stride : Int = 0

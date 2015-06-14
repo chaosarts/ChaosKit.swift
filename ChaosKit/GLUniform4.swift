@@ -27,8 +27,12 @@ public struct GLUniform4f : GLUniform {
 	
 	private let _value : (x: GLfloat, y: GLfloat, z: GLfloat, w: GLfloat)
 	
-	public init (_ x: GLfloat, _ y: GLfloat, z: GLfloat, w: GLfloat) {
+	public init (_ x: GLfloat, _ y: GLfloat, _ z: GLfloat, _ w: GLfloat) {
 		_value = (x, y, z, w)
+	}
+	
+	public init (_ value : vec4) {
+		self.init(value.x, value.y, value.z, value.w)
 	}
 	
 	public func assign (location: GLUniformLocation) {

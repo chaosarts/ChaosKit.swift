@@ -11,15 +11,23 @@ import Foundation
 
 public class GLSpecularLight : GLDiffuseLight, GLLight {
 	
-	public override var type : GLLightType {get {return .Specular}}
+	public var shinyness : GLfloat = 1
 	
-	public var shinyness : GLfloat {
-		didSet {_uniforms[.Shinyness] = GLUniform1f(shinyness)}
+	public override var uniforms : [GLUrl : GLUniform] {
+		get {
+			if nil == _uniforms {
+				_uniforms = [
+					GLUrl(.SpecularLight, GLUniformType.Color) : GLUniform4f(color.r, color.g, color.b, intensity),
+					GLUrl(.SpecularLight, .Transformation) : GLUniform3f(position.x, position.y, position.z),
+					GLUrl(.SpecularLight, .Shinyness) : GLUniform1f(shinyness)
+				]
+			}
+			
+			return _uniforms!
+		}
 	}
 	
-	public init (intensity: GLfloat, position: vec3, shinyness: GLfloat) {
-		self.shinyness = shinyness
-		super.init(intensity: intensity, position: position)
-		_uniforms[.Shinyness] = GLUniform1f(shinyness)
+	public override init () {
+		super.init()
 	}
 }

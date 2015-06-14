@@ -11,15 +11,20 @@ import Foundation
 
 public class GLAmbientLight : GLLightBase, GLLight {
 	
-	public var type : GLLightType {get {return .Ambient}}
-	
-	public var intensity : GLfloat {
-		didSet {_uniforms[.Intensity] = GLUniform1f(intensity)}
+	public var uniforms : [GLUrl : GLUniform] {
+		get {
+			if nil == _uniforms {
+				_uniforms = [
+					GLUrl(.AmbientLight, GLUniformType.Color) : GLUniform4f(color.r, color.g, color.b, intensity)
+				]
+			}
+			
+			return _uniforms!
+		}
 	}
+
 	
-	public init (intensity: GLfloat) {
-		self.intensity = intensity
+	public override init () {
 		super.init()
-		_uniforms[.Intensity] = GLUniform1f(intensity)
 	}
 }

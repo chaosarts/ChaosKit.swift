@@ -8,7 +8,9 @@
 
 import Foundation
 
-public protocol GLSurfaceTexture : GLShapeProperty, GLTextureMap {}
+public protocol GLSurfaceTexture : GLShapeProperty, GLTextureMap {
+	
+}
 
 public class GLSurfaceTextureMap2D : GLSurfaceTexture {
 	

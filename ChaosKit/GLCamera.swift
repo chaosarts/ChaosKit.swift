@@ -11,10 +11,13 @@ import Cocoa
 /** 
 This class models a camera for open gl to draw a stage
 */
-public class GLCamera {
+public final class GLCamera {
 	
 	/// Caches the model view matrix
-	private var _cache : mat4?
+	private var _modelViewMatrix : mat4?
+	
+	/// Caches the uniforms
+	private var _uniforms : [GLUrl : GLUniform]?
 	
 	/// Contains the stage which the camera captures
 	public var stage : GLStage?
@@ -23,16 +26,13 @@ public class GLCamera {
 	public var projection : GLCameraProjection
 	
 	/// Contains the position of the camera
-	public var position : vec3 = vec3(0, 0, 1) {didSet {_cache = nil}}
+	public var position : vec3 = vec3(0, 0, 1) {didSet {_modelViewMatrix = nil}}
 	
 	/// Contains the rotation
-	public var rotation : vec3 = vec3 () {didSet {_cache = nil}}
-	
-	/// Provides the vector (global) in which the camera is directed
-	public var direction : vec3 = vec3 () {didSet {_cache = nil}}
+	public var rotation : vec3 = vec3 () {didSet {_modelViewMatrix = nil}}
 	
 	/// Provides the up vector of the camera
-	public var up : vec3 = vec3(0, 1, 0) {didSet {_cache = nil}}
+	public var up : vec3 = vec3(0, 1, 0) {didSet {_modelViewMatrix = nil}}
 	
 	/// Contains the x position of the camera
 	public var x : GLfloat {
@@ -56,39 +56,57 @@ public class GLCamera {
 	/// and watch direction of the camera
 	public var modelViewMatrix : mat4 {
 		get {
-			if _cache == nil {
-				_cache = mat4.makeRotationX(deg: -rotation.x)
-				_cache!.rotateY(deg: -rotation.y)
-				_cache!.rotateZ(deg: -rotation.z)
-				_cache!.translate(-position)
+			if _modelViewMatrix == nil {
+				_modelViewMatrix = mat4.makeRotationX(deg: -rotation.x)
+				_modelViewMatrix!.rotateY(deg: -rotation.y)
+				_modelViewMatrix!.rotateZ(deg: -rotation.z)
+				_modelViewMatrix!.translate(-position)
 			}
 			
-			return _cache!
+			return _modelViewMatrix!
 		}
 	}
 	
 	
-	public var uniforms : [GLLocationSelector : GLUniform] {
+	/// Provides the uniforms
+	public var uniforms : [GLUrl : GLUniform] {
 		get {
-			var uniforms = projection.uniforms
-			var selector : GLLocationSelector = GLLocationSelector(type: .CameraViewMatrix)
-			uniforms[selector] = GLUniformMatrix4fv(modelViewMatrix)
-			return uniforms
+			if _uniforms == nil {
+				_uniforms = [
+					GLUrl(.Camera, .Transformation) : GLUniformMatrix4fv(modelViewMatrix),
+					GLUrl(.Camera, .Projection) : GLUniformMatrix4fv(projection.matrix)
+				]
+			}
+			
+			return _uniforms!
 		}
 	}
 	
 	
+	/**
+	Initializes the camera with a given projection
+	
+	:param: projection
+	*/
 	public init (projection: GLCameraProjection) {
 		self.projection = projection
 	}
 	
 	
+	/**
+	Initializes the camera with a orthographic projection
+	*/
 	public convenience init () {
 		self.init(projection: GLOrthographicProjection(GLViewVolume()))
 	}
 	
 	
+	/**
+	Rotates the camera to a given position
+	
+	:param: position
+	*/
 	public func lookAt (position: vec3) {
-		polar2cartesian(1, rotation.z * GLfloat(M_PI / 180.0), rotation.y * GLfloat(M_PI / 180.0))
+		
 	}
 }

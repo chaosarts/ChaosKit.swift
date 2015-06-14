@@ -32,7 +32,7 @@ public class GLScreenRenderpass : GLRenderpassBase, GLRenderpass {
 			return
 		}
 		
-		var uniforms : [GLLocationSelector : GLUniform] = camera.uniforms
+		var uniforms : [GLUrl : GLUniform] = camera.uniforms
 		for selector in uniforms.keys {
 			var location : GLUniformLocation? = program.getUniformLocation(selector)
 			

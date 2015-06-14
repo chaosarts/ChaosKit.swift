@@ -19,20 +19,3 @@ public class GLUniformLocation : GLLocation {
 		super.init(index, name)
 	}
 }
-
-public enum GLUniformType : String {
-	
-	case ModelViewMatrix = "ModelViewMatrix"
-	case ProjectionViewMatrix = "ProjectionViewMatrix"
-	case CameraViewMatrix = "CameraViewMatrix"
-	case Sampler = "Sampler"
-	case Light = "Light"
-	
-	public static let cases : [GLUniformType] = [
-		.ModelViewMatrix,
-		.ProjectionViewMatrix,
-		.CameraViewMatrix,
-		.Sampler,
-		.Light
-	]
-}

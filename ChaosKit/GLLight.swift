@@ -39,13 +39,13 @@ public protocol GLLight {
 	var state : GLLightState {get set}
 	
 	/// Provides the light color
-	var color : vec3 {get set}
+	var color : RGBColor {get set}
 	
-	/// The type of the light
-	var type : GLLightType {get}
+	/// Provides the intensity
+	var intensity : GLfloat {get set}
 	
 	/// Provides a map of light property types
-	var uniforms : [GLLightPropertyType : GLUniform] {get}
+	var uniforms : [GLUrl : GLUniform] {get}
 }
 
 
@@ -58,70 +58,17 @@ public protocol GLLight {
 /**
 Represents a light in opengl
 */
-@objc public class GLLightBase : GLDisplayObject {
+@objc public class GLLightBase {
 	
-	/// Provides a map of light property types
-	internal var _uniforms : [GLLightPropertyType : GLUniform] = [GLLightPropertyType : GLUniform]()
+	/// Caches the uniforms
+	internal var _uniforms : [GLUrl : GLUniform]?
 	
 	/// Provides the state of light
 	public var state : GLLightState = ON
 	
 	/// Provides the light color
-	public var color : vec3 = vec3(1, 1, 1) {
-		didSet{_uniforms[.Color] = GLUniform3f(color.x, color.y, color.z)}
-	}
+	public var color : RGBColor = (1, 1, 1)
 	
-	/// Provides a map of light property types
-	public var uniforms : [GLLightPropertyType : GLUniform] {get {return _uniforms}}
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Structs
-|--------------------------------------------------------------------------
-*/
-
-/**
-Light property data type
-*/
-public struct GLLightProperty {
-	
-	/// Opaque value of the property
-	public var value : GLUniform
-	
-	public var type : GLLightPropertyType
-	
-	/// Initializes the property
-	public init (type: GLLightPropertyType, value: GLUniform) {
-		self.value = value
-		self.type = type
-	}
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Enumerations
-|--------------------------------------------------------------------------
-*/
-
-/**
-Enumeration of light types
-*/
-public enum GLLightType : String {
-	case Ambient = "Ambient"
-	case Diffuse = "Diffuse"
-	case Specular = "Specular"
-}
-
-
-/**
-Enumeration of light types
-*/
-public enum GLLightPropertyType : String {
-	case Color = "Color"
-	case Position = "Position"
-	case Intensity = "Intensity"
-	case Shinyness = "Shinyness"
+	/// Provides the lights intensity
+	public var intensity : GLfloat = 1
 }

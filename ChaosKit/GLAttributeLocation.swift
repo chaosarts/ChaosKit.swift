@@ -120,37 +120,3 @@ public class GLAttributeLocation : GLLocation {
 	}
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| Attribute Type Enumeration
-|--------------------------------------------------------------------------
-*/
-
-/**
-Enumerates the type of vertex attributes
-*/
-public enum GLAttributeType : String {
-	
-	/// Represents the color attribute variable
-	case Color = "Color"
-	
-	/// Represents the normal attribute variable
-	case Normal = "Normal"
-	
-	/// Represents the position attribute variable
-	case Position = "Position"
-	
-	/// Represents the texture coordinate attribute variable
-	case TexCoord = "TexCoord"
-
-	
-	static let all : [GLAttributeType] = [
-		.Color,
-		.Normal,
-		.Position,
-		.TexCoord
-	]
-}
-
-
