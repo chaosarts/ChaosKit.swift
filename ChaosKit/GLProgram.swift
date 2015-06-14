@@ -242,7 +242,7 @@ public final class GLProgram: GLBase {
 	
 	:param: selector The attribute selector
 	*/
-	public func setAttributeSelector (selector: GLUrl, forLocation varname: String) {
+	public func setAttributeUrl (selector: GLUrl, forLocation varname: String) {
 		_attributeSelectors[selector] = varname
 	}
 	
@@ -283,7 +283,7 @@ public final class GLProgram: GLBase {
 	:param: selector The selector vor the associated uniform variable
 	:param: varname The variablename
 	*/
-	public func setUniformSelector (selector: GLUrl, forLocation varname: String) {
+	public func setUniformUrl (selector: GLUrl, forLocation varname: String) {
 		_uniformSelectors[selector] = varname
 	}
 }
