@@ -42,7 +42,7 @@ public struct vec4 : Vector {
 	}
 	
 	public var magnitude : GLfloat {
-		return sqrt(self * self)
+		return sqrt(dot(self, self))
 	}
 	
 	public var normalized : vec4 {
@@ -139,10 +139,8 @@ public func -(l: vec4, r: vec4) -> vec4 {
 }
 
 
-public func *(l: vec4, r: vec4) -> GLfloat {
-	let a : GLfloat = l.x * r.x + l.y * r.y
-	let b : GLfloat = l.z * r.z + l.w * r.w
-	return a + b
+public func *(l: vec4, r: vec4) -> vec4 {
+	return vec4(l.x * r.x, l.y * r.y, l.z * r.z, l.w * r.w)
 }
 
 
@@ -153,4 +151,10 @@ public func *(l: vec4, r: GLfloat) -> vec4 {
 
 public func *(l: GLfloat, r: vec4) -> vec4 {
 	return r * l
+}
+
+public func dot(l: vec4, r: vec4) -> GLfloat {
+	let a : GLfloat = l.x * r.x + l.y * r.y
+	let b : GLfloat = l.z * r.z + l.w * r.w
+	return a + b
 }
