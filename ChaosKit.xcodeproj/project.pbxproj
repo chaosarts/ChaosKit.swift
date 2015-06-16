@@ -297,7 +297,7 @@
 			name = Protocol;
 			sourceTree = "<group>";
 		};
-		C457E7851AC4645F003B2B5D /* Element */ = {
+		C457E7851AC4645F003B2B5D /* Display */ = {
 			isa = PBXGroup;
 			children = (
 				C47EFCED1B29629D00681A6A /* Light */,
@@ -308,7 +308,7 @@
 				C48C43271AB372B3006AB10F /* GLStage.swift */,
 				C47EFCEB1B2961D100681A6A /* GLLight.swift */,
 			);
-			name = Element;
+			name = Display;
 			sourceTree = "<group>";
 		};
 		C45DF15C1B2E27B8001B8C77 /* Extension */ = {
@@ -382,7 +382,7 @@
 				C43E2B041B2AFBEC002905C8 /* Application */,
 				C4D3715F1AF6CE4600E29590 /* Base */,
 				C40814641AD4329700007A0C /* Camera */,
-				C457E7851AC4645F003B2B5D /* Element */,
+				C457E7851AC4645F003B2B5D /* Display */,
 				C4D59DA61B0FA8BA00F7292A /* Function */,
 				C4D59DA31B0FA88A00F7292A /* Image */,
 				C48CC2591ACFE57F007FBA60 /* Renderpass */,
