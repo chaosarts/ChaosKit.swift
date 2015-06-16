@@ -11,11 +11,11 @@ import Foundation
 
 public class GLAmbientLight : GLLightBase, GLLight {
 	
-	public var uniforms : [GLUrl : GLUniform] {
+	public var uniforms : [GLurl : GLUniform] {
 		get {
 			if nil == _uniforms {
 				_uniforms = [
-					GLUrl(.AmbientLight, GLUniformType.Color) : GLUniform4f(color.r, color.g, color.b, intensity)
+					GLurl(.AmbientLight, .Intensity) : GLUniform3f(intensity.r, intensity.g, intensity.b)
 				]
 			}
 			

@@ -25,8 +25,11 @@ public protocol GLGeometry : GLShapeProperty {
 	/// Indicates wether the geometry uses shared vertices or not
 	var indexed : Bool {get}
 	
-	///
+	/// Provides the list of indices
 	var indexlist : [Int]? {get}
+	
+	/// Provides the normals of the geometry
+	var normals : GLShapeProperty? {get}
 }
 
 
@@ -68,6 +71,9 @@ public struct GLGeometryArray<V: Vector> : GLGeometry, ArrayLiteralConvertible {
 	
 	/// Provides the index list if geometry uses shared vertices
 	public private(set) var indexlist : [Int]?
+	
+	/// Provides the normals of the geometry
+	public var normals : GLShapeProperty?
 	
 	
 	// SUBSCRIPTS

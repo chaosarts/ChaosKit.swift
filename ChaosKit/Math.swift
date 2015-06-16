@@ -70,7 +70,6 @@ public func rad2deg (value: Double) -> Double {
 	return 180 / M_PI * value
 }
 
-
 /*
 |--------------------------------------------------------------------------
 | Protocols

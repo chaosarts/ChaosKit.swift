@@ -58,26 +58,41 @@ public class GLShape : GLDisplayObject {
 	// ++++++++++++++++++
 	
 	/// Contains the model view matrix
-	public var normalViewMatrix : mat4 {
-		get {return modelViewMatrix}
+	internal var normalTransformation : mat3 {
+		get {return transformation.submatrix(row: 3, col: 3)}
 	}
 	
 	/// Provides the bufferables
-	public var bufferables : [GLUrl : GLBufferable] {
+	public var bufferables : [GLurl : GLBufferable] {
+		// Since this dictionary will mainly be called for buffering,
+		// it's okay to generate the dictionary, without caching
 		get {
-			var output : [GLUrl : GLBufferable] = surface.bufferables
-			output[GLUrl(.Vertex, .Position)] = geometry
-			return output
+			// Get the bufferables from surface
+			var bufferables : [GLurl : GLBufferable] = surface.bufferables
+			
+			// Append geometry and normals (if set)
+			bufferables[GLurl(.Vertex, .Position)] = geometry
+			if geometry.normals != nil {bufferables[GLurl(.Vertex, .Normal)] = geometry.normals!}
+			
+			return bufferables
 		}
 	}
 	
 	
-	public var uniforms : [GLUrl : GLUniform] {
+	/// Returns all uniforms for a draw call
+	public var uniforms : [GLurl : GLUniform] {
+		
+		// Like bufferables, this generates a dictionary of GLurl to GLUniform
+		// This may need to be cached, since it will be called at each draw
+		// operation.
 		get {
-			return [
-				GLUrl(.Model, .Transformation) : GLUniformMatrix4fv(modelViewMatrix),
-				GLUrl(.Normal, .Transformation): GLUniformMatrix4fv(normalViewMatrix)
-			]
+			if _uniforms == nil {
+				_uniforms = [GLurl : GLUniform]()
+				_uniforms![GLurl(.Model, .Transformation)] = GLUniformMatrix4fv(transformation)
+				_uniforms![GLurl(.Normal, .Transformation)] = GLUniformMatrix3fv(normalTransformation)
+			}
+			
+			return surface.uniforms + _uniforms!
 		}
 	}
 	
@@ -89,16 +104,31 @@ public class GLShape : GLDisplayObject {
 			
 			if _compiled {return _buffers!}
 			
+			/// Since calling self.bufferables will always have to generate
+			/// the dictionary, store it in a local variable. May save a little
+			/// time.
+			var bufferables : [GLurl : GLBufferable] = self.bufferables
+			
+			/// It can be assumed, that after _configureBuffer call, that
+			/// buffers are available
 			for buffer in _buffers! {
+				
+				/// Stores the data of the current buffer in this loop
 				var data : [GLfloat] = []
 				
+				/// Fetch data with the count of vertice in geometry
+				/// Make sure all other properties serve at least the
+				/// same amount of values.
 				for index in 0..<geometry.count {
+					
+					/// Read how to format the data for the buffer
 					for block in buffer.blocks {
 						var bufferable : GLBufferable = bufferables[block.selector]!
 						data += bufferable[index]
 					}
 				}
 				
+				/// Finally buffering
 				buffer.bind()
 				buffer.buffer(data)
 			}
@@ -137,7 +167,7 @@ public class GLShape : GLDisplayObject {
 		_buffers = []
 		
 		// Store static bufferables in this array to configure static buffer later
-		var staticBufferables : [GLUrl : GLBufferable] = [GLUrl : GLBufferable]()
+		var staticBufferables : [GLurl : GLBufferable] = [GLurl : GLBufferable]()
 		
 		// Store the stride
 		var stride : Int = 0

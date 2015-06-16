@@ -19,10 +19,10 @@ public final class GLProgram: GLBase {
 	private var _attribLocations : [String : GLAttributeLocation] = [String : GLAttributeLocation]()
 	
 	/// Contains a uniform alias to variable name map
-	private var _uniformSelectors : [GLUrl : String] = [GLUrl : String]()
+	private var _uniformSelectors : [GLurl : String] = [GLurl : String]()
 	
 	/// Contains a attribute alias to variable name map
-	private var _attributeSelectors : [GLUrl : String] = [GLUrl : String]()
+	private var _attributeSelectors : [GLurl : String] = [GLurl : String]()
 	
 	
 	// Derived properties
@@ -183,7 +183,7 @@ public final class GLProgram: GLBase {
 	:param: shape The shape to draw
  	*/
 	public func draw (shape: GLShape) {
-		var uniforms : [GLUrl : GLUniform] = shape.uniforms
+		var uniforms : [GLurl : GLUniform] = shape.uniforms
 		
 		for selector in uniforms.keys {
 			var location : GLUniformLocation? = getUniformLocation(selector)
@@ -212,7 +212,7 @@ public final class GLProgram: GLBase {
 		if _attribLocations[varname] != nil {return _attribLocations[varname]}
 		
 		var location : GLint = glGetAttribLocation(id, varname)
-		if location < 0 {warn("GLAttribData \(varname) not found in program."); return nil}
+		if location < 0 {warn("Attribute '\(varname)' not found in program."); return nil}
 		
 		var pointer : UnsafeMutablePointer<UnsafeMutablePointer<Void>> = UnsafeMutablePointer<UnsafeMutablePointer<Void>>.alloc(1)
 		glGetVertexAttribPointerv(GLuint(location), GLenum(GL_VERTEX_ATTRIB_ARRAY_POINTER), pointer)
@@ -230,9 +230,9 @@ public final class GLProgram: GLBase {
 	:param: varname The varname string as it is used in the shader
 	:return: The attribute location struct
 	*/
-	public func getAttribLocation (selector: GLUrl) -> GLAttributeLocation? {
+	public func getAttribLocation (selector: GLurl) -> GLAttributeLocation? {
 		var varname : String? = _attributeSelectors[selector]
-		if varname == nil {return nil}
+		if varname == nil {println("Could not resolve attribute url '\(selector)'.Have you set it before?"); return nil}
 		return getAttribLocation(varname!)
 	}
 	
@@ -242,7 +242,7 @@ public final class GLProgram: GLBase {
 	
 	:param: selector The attribute selector
 	*/
-	public func setAttributeUrl (selector: GLUrl, forLocation varname: String) {
+	public func setAttributeUrl (selector: GLurl, forLocation varname: String) {
 		_attributeSelectors[selector] = varname
 	}
 	
@@ -256,7 +256,7 @@ public final class GLProgram: GLBase {
 		if _uniformLocations[varname] != nil {return _uniformLocations[varname]}
 		
 		var location : GLint = glGetUniformLocation(id, varname)
-		if location < 0 {println("GLUniform \(varname) not found in program."); return nil}
+		if location < 0 {println("Uniform '\(varname)' not found in program."); return nil}
 		
 		var uniformvar : GLUniformLocation = GLUniformLocation(index: GLuint(location), name: varname)
 		_uniformLocations[varname] = uniformvar
@@ -270,9 +270,9 @@ public final class GLProgram: GLBase {
 	
 	:param: selector The selector, which is associated with the target uniform variable
 	*/
-	public func getUniformLocation (selector: GLUrl) -> GLUniformLocation? {
+	public func getUniformLocation (selector: GLurl) -> GLUniformLocation? {
 		var varname : String? = _uniformSelectors[selector]
-		if varname == nil {println("Selector '\(selector)' hasn't been set for this program."); return nil}
+		if varname == nil {println("Could not resolve uniform url '\(selector)'.Have you set it before?"); return nil}
 		return getUniformLocation(varname!)
 	}
 	
@@ -283,7 +283,7 @@ public final class GLProgram: GLBase {
 	:param: selector The selector vor the associated uniform variable
 	:param: varname The variablename
 	*/
-	public func setUniformUrl (selector: GLUrl, forLocation varname: String) {
+	public func setUniformUrl (selector: GLurl, forLocation varname: String) {
 		_uniformSelectors[selector] = varname
 	}
 }

@@ -38,14 +38,11 @@ public protocol GLLight {
 	/// Provides the state of light
 	var state : GLLightState {get set}
 	
-	/// Provides the light color
-	var color : RGBColor {get set}
-	
 	/// Provides the intensity
-	var intensity : GLfloat {get set}
+	var intensity : RGBColor {get set}
 	
 	/// Provides a map of light property types
-	var uniforms : [GLUrl : GLUniform] {get}
+	var uniforms : [GLurl : GLUniform] {get}
 }
 
 
@@ -61,14 +58,11 @@ Represents a light in opengl
 @objc public class GLLightBase {
 	
 	/// Caches the uniforms
-	internal var _uniforms : [GLUrl : GLUniform]?
+	internal var _uniforms : [GLurl : GLUniform]?
 	
 	/// Provides the state of light
 	public var state : GLLightState = ON
 	
-	/// Provides the light color
-	public var color : RGBColor = (1, 1, 1)
-	
 	/// Provides the lights intensity
-	public var intensity : GLfloat = 1
+	public var intensity : RGBColor = (1, 1, 1)
 }

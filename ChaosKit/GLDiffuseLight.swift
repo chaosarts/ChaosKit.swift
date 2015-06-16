@@ -13,12 +13,12 @@ public class GLDiffuseLight : GLAmbientLight, GLLight {
 	
 	public var position : vec3 = vec3()
 	
-	public override var uniforms : [GLUrl : GLUniform] {
+	public override var uniforms : [GLurl : GLUniform] {
 		get {
 			if nil == _uniforms {
 				_uniforms = [
-					GLUrl(.DiffuseLight, GLUniformType.Color) : GLUniform4f(color.r, color.g, color.b, intensity),
-					GLUrl(.DiffuseLight, .Transformation) : GLUniform3f(position.x, position.y, position.z),
+					GLurl(.DiffuseLight, .Intensity) : GLUniform3f(intensity.r, intensity.g, intensity.b),
+					GLurl(.DiffuseLight, .Transformation) : GLUniform3f(position.x, position.y, position.z)
 				]
 			}
 			

@@ -19,6 +19,11 @@ Stage class to place display objects
 */
 @objc public class GLStage : GLContainer {
 	
+	
+	public var uniforms : [GLurl : GLUniform] {
+		get {return [GLurl : GLUniform]()}
+	}
+	
 	// INITIALIZERS
 	// ++++++++++++
 	

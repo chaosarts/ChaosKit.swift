@@ -13,13 +13,13 @@ public class GLSpecularLight : GLDiffuseLight, GLLight {
 	
 	public var shinyness : GLfloat = 1
 	
-	public override var uniforms : [GLUrl : GLUniform] {
+	public override var uniforms : [GLurl : GLUniform] {
 		get {
 			if nil == _uniforms {
 				_uniforms = [
-					GLUrl(.SpecularLight, GLUniformType.Color) : GLUniform4f(color.r, color.g, color.b, intensity),
-					GLUrl(.SpecularLight, .Transformation) : GLUniform3f(position.x, position.y, position.z),
-					GLUrl(.SpecularLight, .Shinyness) : GLUniform1f(shinyness)
+					GLurl(.SpecularLight, .Intensity) : GLUniform3f(intensity.r, intensity.g, intensity.b),
+					GLurl(.SpecularLight, .Transformation) : GLUniform3f(position.x, position.y, position.z),
+					GLurl(.SpecularLight, .Shinyness) : GLUniform1f(shinyness)
 				]
 			}
 			

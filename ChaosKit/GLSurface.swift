@@ -16,26 +16,16 @@ public struct GLSurface {
 	/// Provides the color of the surface
 	public var color : GLShapeProperty?
 	
-	/// Provides the surface normal of
-	public var normal : GLShapeProperty?
-	
 	/// Provides the uniforms to apply to program when using this surface
-	public var uniforms : [GLUrl : GLUniform] {
-		get {return [GLUrl : GLUniform]()}
+	public var uniforms : [GLurl : GLUniform] {
+		get {return [GLurl : GLUniform]()}
 	}
 	
 	/// Provides the bufferable properties
-	public var bufferables : [GLUrl : GLBufferable] {
+	public var bufferables : [GLurl : GLBufferable] {
 		get {
-			var bufferables : [GLUrl : GLBufferable] = [GLUrl : GLBufferable]()
-			if nil != normal {bufferables[GLUrl(.Vertex, .Normal)] = normal!}
-			if nil != color {bufferables[GLUrl(.Vertex, GLAttributeType.Color)] = color!}
-			
-//			for key in _texturemaps.keys {
-//				var map : GLSurfaceTexture = _texturemaps[key]!
-//				var selector : GLUrl = GLUrl(type: .TexCoord, domain: key.rawValue)
-//				bufferables[selector] = map
-//			}
+			var bufferables : [GLurl : GLBufferable] = [GLurl : GLBufferable]()
+			if nil != color {bufferables[GLurl(.Vertex, GLAttributeType.Color)] = color!}
 			return bufferables
 		}
 	}

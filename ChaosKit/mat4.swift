@@ -338,12 +338,47 @@ public struct mat4 : QuadraticMatrix {
 	
 	
 	/**
-	Translates the matrix along the passed vector
+	Translates in x direction
 	
-	:param: vec The vector to translate along
+	:param: x
 	*/
-	mutating public func translate (vec: vec3) {
-		translate(x: vec.x, y: vec.y, z: vec.z)
+	public mutating func translateX (tx: GLfloat) {
+		let x : GLfloat = _mat[0] * tx + _mat[12]
+		let y : GLfloat = _mat[1] * tx + _mat[13]
+		let z : GLfloat = _mat[2] * tx + _mat[14]
+		let w : GLfloat = _mat[3] * tx + _mat[15]
+		
+		self[col: 3] = vec4(x, y, z, w)
+	}
+	
+	
+	/**
+	Translates in y direction
+	
+	:param: y
+	*/
+	public mutating func translateY (ty: GLfloat) {
+		let x : GLfloat = _mat[4] * ty + _mat[12]
+		let y : GLfloat = _mat[5] * ty + _mat[13]
+		let z : GLfloat = _mat[6] * ty + _mat[14]
+		let w : GLfloat = _mat[7] * ty + _mat[15]
+		
+		self[col: 3] = vec4(x, y, z, w)
+	}
+	
+	
+	/**
+	Translates in z direction
+	
+	:param: z
+	*/
+	public mutating func translateZ (tz: GLfloat) {
+		let x : GLfloat = _mat[8] * tz + _mat[12]
+		let y : GLfloat = _mat[9] * tz + _mat[13]
+		let z : GLfloat = _mat[10] * tz + _mat[14]
+		let w : GLfloat = _mat[11] * tz + _mat[15]
+		
+		self[col: 3] = vec4(x, y, z, w)
 	}
 	
 	
@@ -372,6 +407,16 @@ public struct mat4 : QuadraticMatrix {
 		let cw : GLfloat = _mat[11] * dz + _mat[15]
 		
 		self[col: 3] = vec4(ax + bx + cx, ay + by + cy, az + bz + cz, aw + bw + cw)
+	}
+	
+	
+	/**
+	Translates the matrix along the passed vector
+	
+	:param: vec The vector to translate along
+	*/
+	mutating public func translate (vec: vec3) {
+		translate(x: vec.x, y: vec.y, z: vec.z)
 	}
 	
 	

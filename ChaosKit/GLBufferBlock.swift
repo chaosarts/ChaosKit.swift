@@ -29,7 +29,7 @@ public struct GLBufferBlock {
 	/// Provides the offset of the buffer block in bytes
 	public let offset : Int
 	
-	public let selector : GLUrl
+	public let selector : GLurl
 	
 	/**
 	Initializes the block
@@ -37,7 +37,7 @@ public struct GLBufferBlock {
 	:param: attribute The target symbol which represents an attribute in the shader
 	:param: size The size of the block per vertex. Mus be either 1, 2, 3 or 4
 	*/
-	public init (_ attribute: GLUrl, _ size: Int, _ type : Int32, _ normalized: Bool, _ stride: Int, _ offset: Int) {
+	public init (_ attribute: GLurl, _ size: Int, _ type : Int32, _ normalized: Bool, _ stride: Int, _ offset: Int) {
 		self.selector = attribute
 		self.size = GLint(size)
 		self.type = GLenum(type)
