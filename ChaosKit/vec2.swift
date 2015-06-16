@@ -88,7 +88,7 @@ public struct vec2 : Vector {
 	}
 	
 	
-	subscript (index: Int) -> GLfloat {
+	public subscript (index: Int) -> GLfloat {
 		get {
 			assert(valid(index), "Bad index access for vec2")
 			return index == 0 ? x : y
