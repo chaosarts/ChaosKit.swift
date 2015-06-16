@@ -110,11 +110,11 @@ public class GLDisplayObject : Identifiable {
 	}
 	
 	/// Provides the transformation of the object
-	internal var transformation : mat4 {
+	public var transformation : mat4 {
 		get {
 			var transformation : mat4 = _transformation
-			if nil == _parent {transformation = _parent!.transformation * _transformation}
-			return _transformation
+			if nil != _parent {transformation = _parent!.transformation * _transformation}
+			return transformation
 		}
 	}
 	
