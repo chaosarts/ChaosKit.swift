@@ -40,7 +40,6 @@ public class GLScreenRenderpass : GLRenderpassBase, GLRenderpass {
 			
 			var uniform : GLUniform = uniforms[selector]!
 			uniform.assign(location!)
-			println (selector)
 		}
 		
 		var stage : GLStage = camera.stage!
