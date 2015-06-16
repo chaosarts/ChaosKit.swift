@@ -833,41 +833,55 @@ public func -(l: mat4, r: mat4) -> mat4 {
 
 /// Matrix multiplication
 public func *(l: mat4, r: mat4) -> mat4 {
-	return [
-		l[row: 0] * r[col: 0],
-		l[row: 0] * r[col: 1],
-		l[row: 0] * r[col: 2],
-		l[row: 0] * r[col: 3],
-		
-		l[row: 1] * r[col: 0],
-		l[row: 1] * r[col: 1],
-		l[row: 1] * r[col: 2],
-		l[row: 1] * r[col: 3],
-		
-		l[row: 2] * r[col: 0],
-		l[row: 2] * r[col: 1],
-		l[row: 2] * r[col: 2],
-		l[row: 2] * r[col: 3],
-		
-		l[row: 3] * r[col: 0],
-		l[row: 3] * r[col: 1],
-		l[row: 3] * r[col: 2],
-		l[row: 3] * r[col: 3],
-	]
+	var resultMat : [GLfloat] = []
+	
+	let mat0 = l.array
+	let mat1 = r.array
+	
+	let a00 = mat0[0], a10 = mat0[1], a20 = mat0[2], a30 = mat0[3]
+	let a01 = mat0[4], a11 = mat0[5], a21 = mat0[6], a31 = mat0[7]
+	let a02 = mat0[8], a12 = mat0[9], a22 = mat0[10], a32 = mat0[11]
+	let a03 = mat0[12], a13 = mat0[13], a23 = mat0[14], a33 = mat0[15]
+	
+	let b00 = mat1[0], b10 = mat1[1], b20 = mat1[2], b30 = mat1[3]
+	let b01 = mat1[4], b11 = mat1[5], b21 = mat1[6], b31 = mat1[7]
+	let b02 = mat1[8], b12 = mat1[9], b22 = mat1[10], b32 = mat1[11]
+	let b03 = mat1[12], b13 = mat1[13], b23 = mat1[14], b33 = mat1[15]
+	
+	resultMat.append(a00 * b00 + a01 * b10 + a02 * b20 + a03 * b30)
+	resultMat.append(a10 * b00 + a11 * b10 + a12 * b20 + a13 * b30)
+	resultMat.append(a20 * b00 + a21 * b10 + a22 * b20 + a23 * b30)
+	resultMat.append(a30 * b00 + a31 * b10 + a32 * b20 + a33 * b30)
+	
+	resultMat.append(a00 * b01 + a01 * b11 + a02 * b21 + a03 * b31)
+	resultMat.append(a10 * b01 + a11 * b11 + a12 * b21 + a13 * b31)
+	resultMat.append(a20 * b01 + a21 * b11 + a22 * b21 + a23 * b31)
+	resultMat.append(a30 * b01 + a31 * b11 + a32 * b21 + a33 * b31)
+	
+	resultMat.append(a00 * b02 + a01 * b12 + a02 * b22 + a03 * b32)
+	resultMat.append(a10 * b02 + a11 * b12 + a12 * b22 + a13 * b32)
+	resultMat.append(a20 * b02 + a21 * b12 + a22 * b22 + a23 * b32)
+	resultMat.append(a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32)
+	
+	resultMat.append(a00 * b03 + a01 * b13 + a02 * b23 + a03 * b33)
+	resultMat.append(a10 * b03 + a11 * b13 + a12 * b23 + a13 * b33)
+	resultMat.append(a20 * b03 + a21 * b13 + a22 * b23 + a23 * b33)
+	resultMat.append(a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33)
+	return mat4(resultMat)
 }
 
 
-/// Left side multiplication of a matrix and a vector. The vector is
+//,/ Left side multiplication of a matrix and a vector. The vector is
 /// considered as a column vector
 public func *(l: mat4, r: vec4) -> vec4 {
-	return [l[row: 0] * r, l[row: 1] * r, l[row: 2] * r, l[row: 3] * r]
+	return [dot(l[row: 0], r), dot(l[row: 1], r), dot(l[row: 2], r), dot(l[row: 3], r)]
 }
 
 
 /// Right side multiplication of a matrix and a vector. The vector is
 /// considered as a row vector
 public func *(l: vec4, r: mat4) -> vec4 {
-	return [l * r[col: 0], l * r[col: 1], l * r[col: 2], l * r[col: 3]]
+	return [dot(l, r[col: 0]), dot(l, r[col: 1]), dot(l, r[col: 2]), dot(l, r[col: 3])]
 }
 
 
