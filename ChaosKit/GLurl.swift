@@ -74,7 +74,7 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	:param: subdomain
 	:param: subdomains
 	*/
-	public init (_ domain: GLurlDomain, _ subdomain: GLAttributeType, _ subdomains: String...) {
+	public init (_ domain: GLUrlDomain, _ subdomain: GLAttributeType, _ subdomains: String...) {
 		self.init([domain.rawValue, subdomain.rawValue] + subdomains)
 	}
 	
@@ -86,7 +86,7 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	:param: subdomains
  	*/
 	public init (_ subdomain: GLAttributeType, _ subdomains: String...) {
-		self.init([GLurlDomain.Default.rawValue, subdomain.rawValue] + subdomains)
+		self.init([GLUrlDomain.Default.rawValue, subdomain.rawValue] + subdomains)
 	}
 	
 	
@@ -109,7 +109,7 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	:param: subdomain
 	:param: subdomains
 	*/
-	public init (_ domain: GLurlDomain, _ subdomain: GLUniformType, _ subdomains: String...) {
+	public init (_ domain: GLUrlDomain, _ subdomain: GLUniformType, _ subdomains: String...) {
 		self.init([domain.rawValue, subdomain.rawValue] + subdomains)
 	}
 	
@@ -121,7 +121,7 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	:param: subdomains
 	*/
 	public init (_ subdomain: GLUniformType, _ subdomains: String...) {
-		self.init([GLurlDomain.Default.rawValue, subdomain.rawValue] + subdomains)
+		self.init([GLUrlDomain.Default.rawValue, subdomain.rawValue] + subdomains)
 	}
 	
 	
@@ -168,12 +168,13 @@ public func ==(left: GLurl, right: GLurl) -> Bool {
 }
 
 
-public enum GLurlDomain : String {
+public enum GLUrlDomain : String {
 	case Default = "default"
 	
 	case Vertex = "vertex"
 	case Model = "model"
 	case Normal = "normal"
+	case Stage = "stage"
 	case Camera = "camera"
 	
 	case AmbientLight = "ambientlight"
@@ -199,7 +200,7 @@ public enum GLAttributeType : String {
 
 
 public enum GLUniformType : String {
-	case Transformation = "Transformation"
+	case Transformation = "transformation"
 	case Projection = "projection"
 	
 	case Sampler = "sampler"
