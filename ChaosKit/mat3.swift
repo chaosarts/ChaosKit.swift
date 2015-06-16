@@ -189,20 +189,20 @@ public func -(l: mat3, r: mat3) -> mat3 {
 
 public func *(l: mat3, r: mat3) -> mat3 {
 	return [
-		l[row: 0] * r[col: 0], l[row: 0] * r[col: 1], l[row: 0] * r[col: 2],
-		l[row: 1] * r[col: 0], l[row: 1] * r[col: 1], l[row: 1] * r[col: 2],
-		l[row: 2] * r[col: 0], l[row: 2] * r[col: 1], l[row: 2] * r[col: 2],
+		dot(l[row: 0], r[col: 0]), dot(l[row: 0], r[col: 1]), dot(l[row: 0], r[col: 2]),
+		dot(l[row: 1], r[col: 0]), dot(l[row: 1], r[col: 1]), dot(l[row: 1], r[col: 2]),
+		dot(l[row: 2], r[col: 0]), dot(l[row: 2], r[col: 1]), dot(l[row: 2], r[col: 2])
 	]
 }
 
 
 public func *(l: mat3, r: vec3) -> vec3 {
-	return [l[row: 0] * r, l[row: 1] * r, l[row: 2] * r]
+	return [dot(l[row: 0], r), dot(l[row: 1], r), dot(l[row: 2], r)]
 }
 
 
 public func *(l: vec3, r: mat3) -> vec3 {
-	return [l * r[col: 0], l * r[col: 1], l * r[col: 2]]
+	return r * l
 }
 
 
