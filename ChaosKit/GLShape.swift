@@ -58,7 +58,7 @@ public class GLShape : GLDisplayObject {
 	// ++++++++++++++++++
 	
 	/// Contains the model view matrix
-	internal var normalTransformation : mat3 {
+	public var normalTransformation : mat3 {
 		get {return transformation.submatrix(row: 3, col: 3)}
 	}
 	
