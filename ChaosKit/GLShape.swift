@@ -82,17 +82,14 @@ public class GLShape : GLDisplayObject {
 	/// Returns all uniforms for a draw call
 	public var uniforms : [GLurl : GLUniform] {
 		
-		// Like bufferables, this generates a dictionary of GLurl to GLUniform
-		// This may need to be cached, since it will be called at each draw
-		// operation.
+		// NOTE: No cache possibilities found yet, since at this point
+		// it is unknown if there are changes in transformation for the parent
+		// object
 		get {
-			if _uniforms == nil {
-				_uniforms = [GLurl : GLUniform]()
-				_uniforms![GLurl(.Model, .Transformation)] = GLUniformMatrix4fv(transformation)
-				_uniforms![GLurl(.Normal, .Transformation)] = GLUniformMatrix3fv(normalTransformation)
-			}
-			
-			return surface.uniforms + _uniforms!
+			var	uniforms : [GLurl : GLUniform] = [GLurl : GLUniform]()
+			uniforms[GLurl(.Model, .Transformation)] = GLUniformMatrix4fv(transformation)
+			uniforms[GLurl(.Normal, .Transformation)] = GLUniformMatrix3fv(normalTransformation)
+			return surface.uniforms + uniforms
 		}
 	}
 	
