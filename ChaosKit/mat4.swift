@@ -10,24 +10,33 @@ import Foundation
 
 public struct mat4 : QuadraticMatrix {
 	
+	// STATIC PROPERTIES
+	// +++++++++++++++++
+	
+	/// Provides the count of elements per rows
 	public static let rows : Int = 4
 	
+	/// Provides the count of elements per columns
 	public static var cols : Int {get {return rows}}
 	
+	/// Provides the size of the matrix in byte
 	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
 	
-	/** The size of a vector */
+	/// Provides the count of elements
 	public static var elementCount : Int {get {return rows * cols}}
 	
-	/** 
-	Provides a list of matrix components in major-row
-	represenstation 
-	*/
+	
+	// STORED PROPERTIES
+	// +++++++++++++++++
+	
+	// Provides a list of matrix components in major-row represenstation
 	private var _mat : [GLfloat] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	
-	/**
-	Provides the determinant of the matrix
-	*/
+	
+	// DERIVED PROPERTIES
+	// ++++++++++++++++++
+	
+	/// Provides the determinant of the matrix
 	public var determinant : GLfloat {
 		let m : mat4 = self
 		
@@ -41,9 +50,7 @@ public struct mat4 : QuadraticMatrix {
 		return a - b + c - d
 	}
 	
-	/**
-	Provides the transposed matrix of this matrix
-	*/
+	/// Provides the transposed matrix of this matrix
 	public var transposed : mat4 {
 		let m : mat4 = self
 		return [
@@ -54,16 +61,17 @@ public struct mat4 : QuadraticMatrix {
 		]
 	}
 	
-	
+	/// The matrix represented as array
 	public var array : [GLfloat] {
 		get {return _mat}
 	}
 	
 	
-	/**
-	Array access for row vectors
-	*/
-	subscript(row index: Int) -> vec4 {
+	// SUBSCRIPTS
+	// ++++++++++
+	
+	/// Subscript access for row vectors
+	public subscript(row index: Int) -> vec4 {
 		get {
 			assert(valid(index), "Invalid mat4 index access.")
 			return vec4(_mat[index], _mat[index + 4], _mat[index + 8], _mat[index + 12])
@@ -78,10 +86,8 @@ public struct mat4 : QuadraticMatrix {
 		}
 	}
 	
-	/**
-	Array access for column vectors
-	*/
-	subscript(col index: Int) -> vec4 {
+	/// Array access for column vectors
+	public subscript(col index: Int) -> vec4 {
 		get {
 		assert(valid(index), "Invalid mat4 index access.")
 		return vec4(_mat[index * 4], _mat[index * 4 + 1], _mat[index * 4 + 2], _mat[index * 4 + 3])
@@ -89,7 +95,7 @@ public struct mat4 : QuadraticMatrix {
 		
 		set {
 			assert(valid(index), "Invalid mat4 index access.")
-			var i : Int = index * 4
+			let i : Int = index * 4
 			_mat[i] = newValue.x
 			_mat[i + 1] = newValue.y
 			_mat[i + 2] = newValue.z
@@ -97,10 +103,8 @@ public struct mat4 : QuadraticMatrix {
 		}
 	}
 	
-	/**
-	Array access for single components
-	*/
-	subscript(row: Int, col: Int) -> GLfloat {
+	/// Array access for single components
+	public subscript(row: Int, col: Int) -> GLfloat {
 		get {
 			assert(valid(row) && valid(col), "Invalid mat4 index access.")
 			return _mat[col * 4 + row]
@@ -113,27 +117,33 @@ public struct mat4 : QuadraticMatrix {
 	}
 	
 	
+	// INITIALIZERS AND METHODS
+	// ++++++++++++++++++++++++
+	
 	/**
 	Default initializer. Fills the matrix with zeros
 	*/
-	public init () {
-
-	}
+	public init () {}
 	
 	
+	/**
+	Returns the submatrix by removing a row and column at given indices
+	
+	:param: row The row index to remove
+	:param: col The col index to remove
+	*/
 	public func submatrix(row rowIndex: Int, col colIndex: Int) -> mat3 {
 		assert(valid(rowIndex) && valid(colIndex), "Bad index access for mat4")
 		
-		var m : [GLfloat] = _mat
-		for var r : Int = 3; r >= 0; r-- {
-			for var c : Int = 3; c >= 0; c-- {
-				if r == rowIndex || c == colIndex {
-					m.removeAtIndex(c * 4 + r)
-				}
+		var m : [GLfloat] = []
+		for r in 0..<mat4.rows {
+			for c in 0..<mat4.cols {
+				if r == rowIndex || c == colIndex {continue}
+				m.append(_mat[c * 4 + r])
 			}
 		}
 		
-		return [m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8]]
+		return mat3(m)
 	}
 	
 	
@@ -166,7 +176,7 @@ public struct mat4 : QuadraticMatrix {
 	:param: vec The axis to rotate around
 	*/
 	mutating public func rotate (deg degree: GLfloat, x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) {
-		let radian : GLfloat = degree * GLfloat(M_PI / 180.0)
+		let radian : GLfloat = deg2rad(degree)
 		rotate(rad: radian, x: dx, y: dy, z: dz)
 	}
 	
@@ -178,26 +188,26 @@ public struct mat4 : QuadraticMatrix {
 	:param: vec The axis to rotate around
 	*/
 	mutating public func rotate (rad radian: GLfloat, x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) {
-		var m00 = _mat[0], m10 = _mat[1], m20 = _mat[2], m30 = _mat[3]
-		var m01 = _mat[4], m11 = _mat[5], m21 = _mat[6], m31 = _mat[7]
-		var m02 = _mat[8], m12 = _mat[9], m22 = _mat[10], m32 = _mat[11]
-		var m03 = _mat[12], m13 = _mat[13], m23 = _mat[14], m33 = _mat[15]
+		let m00 = _mat[0], m10 = _mat[1], m20 = _mat[2], m30 = _mat[3]
+		let m01 = _mat[4], m11 = _mat[5], m21 = _mat[6], m31 = _mat[7]
+		let m02 = _mat[8], m12 = _mat[9], m22 = _mat[10], m32 = _mat[11]
+		let m03 = _mat[12], m13 = _mat[13], m23 = _mat[14], m33 = _mat[15]
 		
-		var cosAngle = cos(radian)
-		var sinAngle = sin(radian)
-		var diffCosAngle = 1 - cosAngle
+		let cosAngle = cos(radian)
+		let sinAngle = sin(radian)
+		let diffCosAngle = 1 - cosAngle
 		
-		var r00 = dx * dx * diffCosAngle + cosAngle
-		var r10 = dx * dy * diffCosAngle + dz * sinAngle
-		var r20 = dx * dz * diffCosAngle - dy * sinAngle
+		let r00 = dx * dx * diffCosAngle + cosAngle
+		let r10 = dx * dy * diffCosAngle + dz * sinAngle
+		let r20 = dx * dz * diffCosAngle - dy * sinAngle
 		
-		var r01 = dx * dy * diffCosAngle - dz * sinAngle
-		var r11 = dy * dy * diffCosAngle + cosAngle
-		var r21 = dy * dz * diffCosAngle + dx * sinAngle
+		let r01 = dx * dy * diffCosAngle - dz * sinAngle
+		let r11 = dy * dy * diffCosAngle + cosAngle
+		let r21 = dy * dz * diffCosAngle + dx * sinAngle
 		
-		var r02 = dx * dz * diffCosAngle + dy * sinAngle
-		var r12 = dy * dz * diffCosAngle - dx * sinAngle
-		var r22 = dz * dz * diffCosAngle + cosAngle
+		let r02 = dx * dz * diffCosAngle + dy * sinAngle
+		let r12 = dy * dz * diffCosAngle - dx * sinAngle
+		let r22 = dz * dz * diffCosAngle + cosAngle
 		
 		
 		_mat[0]  = m00 * r00 + m01 * r10 + m02 * r20
@@ -228,7 +238,7 @@ public struct mat4 : QuadraticMatrix {
 	:param: alpha The angle
 	*/
 	mutating public func rotateX (deg degree: GLfloat) {
-		let rad : GLfloat = degree * GLfloat(M_PI / 180.0)
+		let rad : GLfloat = deg2rad(degree)
 		rotateX(rad: rad)
 	}
 	
@@ -239,11 +249,11 @@ public struct mat4 : QuadraticMatrix {
 	:param: alpha The angle
 	*/
 	mutating public func rotateX (rad radian: GLfloat) {
-		var m01 = _mat[4], m11 = _mat[5], m21 = _mat[6], m31 = _mat[7]
-		var m02 = _mat[8], m12 = _mat[9], m22 = _mat[10], m32 = _mat[11]
+		let m01 = _mat[4], m11 = _mat[5], m21 = _mat[6], m31 = _mat[7]
+		let m02 = _mat[8], m12 = _mat[9], m22 = _mat[10], m32 = _mat[11]
 		
-		var c = cos(radian)
-		var s = sin(radian)
+		let c = cos(radian)
+		let s = sin(radian)
 		
 		_mat[4] = m01 * c + m02 * s
 		_mat[5] = m11 * c + m12 * s
@@ -256,8 +266,13 @@ public struct mat4 : QuadraticMatrix {
 	}
 	
 	
+	/**
+	Rotates the matrix around the y axis
+	
+	:param: alpha The angle
+	*/
 	mutating public func rotateY (deg degree: GLfloat) {
-		let rad : GLfloat = degree * GLfloat(M_PI / 180.0)
+		let rad : GLfloat = deg2rad(degree)
 		rotateY(rad: rad)
 	}
 	
@@ -295,7 +310,7 @@ public struct mat4 : QuadraticMatrix {
 	:param: deg The angle in degrees
 	*/
 	mutating public func rotateZ (deg degree: GLfloat) {
-		let rad : GLfloat = degree * GLfloat(M_PI / 180.0)
+		let rad : GLfloat = deg2rad(degree)
 		rotateZ(rad: rad)
 	}
 	
@@ -305,20 +320,20 @@ public struct mat4 : QuadraticMatrix {
 	:param: rad The angle in radians
 	*/
 	mutating public func rotateZ (rad radian: GLfloat) {
-		let m00 = _mat[0], m10 = _mat[4], m20 = _mat[8], m30 = _mat[12]
-		let m01 = _mat[1], m11 = _mat[5], m21 = _mat[7], m31 = _mat[13]
+		let m00 = _mat[0], m10 = _mat[1], m20 = _mat[2], m30 = _mat[3]
+		let m01 = _mat[4], m11 = _mat[5], m21 = _mat[6], m31 = _mat[7]
 		
 		let c = cos(radian)
 		let s = sin(radian)
 		
 		_mat[0] = m00 * c + m01 * s
-		_mat[4] = m10 * c + m11 * s
-		_mat[8] = m20 * c + m21 * s
-		_mat[12] = m30 * c + m31 * s
-		_mat[1] = m00 * -s + m01 * c
+		_mat[1] = m10 * c + m11 * s
+		_mat[2] = m20 * c + m21 * s
+		_mat[3] = m30 * c + m31 * s
+		_mat[4] = m00 * -s + m01 * c
 		_mat[5] = m10 * -s + m11 * c
-		_mat[7] = m20 * -s + m21 * c
-		_mat[13] = m30 * -s + m31 * c
+		_mat[6] = m20 * -s + m21 * c
+		_mat[7] = m30 * -s + m31 * c
 	}
 	
 	
@@ -373,41 +388,53 @@ public struct mat4 : QuadraticMatrix {
 }
 
 
-// Extensions
-// **********
+/*
+|--------------------------------------------------------------------------
+| Extensions
+|--------------------------------------------------------------------------
+*/
 
+/** 
+Array literal convertibal initalizer
+*/
 extension mat4 : ArrayLiteralConvertible {
 	public init(arrayLiteral elements: GLfloat...) {
-		let maximum : Int = min(mat4.elementCount, elements.count)
-		_mat = [GLfloat](count: maximum, repeatedValue: 0.0)
-		for index in 0..<maximum {
-			_mat[index] = elements[index]
-		}
+		self.init(elements)
 	}
 }
 
+
+/**
+Array representable initalizer
+*/
 extension mat4 : ArrayRepresentable {
 	public init(_ array: [GLfloat]) {
-		for index in 0..<mat4.elementCount {
-			_mat[index] = array.count > index ? array[index] : 0
+		let maximum : Int = min(mat4.elementCount, array.count)
+		_mat = [GLfloat](count: maximum, repeatedValue: 0.0)
+		for index in 0..<maximum {
+			_mat[index] = array[index]
 		}
 	}
 }
 
 
+/**
+Equatable
+*/
 extension mat4 : Equatable {}
 
 public func ==(left: mat4, right: mat4) -> Bool {
 	for index in 0...15 {
-		if left._mat[index] != right._mat[index] {
-			return false
-		}
+		if left._mat[index] != right._mat[index] {return false}
 	}
 	
 	return true
 }
 
 
+/** 
+Printable
+*/
 extension mat4 : Printable {
 	public var description : String {
 		get {
@@ -424,8 +451,8 @@ extension mat4 : Printable {
 			for r in 0...3 {
 				output += "|"
 				for c in 0...3 {
-					var fillLen : Int = maxlen - count(m[r, c].description)
-					var white : String = " " * fillLen
+					let fillLen : Int = maxlen - count(m[r, c].description)
+					let white : String = " " * fillLen
 					output += white + m[r, c].description
 				}
 				output += "|\n"
@@ -436,8 +463,11 @@ extension mat4 : Printable {
 }
 
 
-// Static
-// ******
+/*
+|--------------------------------------------------------------------------
+| Static Extensions
+|--------------------------------------------------------------------------
+*/
 
 extension mat4 {
 	
@@ -447,18 +477,12 @@ extension mat4 {
 	public static let identity : mat4 = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
 	
 	
-	/** 
-	Creates a rotation matrix with rotation angle alpha
+	/**
+	Creates a rotation matrix with rotation angle alpha around the x axis
 	
-	:param: alpha The rotation angle
+	:param: alpha The rotation angle in radians
 	:returns: The rotation matrix
 	*/
-	public static func makeRotationX (deg degree: GLfloat) -> mat4 {
-		let radian : GLfloat = degree * GLfloat(M_PI / 180)
-		return makeRotationX(rad: radian)
-	}
-	
-	
 	public static func makeRotationX (rad radian: GLfloat) -> mat4 {
 		let cosine = cos(radian)
 		let sinus = sin(radian)
@@ -473,10 +497,21 @@ extension mat4 {
 	
 	
 	/**
-	Creates a y rotation matrix with rotation angle alpha
+	Creates a rotation matrix with rotation angle alpha around the x axis
+	
+	:param: alpha The rotation angle in degrees
+	:returns: The rotation matrix
+	*/
+	public static func makeRotationX (deg degree: GLfloat) -> mat4 {
+		let radian : GLfloat = deg2rad(degree)
+		return makeRotationX(rad: radian)
+	}
 	
 	
-	:param: alpha The rotation angle
+	/**
+	Creates a rotation matrix with rotation angle alpha around the y axis
+	
+	:param: alpha The rotation angle in radians
 	:returns: The rotation matrix
 	*/
 	public static func makeRotationY (rad radian: GLfloat) -> mat4 {
@@ -488,6 +523,18 @@ extension mat4 {
 			sinus, 0.0, cosine, 0.0,
 			0.0, 0.0, 0.0, 1.0
 		]
+	}
+	
+	
+	/**
+	Creates a rotation matrix with rotation angle alpha around the y axis
+	
+	:param: alpha The rotation angle in degrees
+	:returns: The rotation matrix
+	*/
+	public static func makeRotationY (deg degree: GLfloat) -> mat4 {
+		let radian : GLfloat = deg2rad(degree)
+		return makeRotationY(rad: radian)
 	}
 	
 	
@@ -506,6 +553,18 @@ extension mat4 {
 			0.0, 0.0, 1.0, 0.0,
 			0.0, 0.0, 0.0, 1.0
 		]
+	}
+	
+	
+	/**
+	Creates a rotation matrix with rotation angle alpha around the z axis
+	
+	:param: alpha The rotation angle in degrees
+	:returns: The rotation matrix
+	*/
+	public static func makeRotationZ (deg degree: GLfloat) -> mat4 {
+		let radian : GLfloat = deg2rad(degree)
+		return makeRotationZ(rad: radian)
 	}
 	
 	
@@ -560,11 +619,25 @@ extension mat4 {
 	}
 	
 	
+	/**
+	Returns a matrix with translation in given direction
+	
+	:param: direction The direction for the translation
+	:return: The translation matrix
+	*/
 	public static func makeTranslate (direction: vec3) -> mat4 {
 		return makeTranslate(x: direction.x, y: direction.y, z: direction.z)
 	}
 	
 	
+	/**
+	Returns a matrix with translation in given direction
+	
+	:param: x The x direction for the translation
+	:param: y The y direction for the translation
+	:param: z The z direction for the translation
+	:return: The translation matrix
+	*/
 	public static func makeTranslate (x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) -> mat4 {
 		return [
 			1.0, 0.0, 0.0, 0,
@@ -575,6 +648,16 @@ extension mat4 {
 	}
 	
 	
+	/** 
+	Returns a orthographic projection matrix
+	
+	:param: left The left bound of the view volume
+	:param: right The right bound of the view volume
+	:param: bottom The bottom bound of the view volume
+	:param: top The top bound of the view volume
+	:param: near The near bound of the view volume
+	:param: far The far bound of the view volume
+	*/
 	public static func makeOrtho (left l: GLfloat, right: GLfloat, bottom: GLfloat,
 		top: GLfloat, near: GLfloat, far: GLfloat) -> mat4 {
 			
@@ -605,12 +688,12 @@ extension mat4 {
 	:param: far The far boundary
 	*/
 	public static func makeFrustum (left l: GLfloat, right: GLfloat, bottom: GLfloat, top: GLfloat, near: GLfloat, far: GLfloat) -> mat4 {
-		var x = (2 * near) / (right - l)
-		var y = (2 * near) / (top - bottom)
-		var a = (right + l) / (right - l)
-		var b = (top + bottom) / (top - bottom)
-		var c = -(far + near) / (far - near)
-		var d = -(2 * far * near) / (far - near)
+		let x = (2 * near) / (right - l)
+		let y = (2 * near) / (top - bottom)
+		let a = (right + l) / (right - l)
+		let b = (top + bottom) / (top - bottom)
+		let c = -(far + near) / (far - near)
+		let d = -(2 * far * near) / (far - near)
 
 		return [
 			x, 0, 0, 0,
@@ -621,16 +704,24 @@ extension mat4 {
 	}
 	
 	
+	/**
+	Returns a perspective projection matrix
+	
+	:param:  fovy
+	:param:  aspect
+	:param:  near
+	:param:  far
+ 	*/
 	public static func makePerspective (fovy f: GLfloat, aspect: GLfloat, near: GLfloat, far: GLfloat) -> mat4 {
 		
-		var angle = f / 2
-		var dz = far - near
-		var sinAngle = sin(angle)
+		let angle = f / 2
+		let dz = far - near
+		let sinAngle = sin(angle)
 		if (dz == 0 || sinAngle == 0 || aspect == 0) {
 			return mat4.identity
 		}
 			
-		var cot = cos(angle) / sinAngle
+		let cot = cos(angle) / sinAngle
 		return [
 			cot / aspect, 0, 0, 0,
 			0, cot, 0, 0,
@@ -641,7 +732,13 @@ extension mat4 {
 }
 
 
+/*
+|--------------------------------------------------------------------------
+| Operators
+|--------------------------------------------------------------------------
+*/
 
+/// Negates the matrix, by negating each element
 public prefix func -(l: mat4) -> mat4 {
 	var mat : [GLfloat] = l.array
 	
@@ -672,6 +769,7 @@ public prefix func -(l: mat4) -> mat4 {
 }
 
 
+/// Matrix addition
 public func +(l: mat4, r: mat4) -> mat4 {
 	return [
 		l[0, 0] + r[0, 0], l[0, 1] + r[0, 1], l[0, 2] + r[0, 2], l[0, 3] + r[0, 3],
@@ -682,11 +780,13 @@ public func +(l: mat4, r: mat4) -> mat4 {
 }
 
 
+/// Matrix subtraction
 public func -(l: mat4, r: mat4) -> mat4 {
 	return l + -r
 }
 
 
+/// Matrix multiplication
 public func *(l: mat4, r: mat4) -> mat4 {
 	return [
 		l[row: 0] * r[col: 0],
@@ -712,16 +812,21 @@ public func *(l: mat4, r: mat4) -> mat4 {
 }
 
 
+/// Left side multiplication of a matrix and a vector. The vector is
+/// considered as a column vector
 public func *(l: mat4, r: vec4) -> vec4 {
 	return [l[row: 0] * r, l[row: 1] * r, l[row: 2] * r, l[row: 3] * r]
 }
 
 
+/// Right side multiplication of a matrix and a vector. The vector is
+/// considered as a row vector
 public func *(l: vec4, r: mat4) -> vec4 {
 	return [l * r[col: 0], l * r[col: 1], l * r[col: 2], l * r[col: 3]]
 }
 
 
+/// Left side Scalar multiplication with a matrix
 public func *(l: GLfloat, r: mat4) -> mat4 {
 	return [
 		l * r[0, 0], l * r[0, 1], l * r[0, 2], l * r[0, 3],
@@ -732,6 +837,7 @@ public func *(l: GLfloat, r: mat4) -> mat4 {
 }
 
 
+/// Left side Scalar multiplication with a matrix
 public func *(l: mat4, r: GLfloat) -> mat4 {
 	return r * l
 }
