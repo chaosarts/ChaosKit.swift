@@ -68,6 +68,7 @@
 		C49F09621B24EAA6007EF368 /* GLGeometryNormal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49F09611B24EAA6007EF368 /* GLGeometryNormal.swift */; };
 		C49F09661B24F81D007EF368 /* GLSurfaceColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49F09651B24F81D007EF368 /* GLSurfaceColor.swift */; };
 		C49F09681B24FA5B007EF368 /* GLSurfaceTexture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C49F09671B24FA5B007EF368 /* GLSurfaceTexture.swift */; };
+		C4B559511B322ADD003C4D7F /* GLParallelogram.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B559501B322ADD003C4D7F /* GLParallelogram.swift */; };
 		C4CB742D1ADC75B700340BBE /* GLBufferBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CB742C1ADC75B700340BBE /* GLBufferBlock.swift */; };
 		C4CDC5A81A6EAA7600AC1F0F /* vec4.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CDC5A71A6EAA7600AC1F0F /* vec4.swift */; };
 		C4CDC5AA1A6EADB200AC1F0F /* math.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CDC5A91A6EADB200AC1F0F /* math.swift */; };
@@ -164,6 +165,7 @@
 		C49F09611B24EAA6007EF368 /* GLGeometryNormal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLGeometryNormal.swift; sourceTree = "<group>"; };
 		C49F09651B24F81D007EF368 /* GLSurfaceColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLSurfaceColor.swift; sourceTree = "<group>"; };
 		C49F09671B24FA5B007EF368 /* GLSurfaceTexture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLSurfaceTexture.swift; sourceTree = "<group>"; };
+		C4B559501B322ADD003C4D7F /* GLParallelogram.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GLParallelogram.swift; path = ../../../../.Trash/GLParallelogram.swift; sourceTree = "<group>"; };
 		C4CB742C1ADC75B700340BBE /* GLBufferBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GLBufferBlock.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C4CDC5A71A6EAA7600AC1F0F /* vec4.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = vec4.swift; sourceTree = "<group>"; };
 		C4CDC5A91A6EADB200AC1F0F /* math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = math.swift; sourceTree = "<group>"; };
@@ -297,7 +299,7 @@
 			name = Protocol;
 			sourceTree = "<group>";
 		};
-		C457E7851AC4645F003B2B5D /* Display */ = {
+		C457E7851AC4645F003B2B5D /* DisplayObject */ = {
 			isa = PBXGroup;
 			children = (
 				C47EFCED1B29629D00681A6A /* Light */,
@@ -308,7 +310,7 @@
 				C48C43271AB372B3006AB10F /* GLStage.swift */,
 				C47EFCEB1B2961D100681A6A /* GLLight.swift */,
 			);
-			name = Display;
+			name = DisplayObject;
 			sourceTree = "<group>";
 		};
 		C45DF15C1B2E27B8001B8C77 /* Extension */ = {
@@ -382,7 +384,7 @@
 				C43E2B041B2AFBEC002905C8 /* Application */,
 				C4D3715F1AF6CE4600E29590 /* Base */,
 				C40814641AD4329700007A0C /* Camera */,
-				C457E7851AC4645F003B2B5D /* Display */,
+				C457E7851AC4645F003B2B5D /* DisplayObject */,
 				C4D59DA61B0FA8BA00F7292A /* Function */,
 				C4D59DA31B0FA88A00F7292A /* Image */,
 				C48CC2591ACFE57F007FBA60 /* Renderpass */,
@@ -448,6 +450,7 @@
 			isa = PBXGroup;
 			children = (
 				C49F09611B24EAA6007EF368 /* GLGeometryNormal.swift */,
+				C4B559501B322ADD003C4D7F /* GLParallelogram.swift */,
 			);
 			name = Geometry;
 			sourceTree = "<group>";
@@ -695,6 +698,7 @@
 				C47EFCFF1B29B18500681A6A /* GLUniform1.swift in Sources */,
 				C48C43C81AB5E821006AB10F /* GLTexture.swift in Sources */,
 				C47EFCF81B29A66500681A6A /* Stack.swift in Sources */,
+				C4B559511B322ADD003C4D7F /* GLParallelogram.swift in Sources */,
 				C44DC8BB1ACB299100A5C662 /* GLBuffer.swift in Sources */,
 				C48C43311AB372B3006AB10F /* GLContainer.swift in Sources */,
 				C43E2B101B2B298D002905C8 /* XmlExportFormat.swift in Sources */,

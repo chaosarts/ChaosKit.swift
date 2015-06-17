@@ -32,6 +32,9 @@ public class GLShape : GLDisplayObject {
 	/// Indicates whether the shape is compiled or not
 	private var _compiled : Bool = false
 	
+	/// Provides the normal transformation in case for shearing or scaling
+	internal var _normalTransformation : mat4?
+	
 	/// Provides the target
 	public private(set) var target : GLBufferTarget = GLArrayBufferTarget()
 
@@ -58,8 +61,11 @@ public class GLShape : GLDisplayObject {
 	// ++++++++++++++++++
 	
 	/// Contains the model view matrix
-	public var normalTransformation : mat3 {
-		get {return transformation.submatrix(row: 3, col: 3)}
+	public var normalTransformation : mat4 {
+		get {
+			if nil != _normalTransformation {return _normalTransformation! * transformation}
+			return transformation
+		}
 	}
 	
 	/// Provides the bufferables
@@ -88,7 +94,7 @@ public class GLShape : GLDisplayObject {
 		get {
 			var	uniforms : [GLurl : GLUniform] = [GLurl : GLUniform]()
 			uniforms[GLurl(.Model, .Transformation)] = GLUniformMatrix4fv(transformation)
-			uniforms[GLurl(.Normal, .Transformation)] = GLUniformMatrix3fv(normalTransformation)
+			uniforms[GLurl(.Normal, .Transformation)] = GLUniformMatrix4fv(normalTransformation)
 			return surface.uniforms + uniforms
 		}
 	}
