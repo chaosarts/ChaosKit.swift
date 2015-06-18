@@ -176,6 +176,7 @@ public enum GLUrlDomain : String {
 	case Normal = "normal"
 	case Stage = "stage"
 	case Camera = "camera"
+	case Surface = "surface"
 	
 	case AmbientLight = "ambientlight"
 	case DiffuseLight = "diffuselight"
@@ -206,6 +207,6 @@ public enum GLUniformType : String {
 	case Sampler = "sampler"
 	
 	case Intensity = "intensity"
-	case Shinyness = "shinyness"
+	case Reflection = "reflection"
 }
 
