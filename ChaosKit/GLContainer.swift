@@ -166,6 +166,8 @@ public class GLContainer: GLDisplayObject {
 		
 		_shapeCache = []
 		for child in children {
+			if !child.visible {continue}
+			
 			if let shape = child as? GLShape {
 				_shapeCache!.append(child as! GLShape)
 			}
