@@ -158,3 +158,17 @@ public func dot(l: vec4, r: vec4) -> GLfloat {
 	let b : GLfloat = l.z * r.z + l.w * r.w
 	return a + b
 }
+
+
+public func gramschmidt (a: vec4, b: vec4, c: vec4, d: vec4) -> [vec4] {
+	let x : vec4 = a
+	let xdot : Float = dot(x, x)
+	
+	let y : vec4 = b - (dot(x, b) / xdot) * x
+	let ydot : Float = dot(y, y)
+	
+	let z : vec4 = c - (dot(x, c) / xdot) * x - (dot(y, c) / ydot) * y
+	
+	let w : vec4 = d - (dot(x, d) / xdot) * x - (dot(y, d) / ydot) * y - (dot(z, d) / dot(z, z)) * z
+	return [x, y, z, w]
+}

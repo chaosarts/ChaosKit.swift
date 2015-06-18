@@ -219,3 +219,22 @@ public func cross(l: vec3, r: vec3) -> vec3 {
 		l.x * r.y - l.y * r.x
 	)
 }
+
+
+public func gramschmidt (a: vec3, b: vec3, c: vec3) -> [vec3] {
+	let x : vec3 = a
+	let xdot : Float = dot(x, x)
+	let y : vec3 = b - (dot(x, b) / xdot) * x
+	let z : vec3 = c - (dot(x, c) / xdot) * x - (dot(y, c) / dot(y, y)) * y
+	return [x, y, z]
+}
+
+
+public func makeRightHandBasis (a: vec3, b: vec3, c: vec3) -> [vec3] {
+	return [a, b, dot(cross(a, b), c) > 0 ? c : -c]
+}
+
+
+public func makeLeftHandBasis (a: vec3, b: vec3, c: vec3) -> [vec3] {
+	return [a, b, dot(cross(a, b), c) < 0 ? c : -c]
+}

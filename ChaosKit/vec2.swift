@@ -164,3 +164,10 @@ public func *(l: GLfloat, r: vec2) -> vec2 {
 public func *(l: vec2, r: GLfloat) -> vec2 {
 	return r * l
 }
+
+
+public func gramschmidt (a: vec2, b: vec2) -> [vec2] {
+	let x : vec2 = a
+	let y : vec2 = b - (dot(x, b) / dot(x, x)) * x
+	return [x, y]
+}
