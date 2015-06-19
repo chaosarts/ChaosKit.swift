@@ -34,11 +34,23 @@ Basic class
 public class GLRenderpassBase {
 	
 	/// Contains a capability map
-	private var _capabilities : [GLenum : GLcapability] = [GLenum : GLcapability]()
+	private var _capabilities : [GLenum : GLcap] = [GLenum : GLcap]()
 	
 	/// Contains the bitfield for clearing the buffers
-	private var _clearmasks : [Int32 : GLclearmask] = [Int32 : GLclearmask]()
+	private var _clearmasks : [Int32 : GLclear] = [Int32 : GLclear]()
 	
+	/// Contains gl hints
+	private var _hints : [Int32 : Int32] = [Int32 : Int32]()
+	
+	public var lineSmooth : Int32? {
+		get {return _hints[GL_LINE_SMOOTH_HINT]}
+		set {setHint(GL_LINE_SMOOTH_HINT, value: newValue)}
+	}
+	
+	public var polygonSmooth : Int32? {
+		get {return _hints[GL_POLYGON_SMOOTH_HINT]}
+		set {setHint(GL_POLYGON_SMOOTH_HINT, value: newValue)}
+	}
 	
 	public init () {}
 	
@@ -48,8 +60,15 @@ public class GLRenderpassBase {
 	
 	:param: mask
 	*/
-	public func setClear (mask: GLclearmask) {
+	public func setClear (mask: GLclear) {
 		_clearmasks[mask.bitmask] = mask
+	}
+	
+	/**
+	*/
+	public func setHint (name: Int32, value: Int32?) {
+		if value != nil {_hints[name] = value}
+		else {_hints.removeValueForKey(name)}
 	}
 	
 	
@@ -60,7 +79,7 @@ public class GLRenderpassBase {
 	*/
 	public func enableCapabilities (caps: Int32...) {
 		for cap in caps {
-			_capabilities[GLenum(cap)] = GLcapability(cap, true)
+			_capabilities[GLenum(cap)] = GLcap(cap, true)
 		}
 	}
 	
@@ -72,7 +91,7 @@ public class GLRenderpassBase {
 	*/
 	public func disableCapabilities (caps: Int32...) {
 		for cap in caps {
-			_capabilities[GLenum(cap)] = GLcapability(cap, false)
+			_capabilities[GLenum(cap)] = GLcap(cap, false)
 		}
 	}
 	
@@ -83,6 +102,13 @@ public class GLRenderpassBase {
 	public func applyCapabilities () {
 		for name in _capabilities.keys {
 			_capabilities[name]?.apply()
+		}
+	}
+	
+	
+	public func applyHints () {
+		for hintname in _hints.keys {
+			glHint(GLenum(hintname), GLenum(_hints[hintname]!))
 		}
 	}
 	
