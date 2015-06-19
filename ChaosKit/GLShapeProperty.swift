@@ -18,7 +18,7 @@ public protocol GLShapeProperty : GLBufferable {}
 General shape property struct, that provides the data as a list of vectors. This is
 needed, when a shape needs another value for each vertex, like normals or texture coordinates.
 */
-public struct GLShapePropertyArray<V: Vector> : GLShapeProperty, ArrayLiteralConvertible  {
+public struct GLpropa<V: Vector> : GLShapeProperty, ArrayLiteralConvertible  {
 	
 	/// The values as a list of vectors
 	public var values : [V] = []
@@ -65,7 +65,7 @@ General shape property struct that provides one single value. This is useful for
 Shapes with one surface color. The struct reutrns always the same value for each
 subscript index access. This may safe some memory.
 */
-public struct GLShapePropertySingleValue<V: Vector> : GLShapeProperty, ArrayLiteralConvertible {
+public struct GLprops<V: Vector> : GLShapeProperty, ArrayLiteralConvertible {
 	
 	/// Provides the single value, which will be returned 
 	/// as array on subscipt access

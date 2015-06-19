@@ -9,13 +9,13 @@
 import Foundation
 import ChaosKit
 
-public class GLParallelogram : GLGeometry {
+public struct GLparallelogram : GLGeometry {
 	
 	/// Caches the points
 	private var _cache : [vec3]?
 	
 	/// Returns the counts of vertice
-	public var count : Int {get {return values.count}}
+	public var count : Int {mutating get {return values.count}}
 	
 	/// Provides the size per vertex
 	public var size : Int {get {return 3}}
@@ -30,7 +30,7 @@ public class GLParallelogram : GLGeometry {
 	public private(set) var indexlist : [Int]?
 	
 	/// Provides a list of vertice
-	public var values : [vec3] {get {updateCache(); return _cache!}}
+	public var values : [vec3] {mutating get {updateCache(); return _cache!}}
 	
 	/// Provides the first vector that clamps the ractangle
 	public var u : vec3 {didSet{_cache = nil}}
@@ -45,7 +45,7 @@ public class GLParallelogram : GLGeometry {
 	public var normal : vec3 {get {return cross(u, v)}}
 	
 	/// 
-	public var normals : GLShapeProperty? {get {return GLGeometrySingleNormal3D(value: normal)}}
+	public var normals : GLShapeProperty? {get {return GLnormal3(value: normal)}}
 	
 	/// Provides the width of the rectangle
 	public var width : GLfloat {get {return u.magnitude}}
@@ -55,7 +55,7 @@ public class GLParallelogram : GLGeometry {
 	
 	/// Subscript access to one vertex as float list
 	public subscript (index: Int) -> [GLfloat] {
-		get {return values[index].array}
+		mutating get {return values[index].array}
 	}
 	
 	
@@ -82,7 +82,7 @@ public class GLParallelogram : GLGeometry {
 	:param: u
 	:param: v
 	*/
-	public convenience init (center c: vec3, u: vec3, v: vec3) {
+	public init (center c: vec3, u: vec3, v: vec3) {
 		self.init(origin: c - 0.5 * (u + v), u: u, v: v)
 	}
 	
@@ -95,7 +95,7 @@ public class GLParallelogram : GLGeometry {
 	:param: u
 	:param: v
 	*/
-	public convenience init (u: vec3, v: vec3) {
+	public init (u: vec3, v: vec3) {
 		self.init(origin: vec3(), u: u, v: v)
 	}
 	
@@ -103,15 +103,15 @@ public class GLParallelogram : GLGeometry {
 	/**
 	Updates the internal vertice cache
  	*/
-	public func updateCache () {
+	public mutating func updateCache () {
 		if nil != _cache {return}		
-		_cache = GLParallelogram.generateValues(origin, u: u, v: v)
+		_cache = GLparallelogram.generateValues(origin, u: u, v: v)
 	}
 }
 
 
-extension GLParallelogram {
-	public class func generateValues (origin: vec3, u: vec3, v: vec3) -> [vec3]{
+extension GLparallelogram {
+	public static func generateValues (origin: vec3, u: vec3, v: vec3) -> [vec3]{
 		let a : vec3 = origin
 		let b : vec3 = origin + u
 		let c : vec3 = origin + u + v
