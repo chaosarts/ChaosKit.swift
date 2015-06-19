@@ -17,5 +17,5 @@ public protocol GLBufferable {
 	var dynamic : Bool {get}
 	
 	/// Returns the attribute value for a vertex at given index position
-	subscript (index : Int) -> [GLfloat] {get}
+	subscript (index : Int) -> [GLfloat] {mutating get}
 }
