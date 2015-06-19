@@ -15,7 +15,7 @@ public protocol GLclear {
 }
 
 
-public struct GLColorClearMask : GLclear {
+public struct GLcolclear : GLclear {
 	public let bitmask : Int32 = GL_COLOR_BUFFER_BIT
 	
 	public var value : RGBAColor = (0, 0, 0, 0)
@@ -37,7 +37,7 @@ public struct GLColorClearMask : GLclear {
 
 
 
-public struct GLDepthClearMask : GLclear {
+public struct GLdepthclear : GLclear {
 	
 	public let bitmask : Int32 = GL_DEPTH_BUFFER_BIT
 	
@@ -55,7 +55,7 @@ public struct GLDepthClearMask : GLclear {
 }
 
 
-public struct GLStencilClearMask : GLclear {
+public struct GLstencilclear : GLclear {
 	
 	public let bitmask : Int32 = GL_STENCIL_BUFFER_BIT
 	
