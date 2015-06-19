@@ -14,7 +14,7 @@ Geometry class that generates vertices for a parallelepiped by passing three vec
 clamps the geometry. A parallelpiped consits of 12 edges, 8 corners and 6 planes. Each plane is
 a parallelogram and each plane and its opposite are parallel.
 */
-public class GLParallelepiped : GLGeometry {
+public struct GLparallelepiped : GLGeometry {
 	
 	/// Stores the vertices of the geometry
 	internal var _values : [vec3]?
@@ -41,14 +41,14 @@ public class GLParallelepiped : GLGeometry {
 	public let indexlist : [Int]? = nil
 	
 	/// Provieds the vertice as a list of vectors
-	public var values : [vec3] {updateCache(); return _values!}
+	public var values : [vec3] {mutating get {updateCache(); return _values!}}
 	
 	/// The count of vertice provided by the geometry
-	public var count : Int {get {return values.count}}
+	public var count : Int {mutating get {return values.count}}
 	
 	/// Index access to a single vertex as array of float
 	public subscript (index: Int) -> [GLfloat] {
-		get {return values[index].array}
+		mutating get {return values[index].array}
 	}
 	
 	public var normals : GLShapeProperty? {
@@ -68,7 +68,7 @@ public class GLParallelepiped : GLGeometry {
 			array += Array<vec3>(count: 6, repeatedValue: abnormal)
 			array += Array<vec3>(count: 6, repeatedValue: -abnormal)
 			
-			return GLGeometryNormal3DArray(values: array)
+			return GLnormals3(values: array)
 		}
 	}
 	
@@ -91,12 +91,12 @@ public class GLParallelepiped : GLGeometry {
 	/**
 	Initilaizes the geoemtry as unit cube
 	*/
-	public convenience init () {
+	public init () {
 		self.init(vec3(1, 0, 0), vec3(0, 1, 0), vec3(0, 0, 1))
 	}
 	
 	
-	public func updateCache () {
+	public mutating func updateCache () {
 		
 		if _values != nil {return}
 		
@@ -122,14 +122,14 @@ public class GLParallelepiped : GLGeometry {
 }
 
 
-extension GLParallelepiped {
+extension GLparallelepiped {
 	
-	public class func generateValues (origin o: vec3, a: vec3, b: vec3, c: vec3) {
+	public static func generateValues (origin o: vec3, a: vec3, b: vec3, c: vec3) {
 		
 	}
 	
 	
-	public class func generateNormalValues (origin o: vec3, a: vec3, b: vec3, c: vec3) {
+	public static func generateNormalValues (origin o: vec3, a: vec3, b: vec3, c: vec3) {
 	
 	}
 }
