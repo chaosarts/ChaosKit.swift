@@ -71,7 +71,9 @@ public protocol GLTexture : GLIdentifiable, GLBindable {
 /** 
 Base class for texture objects
 */
-public class GLTextureBase : GLBase {
+public class GLTextureBase {
+	
+	public var id : GLuint {get {return _ptr.memory}}
 	
 	/// Provides the pointer with which the texture has been created
 	private var _ptr : UnsafeMutablePointer<GLuint>
@@ -97,7 +99,6 @@ public class GLTextureBase : GLBase {
 		glGenTextures(1, _ptr)
 		
 		self.target = target
-		super.init(_ptr.memory)
 	}
 	
 	
