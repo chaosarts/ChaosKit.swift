@@ -34,22 +34,69 @@ Basic class
 public class GLRenderpassBase {
 	
 	/// Contains a capability map
-	private var _capabilities : [GLenum : GLcap] = [GLenum : GLcap]()
+	private final var _caps : [GLenum : GLcap] = [GLenum : GLcap]()
+	
+	/// Provides a list of buffer writer capabilities
+	private final var _bufwrites : [GLenum : GLbufwrite] = [GLenum : GLbufwrite]()
 	
 	/// Contains the bitfield for clearing the buffers
-	private var _clearmasks : [Int32 : GLclear] = [Int32 : GLclear]()
+	private final var _clearmasks : [Int32 : GLclear] = [Int32 : GLclear]()
 	
 	/// Contains gl hints
-	private var _hints : [Int32 : Int32] = [Int32 : Int32]()
+	private final var _hints : [GLenum : GLenum] = [GLenum : GLenum]()
 	
-	public var lineSmooth : Int32? {
-		get {return _hints[GL_LINE_SMOOTH_HINT]}
-		set {setHint(GL_LINE_SMOOTH_HINT, value: newValue)}
+	/// Indicates if capability GL_BLEND is enabled or disabled
+	public var blendEnabled : Bool {
+		get {return nil != _caps[GLenum(GL_BLEND)] && _caps[GLenum(GL_BLEND)]!.enabled}
+		set {setCapabilityEnabled(GL_BLEND, newValue)}
 	}
 	
-	public var polygonSmooth : Int32? {
-		get {return _hints[GL_POLYGON_SMOOTH_HINT]}
-		set {setHint(GL_POLYGON_SMOOTH_HINT, value: newValue)}
+	/// Indicates if capability GL_CULL_FACE is enabled or disabled
+	public var cullFaceEnabled : Bool {
+		get {return nil != _caps[GLenum(GL_CULL_FACE)] && _caps[GLenum(GL_CULL_FACE)]!.enabled}
+		set {setCapabilityEnabled(GL_CULL_FACE, newValue)}
+	}
+	
+	/// Indicates if capability GL_DEPTH_TEST is enabled or disabled
+	public var depthTestEnabled : Bool {
+		get {return nil != _caps[GLenum(GL_DEPTH_TEST)] && _caps[GLenum(GL_DEPTH_TEST)]!.enabled}
+		set {setCapabilityEnabled(GL_DEPTH_TEST, newValue)}
+	}
+	
+	/// Indicates if capability GL_LINE_SMOOTH is enabled or disabled
+	public var lineSmoothEnabled : Bool {
+		get {return nil != _caps[GLenum(GL_LINE_SMOOTH)] && _caps[GLenum(GL_LINE_SMOOTH)]!.enabled}
+		set {setCapabilityEnabled(GL_LINE_SMOOTH, newValue)}
+	}
+	
+	/// Indicates if capability GL_POLYGON_SMOOTH is enabled or disabled
+	public var polygonSmoothEnabled : Bool {
+		get {return nil != _caps[GLenum(GL_POLYGON_SMOOTH)] && _caps[GLenum(GL_POLYGON_SMOOTH)]!.enabled}
+		set {setCapabilityEnabled(GL_POLYGON_SMOOTH, newValue)}
+	}
+	
+	/// Indicates if capability GL_SCISSOR_TEST is enabled or disabled
+	public var sciccorTestEnabled : Bool {
+		get {return nil != _caps[GLenum(GL_SCISSOR_TEST)] && _caps[GLenum(GL_SCISSOR_TEST)]!.enabled}
+		set {setCapabilityEnabled(GL_SCISSOR_TEST, newValue)}
+	}
+	
+	/// Indicates if capability GL_STENCIL_TEST is enabled or disabled
+	public var stencilTestEnabled : Bool {
+		get {return nil != _caps[GLenum(GL_STENCIL_TEST)] && _caps[GLenum(GL_STENCIL_TEST)]!.enabled}
+		set {setCapabilityEnabled(GL_STENCIL_TEST, newValue)}
+	}
+
+	/// Provides the hint value for line smoothness
+	public var lineSmoothHint : GLenum? {
+		get {return getHint(GL_LINE_SMOOTH_HINT)}
+		set {setHint(GL_LINE_SMOOTH_HINT, newValue)}
+	}
+	
+	/// Provides the hint value for polygon smoothness
+	public var polygonSmoothHint : GLenum? {
+		get {return getHint(GL_POLYGON_SMOOTH_HINT)}
+		set {setHint(GL_POLYGON_SMOOTH_HINT, newValue)}
 	}
 	
 	public init () {}
@@ -60,15 +107,79 @@ public class GLRenderpassBase {
 	
 	:param: mask
 	*/
-	public func setClear (mask: GLclear) {
+	public final func setClear (mask: GLclear) {
 		_clearmasks[mask.bitmask] = mask
 	}
 	
+	
 	/**
+	Returns the value for the passed hint
+	
+	:param: hint
 	*/
-	public func setHint (name: Int32, value: Int32?) {
+	public final func getHint (name: GLenum) -> GLenum? {
+		return _hints[name]
+	}
+	
+	
+	/**
+	Returns the value for the passed hint
+	
+	:param: hint
+	*/
+	public final func getHint (name: Int32) -> GLenum? {
+		return getHint(GLenum(name))
+	}
+	
+	
+	/**
+	Sets a hint for the opngl server
+	
+	:param: name The name of the hint
+	:param: value The value for the hint
+	*/
+	public final func setHint (name: GLenum, _ value: GLenum?) {
 		if value != nil {_hints[name] = value}
 		else {_hints.removeValueForKey(name)}
+	}
+	
+	
+	public final func setHint (name: Int32, _ value: GLenum?) {
+		setHint(GLenum(name), value)
+	}
+	
+	
+	public final func setHint (name: GLenum, _ value: Int32?) {
+		var val : GLenum? = nil == value ? nil : GLenum(value!)
+		setHint(name, val)
+	}
+	
+	
+	public final func setHint (name: Int32, _ value: Int32?) {
+		var val : GLenum? = nil == value ? nil : GLenum(value!)
+		setHint(GLenum(name), val)
+	}
+	
+	
+	/**
+	En or disables a server-side capability
+	
+	:param: cap The name of the capability
+	:param: enable
+	*/
+	public final func setCapabilityEnabled (cap: GLenum, _ enable: Bool = true) {
+		_caps[GLenum(cap)] = GLcap(cap, enable)
+	}
+	
+	
+	/**
+	En or disables a server-side capability
+	
+	:param: cap The name of the capability
+	:param: enable
+	*/
+	public final func setCapabilityEnabled (cap: Int32, _ enable: Bool = true) {
+		setCapabilityEnabled(GLenum(cap), enable)
 	}
 	
 	
@@ -77,9 +188,9 @@ public class GLRenderpassBase {
 	
 	:param: cap The capability name as Int32
 	*/
-	public func enableCapabilities (caps: Int32...) {
+	public final func enableCapabilities (caps: Int32...) {
 		for cap in caps {
-			_capabilities[GLenum(cap)] = GLcap(cap, true)
+			setCapabilityEnabled(GLenum(cap), true)
 		}
 	}
 	
@@ -89,9 +200,9 @@ public class GLRenderpassBase {
 	
 	:param: cap The capability name as Int32
 	*/
-	public func disableCapabilities (caps: Int32...) {
+	public final func disableCapabilities (caps: Int32...) {
 		for cap in caps {
-			_capabilities[GLenum(cap)] = GLcap(cap, false)
+			setCapabilityEnabled(GLenum(cap), false)
 		}
 	}
 	
@@ -99,14 +210,14 @@ public class GLRenderpassBase {
 	/**
 	Applies set rendering capabilities
 	*/
-	public func applyCapabilities () {
-		for name in _capabilities.keys {
-			_capabilities[name]?.apply()
+	public final func applyCapabilities () {
+		for name in _caps.keys {
+			_caps[name]?.apply()
 		}
 	}
 	
 	
-	public func applyHints () {
+	public final func applyHints () {
 		for hintname in _hints.keys {
 			glHint(GLenum(hintname), GLenum(_hints[hintname]!))
 		}
@@ -116,7 +227,7 @@ public class GLRenderpassBase {
 	/** 
 	Clears opengl buffers
 	*/
-	public func clear () {
+	public final func clear () {
 		var bitmask : Int32 = 0
 		
 		for flag in _clearmasks.keys {
