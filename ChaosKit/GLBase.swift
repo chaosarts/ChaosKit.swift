@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OpenGL
 
 
 public protocol GLIdentifiable {
@@ -62,5 +63,6 @@ public class GLBase: GLIdentifiable {
 
 public typealias RGBAColor = (r: GLclampf, g: GLclampf, b: GLclampf, a: GLclampf)
 public typealias RGBColor = (r: GLclampf, g: GLclampf, b: GLclampf)
+public typealias RGBAColormask = (r: GLboolean, g: GLboolean, b: GLboolean, a: GLboolean)
 
 

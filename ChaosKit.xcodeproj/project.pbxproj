@@ -406,19 +406,12 @@
 			name = Math;
 			sourceTree = "<group>";
 		};
-		C47B15E11B3426CE00DEF535 /* Struct */ = {
+		C47ED5D81B39EA25007AABC9 /* Struct */ = {
 			isa = PBXGroup;
 			children = (
 				C47B15E21B342EA200DEF535 /* GLbufwrite.swift */,
 				C4D371601AF6D03D00E29590 /* GLcap.swift */,
 				C42CB98F1AFCDA79001EA5A2 /* GLclear.swift */,
-			);
-			name = Struct;
-			sourceTree = "<group>";
-		};
-		C47ED5D81B39EA25007AABC9 /* Struct */ = {
-			isa = PBXGroup;
-			children = (
 				C45DF15A1B2E15F4001B8C77 /* GLurl.swift */,
 			);
 			name = Struct;
@@ -446,7 +439,6 @@
 		C48CC2591ACFE57F007FBA60 /* Renderpass */ = {
 			isa = PBXGroup;
 			children = (
-				C47B15E11B3426CE00DEF535 /* Struct */,
 				C45690E81AD5D3BB009C72E4 /* GLRenderpass.swift */,
 				C42CB9921B008F29001EA5A2 /* GLScreenRenderpass.swift */,
 			);

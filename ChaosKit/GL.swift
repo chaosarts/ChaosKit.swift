@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OpenGL
 
 public class GL {
 	

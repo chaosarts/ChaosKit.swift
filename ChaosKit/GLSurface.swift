@@ -21,7 +21,7 @@ public class GLSurface {
 	public var _textures : [GLUrlDomain : GLSurfaceTexture] = [GLUrlDomain : GLSurfaceTexture]()
 	
 	/// Provides the refelction factor
-	public var reflection : GLfloat = 0
+	public var reflection : GLfloat = 0.5
 	
 	/// Provides the color of the surface
 	public var color : GLShapeProperty?

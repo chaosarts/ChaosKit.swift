@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import OpenGL
+
 
 public protocol GLBufferable {
 	

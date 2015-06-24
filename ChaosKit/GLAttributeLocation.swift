@@ -6,7 +6,8 @@
 //  Copyright (c) 2015 Fu Lam Diep. All rights reserved.
 //
 
-import Cocoa
+import Foundation
+import OpenGL
 
 /*
 |--------------------------------------------------------------------------
@@ -16,18 +17,18 @@ import Cocoa
 
 public class GLAttributeLocation : GLLocation {
 	
-	private let _ptr : UnsafeMutablePointer<Void>
+	private var _ptr :  UnsafeMutablePointer<UnsafeMutablePointer<Void>>
+	
 	
 	/**
 	Initializes the attribute location
 	
 	:param: index The attribute location fetched by glGetAttribLocation
 	:param: name The string variable name of the attribute
-	:param: type The glsl data type
-	:param: size The size of the variable
 	*/
-	public init (index: GLuint, name: String, pointer: UnsafeMutablePointer<Void>) {
-		_ptr = pointer
+	public init (index: GLuint, name: String) {
+		_ptr = UnsafeMutablePointer<UnsafeMutablePointer<Void>>.alloc(1)
+		glGetVertexAttribPointerv(index, GLenum(GL_VERTEX_ATTRIB_ARRAY_POINTER), _ptr)
 		super.init(index, name)
 	}
 	
@@ -49,7 +50,7 @@ public class GLAttributeLocation : GLLocation {
 	:return: The pointer to the attribute
 	*/
 	public func getVertexAttribPointer () -> UnsafeMutablePointer<Void> {
-		return _ptr
+		return _ptr.memory
 	}
 	
 	
@@ -74,7 +75,7 @@ public class GLAttributeLocation : GLLocation {
 	:param: pointer
 	*/
 	public func setVertexAttribPointer (size: GLint, _ type: GLenum, _ normalized: Bool, _ stride: Int) {
-		setVertexAttribPointer(size, type, normalized, stride, _ptr)
+		setVertexAttribPointer(size, type, normalized, stride, _ptr.memory)
 	}
 	
 	
@@ -88,7 +89,7 @@ public class GLAttributeLocation : GLLocation {
 	:param: pointer
 	*/
 	public func setVertexAttribPointer (size: GLint, _ type: GLenum, _ normalized: Bool, _ stride: Int, _ offset: Int) {
-		setVertexAttribPointer(size, type, normalized, stride, _ptr.advancedBy(sizeof(GLfloat) * offset))
+		setVertexAttribPointer(size, type, normalized, stride, _ptr.memory.advancedBy(sizeof(GLfloat) * offset))
 	}
 	
 	
@@ -117,6 +118,12 @@ public class GLAttributeLocation : GLLocation {
 	*/
 	public func disable () {
 		glDisableVertexAttribArray(id)
+	}
+	
+	
+	deinit {
+		_ptr.destroy()
+		_ptr.dealloc(1)
 	}
 }
 

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import OpenGL
 
 public protocol GLBufferTarget {
 	var value : GLenum {get}

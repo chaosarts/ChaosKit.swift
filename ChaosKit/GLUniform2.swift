@@ -7,16 +7,9 @@
 //
 
 import Foundation
-
-//
-//  GLUniform2.swift
-//  ChaosKit
-//
-//  Created by Fu Lam Diep on 11.06.15.
-//  Copyright (c) 2015 Fu Lam Diep. All rights reserved.
-//
-
-import Foundation
+import OpenGL
+import OpenGL.GL
+import OpenGL.GL3
 
 /*
 |--------------------------------------------------------------------------

@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import OpenGL
+import OpenGL.GL
 
 /**
 Struct to en- or disable OpenGL rendering capabilities

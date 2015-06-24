@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import OpenGL
+
 
 /**
 Sturct that hold data for a block within a buffer to serve information

@@ -25,6 +25,7 @@ public class GLScreenRenderpass : GLRenderpassBase, GLRenderpass {
 		program.use()
 		
 		applyCapabilities()
+		applyHints()
 		clear()
 		
 		if camera.stage == nil {

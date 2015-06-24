@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Fu Lam Diep. All rights reserved.
 //
 
-import Cocoa
+import Foundation
 import OpenGL
-import GLKit
+import OpenGL.GL
 
 /**
 Wrapper class for shaders

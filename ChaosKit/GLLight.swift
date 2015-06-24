@@ -1,5 +1,5 @@
 //
-//  GLLight.swift
+//  GLLightComponent.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 11.06.15.
@@ -10,9 +10,10 @@ import Foundation
 
 /*
 |--------------------------------------------------------------------------
-| Typalias and constants
+| GLLight Typalias and Constants
 |--------------------------------------------------------------------------
 */
+
 
 /// Type for light state
 public typealias GLLightState = Bool
@@ -26,43 +27,13 @@ public let OFF : GLLightState = false
 
 /*
 |--------------------------------------------------------------------------
-| Protocols
+| GLLight Class
 |--------------------------------------------------------------------------
 */
 
-/**
-Protocol for lights
-*/
-public protocol GLLight {
+public class GLLight {
 	
-	/// Provides the state of light
-	var state : GLLightState {get set}
 	
-	/// Provides the intensity
-	var intensity : RGBColor {get set}
 	
-	/// Provides a map of light property types
-	var uniforms : [GLurl : GLUniform] {get}
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| Base Class
-|--------------------------------------------------------------------------
-*/
-
-/**
-Represents a light in opengl
-*/
-@objc public class GLLightBase {
-	
-	/// Caches the uniforms
-	internal var _uniforms : [GLurl : GLUniform]?
-	
-	/// Provides the state of light
-	public var state : GLLightState = ON
-	
-	/// Provides the lights intensity
-	public var intensity : RGBColor = (1, 1, 1)
+	public init () {}
 }

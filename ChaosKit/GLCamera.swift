@@ -25,7 +25,9 @@ public final class GLCamera {
 	public var stage : GLStage?
 	
 	/// Contains the projection matrix of the camera
-	public var projection : GLCameraProjection
+	public var projection : GLCameraProjection {
+		didSet {_uniforms = nil}
+	}
 	
 	// DERIVED PROPERTIES
 	// ++++++++++++++++++

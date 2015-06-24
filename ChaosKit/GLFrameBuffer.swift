@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import OpenGL
 
 public protocol GLFrameBuffer {
 	var id : GLuint {get}

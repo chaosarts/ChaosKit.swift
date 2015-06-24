@@ -6,7 +6,8 @@
 //  Copyright (c) 2015 Fu Lam Diep. All rights reserved.
 //
 
-import Cocoa
+import Foundation
+import OpenGL
 
 internal var _currentProgram : GLProgram?
 
@@ -214,10 +215,7 @@ public final class GLProgram: GLBase {
 		var location : GLint = glGetAttribLocation(id, varname)
 		if location < 0 {warn("Attribute '\(varname)' not found in program."); return nil}
 		
-		var pointer : UnsafeMutablePointer<UnsafeMutablePointer<Void>> = UnsafeMutablePointer<UnsafeMutablePointer<Void>>.alloc(1)
-		glGetVertexAttribPointerv(GLuint(location), GLenum(GL_VERTEX_ATTRIB_ARRAY_POINTER), pointer)
-		
-		var attribvar : GLAttributeLocation = GLAttributeLocation(index: GLuint(location), name: varname, pointer: pointer.memory)
+		var attribvar : GLAttributeLocation = GLAttributeLocation(index: GLuint(location), name: varname)
 		
 		_attribLocations[varname] = attribvar
 		return attribvar

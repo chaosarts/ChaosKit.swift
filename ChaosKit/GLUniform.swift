@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OpenGL
 
 public protocol GLUniform {
 	func assign (location: GLUniformLocation)

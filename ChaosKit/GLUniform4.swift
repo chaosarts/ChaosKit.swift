@@ -7,6 +7,9 @@
 //
 
 import Foundation
+import OpenGL
+import OpenGL.GL
+import OpenGL.GL3
 
 
 public struct GLUniform4d : GLUniform {

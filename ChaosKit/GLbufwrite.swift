@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import OpenGL
+import OpenGL.GL
 
 /** 
 Protocol to describe a buffer write capability. Can be passed to 

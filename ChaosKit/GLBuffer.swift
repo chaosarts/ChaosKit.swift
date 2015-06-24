@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Fu Lam Diep. All rights reserved.
 //
 
-import Cocoa
-
+import Foundation
+import OpenGL
 /**
 Class wrapper for buffer. This class is used just like 
 */
@@ -154,5 +154,12 @@ public class GLBuffer {
 	internal func delete () {
 		_count = 0
 		glDeleteBuffers(1, _ptr)
+	}
+	
+	
+	deinit {
+		delete()
+		_ptr.destroy()
+		_ptr.dealloc(1)
 	}
 }

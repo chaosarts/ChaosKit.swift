@@ -38,45 +38,15 @@ public class GLTexture2D : GLTextureBase, GLTexture {
 	}
 	
 	
-	/**
-	Initializes the texutres with passed path to an image file
-	
-	:param: imagefile The path to the image file
-	*/
-	public convenience init (imagefile: String!, baseurl: CFURL? = nil, options: CFDictionary? = nil) {
-		var source : CGImageSource = CGImageSourceCreateWithString(imagefile, baseurl, options)
-		var image : GLImage = GLImage(source, 0, nil)
-		var ptr : UnsafeMutablePointer<Void> = calloc(image.width * image.height, image.bitsPerPixel)
-		self.init(width: image.width, height: image.height, pixels: ptr)
-	}
-	
-	
-	public convenience init? (imageResource: String!) {
-		var bundle : NSBundle = NSBundle.mainBundle()
-		var filename : String? = bundle.pathForImageResource(imageResource)
-		
-		self.init(imagefile: filename)
-		
-		if filename == nil {return nil}
-	}
-	
-	
-	/** 
-	Initializes the texture
-	
-	:param: resource A path to a resource as string
-	:param: ofType The type of the resource
-	:param: inDirectory The directory within the resource base path
-	*/
-	public convenience init? (resource: String, ofType: String? = nil, inDirectory: String? = nil) {
-		var bundle : NSBundle = NSBundle.mainBundle()
-		var filename : String? = bundle.pathForResource(resource, ofType: ofType, inDirectory: inDirectory)
-		
-		self.init(imagefile: filename!)
-		
-		if filename == nil {return nil}
-	}
-	
+//	/**
+//	Initializes the texutres with passed path to an image file
+//	
+//	:param: imagefile The path to the image file
+//	*/
+//	public convenience init (image: GLimage) {
+//		calloc(image.width * image.bitsPerPixel, <#Int#>)
+////		self.init(width: image.width, height: image.height, pixels: )
+//	}
 	
 	/**
 	Specifies the wrap s function

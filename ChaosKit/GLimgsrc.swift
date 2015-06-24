@@ -15,19 +15,19 @@ public struct GLimgsrc {
 	public static var typeId : CFTypeID {get {return CGImageSourceGetTypeID()}}
 	
 	/// Provides the native image source ref
-	private var _src : CGImageSourceRef
+	private var _reference : CGImageSourceRef
 	
 	/// Provides the native image source ref
-	public var src : CGImageSourceRef {get {return _src}}
+	public var reference : CGImageSourceRef {get {return _reference}}
 	
 	/// Returns the uniform type identifier of the source container.
-	public var type : CFString {get {return CGImageSourceGetType(src)}}
+	public var type : CFString {get {return CGImageSourceGetType(reference)}}
 	
 	/// Returns the number of images (not including thumbnails) in the image source.
-	public var count : Int {get {return CGImageSourceGetCount(src)}}
+	public var count : Int {get {return CGImageSourceGetCount(reference)}}
 	
 	/// Return the status of an image source.
-	public var status : CGImageSourceStatus {get {return CGImageSourceGetStatus(src)}}
+	public var status : CGImageSourceStatus {get {return CGImageSourceGetStatus(reference)}}
 	
 	
 	/**
@@ -36,7 +36,7 @@ public struct GLimgsrc {
 	:param: src
 	*/
 	public init (_ src: CGImageSourceRef) {
-		_src = src
+		_reference = src
 	}
 	
 	
@@ -91,12 +91,12 @@ public struct GLimgsrc {
 	
 	/// Creates an image from index
 	public func createImage (index: Int, _ options: CFDictionaryRef!) -> GLimage {
-		return GLimage(CGImageSourceCreateImageAtIndex(src, index, options))
+		return GLimage(CGImageSourceCreateImageAtIndex(reference, index, options))
 	}
 	
 	
 	/// Creates a thumbnail
 	public func createThumbnail (index: Int, _ options: CFDictionaryRef!) -> GLimage {
-		return GLimage(CGImageSourceCreateThumbnailAtIndex(src, index, options))
+		return GLimage(CGImageSourceCreateThumbnailAtIndex(reference, index, options))
 	}
 }

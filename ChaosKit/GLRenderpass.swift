@@ -220,6 +220,7 @@ public class GLRenderpassBase {
 	public final func applyHints () {
 		for hintname in _hints.keys {
 			glHint(GLenum(hintname), GLenum(_hints[hintname]!))
+			glPrintError_CK()
 		}
 	}
 	
