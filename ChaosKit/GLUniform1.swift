@@ -163,3 +163,29 @@ public struct GLUniform1uiv : GLUniform {
 		glUniform1uiv(GLint(location.id), count, _value)
 	}
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Texture
+|--------------------------------------------------------------------------
+*/
+
+public struct GLUniformTexture : GLUniform {
+	private let _texture : GLTexture
+	
+	private let _index: Int
+	
+	public init (_ texture: GLTexture, _ index: Int) {
+		_texture = texture
+		_index = index
+	}
+	
+	
+	public func assign (location: GLUniformLocation) {
+		let index : GLenum = GLenum(GL_TEXTURE0 + Int32(_index))
+		glActiveTexture(index)
+		_texture.bind()
+		glUniform1i(GLint(location.id), GLint(_index))
+	}
+}
