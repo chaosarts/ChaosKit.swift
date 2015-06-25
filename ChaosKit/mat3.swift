@@ -308,6 +308,28 @@ extension mat3 {
 	public static var identity : mat3 {
 		get {return [1, 0, 0, 0, 1, 0, 0, 0, 1]}
 	}
+	
+	
+	public static func makeRotation (rad radians: GLfloat, x: GLfloat, y: GLfloat, z: GLfloat) -> mat3 {
+		var mat : mat3 = mat3.identity
+		mat.rotate(rad: radians, x: x, y: y, z: z)
+		return mat
+	}
+	
+	
+	public static func makeRotation (deg degrees: GLfloat, x: GLfloat, y: GLfloat, z: GLfloat) -> mat3 {
+		return makeRotation(rad: deg2rad(degrees), x: x, y: y, z: z)
+	}
+	
+	
+	public static func makeRotation (rad radians: GLfloat, axis: vec3) -> mat3 {
+		return makeRotation(rad: radians, x: axis.x, y: axis.y, z: axis.z)
+	}
+	
+	
+	public static func makeRotation (deg degrees: GLfloat, axis: vec3) -> mat3 {
+		return makeRotation(rad: deg2rad(degrees), x: axis.x, y: axis.y, z: axis.z)
+	}
 }
 
 
