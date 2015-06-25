@@ -86,7 +86,7 @@ public class GLSurface {
 						warn("Max combined texture units exceeded.")
 						break
 					}
-					_uniforms![GLurl(domain, .Sampler)] = GLUniform1i(GL_TEXTURE0 + index)
+					_uniforms![GLurl(domain, .Sampler)] = GLUniformTexture(_textures[domain]!.texture, index)
 					index++
 				}
 				_uniforms![GLUrlSurfaceReflection] = GLUniform1f(reflection)
