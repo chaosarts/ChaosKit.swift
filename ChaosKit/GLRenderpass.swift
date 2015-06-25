@@ -40,7 +40,7 @@ public class GLRenderpassBase {
 	private final var _bufwrites : [GLenum : GLbufwrite] = [GLenum : GLbufwrite]()
 	
 	/// Contains the bitfield for clearing the buffers
-	private final var _clearmasks : [Int32 : GLclear] = [Int32 : GLclear]()
+	private final var _clearmasks : [GLbitfield : GLclear] = [GLbitfield : GLclear]()
 	
 	/// Contains gl hints
 	private final var _hints : [GLenum : GLenum] = [GLenum : GLenum]()
@@ -229,13 +229,13 @@ public class GLRenderpassBase {
 	Clears opengl buffers
 	*/
 	public final func clear () {
-		var bitmask : Int32 = 0
+		var bitmask : GLbitfield = 0
 		
 		for flag in _clearmasks.keys {
 			_clearmasks[flag]?.clear()
 			bitmask = bitmask | _clearmasks[flag]!.bitmask
 		}
 		
-		if bitmask != 0 {glClear(GLbitfield(bitmask))}
+		if bitmask != 0 {glClear(bitmask)}
 	}
 }
