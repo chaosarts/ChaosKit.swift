@@ -13,98 +13,92 @@ This class models a camera for open gl to draw a stage
 */
 public final class GLCamera {
 	
-	/// Caches the model view matrix
-	private var _transformation : mat4 = mat4.identity {
-		didSet {_uniforms = nil}
-	}
-	
 	/// Caches the uniforms
 	private var _uniforms : [GLurl : GLUniform]?
+	
+	/// Caches the transformation matrix
+	private var _transformation : mat4?
 	
 	/// Contains the stage which the camera captures
 	public var stage : GLStage?
 	
+	/// Returns the matrix for current transformation
+	public var transformation : mat4 {
+		get {
+			if _transformation == nil {
+				_transformation = mat4.makeTranslate(x: -x, y: -y, z: -z)
+				_transformation!.rotateX(rad: rx)
+				_transformation!.rotateY(rad: ry)
+				_transformation!.rotate(rad: rz, axis: direction)
+			}
+			
+			return _transformation!
+		}
+	}
+	
 	/// Contains the projection matrix of the camera
 	public var projection : GLCameraProjection {
-		didSet {_uniforms = nil}
+		didSet {_transformation = nil}
 	}
+	
+	/// Provides the x position
+	public var x : GLfloat = 0 {
+		didSet {_transformation = nil}
+	}
+	
+	/// Provides the x position
+	public var y : GLfloat = 0 {
+		didSet {_transformation = nil}
+	}
+	
+	/// Provides the x position
+	public var z : GLfloat = 1 {
+		didSet {_transformation = nil}
+	}
+	
+	/// Provides the rotation around x
+	public var rx : GLfloat = 0 {
+		didSet {_transformation = nil}
+	}
+	
+	/// Provides the rotation around y
+	public var ry : GLfloat = 0 {
+		didSet {_transformation = nil}
+	}
+	
+	/// Provides the rotation around z
+	public var rz : GLfloat = 0 {
+		didSet {_transformation = nil}
+	}
+	
 	
 	// DERIVED PROPERTIES
 	// ++++++++++++++++++
 	
-	/// Provides the x position
-	public var x : GLfloat {
-		get {return _transformation[0, 3]}
-		set {_transformation.translateX(-newValue)}
-	}
-	
-	/// Provides the x position
-	public var y : GLfloat {
-		get {return _transformation[1, 3]}
-		set {_transformation.translateY(-newValue)}
-	}
-	
-	/// Provides the x position
-	public var z : GLfloat {
-		get {return _transformation[2, 3]}
-		set {_transformation.translateZ(-newValue)}
-	}
-	
-	/// Provides the position of the object as vector
+	/// Provides the position vector relative to world space origin
 	public var position : vec3 {
-		get {return -vec3(_transformation[col: 3])}
-		set {_transformation.translate(-newValue)}
+		get {return vec3(x, y, z)}
 	}
 	
-	/// Provides the x position
-	public var rx : GLfloat {
-		get {
-			let r32 = _transformation[2,1]
-			let r33 = _transformation[2,2]
-			return atan2(r32, r33)
-		}
-		set {_transformation.rotateX(rad: -newValue)}
+	/// Provides the direction in which the camera is looking at
+	public var direction : vec3 {
+		get {return polar2cartesian(1, ry - Float(M_PI_2), rx)}
 	}
 	
-	/// Provides the x position
-	public var ry : GLfloat {
-		get {
-			let r31 = _transformation[2,0]
-			let r32 = _transformation[2,1]
-			let r33 = _transformation[2,2]
-			return atan2(-r31, sqrt(pow(r32, 2.0) + pow(r33, 2.0)))
-		}
-		set {_transformation.rotateY(rad: -newValue)}
+	/// Provides the up vector of the camera
+	public var up : vec3 {
+		get {return mat3.makeRotation(rad: rz, axis: direction) * polar2cartesian(1, ry, rx)}
 	}
-	
-	/// Provides the x position
-	public var rz : GLfloat {
-		get {
-			let r11 = _transformation[0,0]
-			let r21 = _transformation[1,0]
-			return atan2(r21, r11)
-		}
-		set {_transformation.rotateZ(rad: -newValue)}
-	}
-	
-	/// Provides the rotation around the x, y and z axis
-	public var rotation : vec3 {
-		get {return vec3(-rx, -ry, -rz)}
-	}
-	
 	
 	/// Provides the uniforms
 	public var uniforms : [GLurl : GLUniform] {
 		get {
-			if _uniforms == nil {
-				_uniforms = [
-					GLUrlCameraViewMatrix : GLUniformMatrix4fv(_transformation),
-					GLUrlCameraProjection : GLUniformMatrix4fv(projection.matrix),
-					GLUrlCameraPosition : GLUniform3f(position.x, position.y, position.z)
-				]
-			}
-			
-			return _uniforms!
+			return [
+				GLUrlCameraViewMatrix : GLUniformMatrix4fv(transformation),
+				GLUrlCameraProjection : GLUniformMatrix4fv(projection.matrix),
+				GLUrlCameraPosition : GLUniform3f(x, y, z),
+				GLUrlCameraDirection : GLUniform3f(direction)
+			]
 		}
 	}
 	
@@ -128,16 +122,7 @@ public final class GLCamera {
 	
 	
 	public func resetTransformation () {
-		_transformation = mat4.identity
-	}
-	
-	
-	/**
-	Rotates the camera to a given position
-	
-	:param: position
-	*/
-	public func lookAt (position: vec3) {
-		
+		x = 0; y = 0; z = 0
+		rx = 0; ry = 0; rz = 0
 	}
 }
