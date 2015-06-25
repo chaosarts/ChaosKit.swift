@@ -29,7 +29,7 @@ needed.
 public protocol GLclear {
 	
 	/// Provides the clear mask
-	var bitmask : Int32 {get}
+	var bitmask : GLbitfield {get}
 	
 	/// Calls the according glClear* function
 	func clear ()
@@ -48,7 +48,7 @@ Clearmask struct implementing GLclear to clear color buffer bit.
 public struct GLcolclear : GLclear {
 	
 	/// Provides the clear mask
-	public let bitmask : Int32 = GL_COLOR_BUFFER_BIT
+	public let bitmask : GLbitfield = GLbitfield(GL_COLOR_BUFFER_BIT)
 	
 	/// Provides the value to use for clear function
 	public var value : RGBAColor
@@ -95,7 +95,7 @@ Clearmask struct implementing GLclear to clear depth buffer bit.
 public struct GLdepthclear : GLclear {
 	
 	/// Provides the clear mask
-	public let bitmask : Int32 = GL_DEPTH_BUFFER_BIT
+	public let bitmask : GLbitfield = GLbitfield(GL_DEPTH_BUFFER_BIT)
 	
 	/// The clear value
 	public var value : GLclampd
@@ -128,7 +128,7 @@ Clearmask struct implementing GLclear to clear stencil buffer bit.
 public struct GLstencilclear : GLclear {
 	
 	/// Provides the clear mask
-	public let bitmask : Int32 = GL_STENCIL_BUFFER_BIT
+	public let bitmask : GLbitfield = GLbitfield(GL_STENCIL_BUFFER_BIT)
 	
 	/// The clear value
 	public var value : Int = 0
