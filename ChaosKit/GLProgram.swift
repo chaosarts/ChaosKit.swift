@@ -183,16 +183,7 @@ public final class GLProgram: GLBase {
 	
 	:param: shape The shape to draw
  	*/
-	public func draw (shape: GLShape) {
-		var uniforms : [GLurl : GLUniform] = shape.uniforms
-		
-		for selector in uniforms.keys {
-			var location : GLUniformLocation? = getUniformLocation(selector)
-			var uniform : GLUniform = uniforms[selector]!
-			if nil == location {continue}
-			uniform.assign(location!)
-		}
-		
+	public func draw (shape: GLShape) {		
 		upload(shape.buffers)
 		for mode in shape.modes {
 			glLineWidth(shape.linewidth)
