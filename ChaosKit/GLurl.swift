@@ -174,7 +174,6 @@ public enum GLUrlDomain : String {
 	case Vertex = "vertex"
 	case Model = "model"
 	case Normal = "normal"
-	case Stage = "stage"
 	case Camera = "camera"
 	case Surface = "surface"
 	
@@ -208,5 +207,43 @@ public enum GLUniformType : String {
 	
 	case Intensity = "intensity"
 	case Reflection = "reflection"
+	case PhongExp = "phongexp"
 }
 
+
+
+public let GLUrlVertexPosition : GLurl = GLurl(.Vertex, .Position)
+public let GLUrlVertexNormal : GLurl = GLurl(.Vertex, .Normal)
+public let GLUrlSurfaceColor : GLurl = GLurl(.Vertex, .Color)
+public let GLUrlSurfaceReflection : GLurl = GLurl(.Surface, .Reflection)
+
+public let GLUrlColorMapTexCoord : GLurl = GLurl(.ColorMap, .TexCoord)
+public let GLUrlDiffuseMapTexCoord : GLurl = GLurl(.DiffuseMap, .TexCoord)
+public let GLUrlNormalMapTexCoord : GLurl = GLurl(.NormalMap, .TexCoord)
+public let GLUrlBumpMapTexCoord : GLurl = GLurl(.BumpMap, .TexCoord)
+public let GLUrlHeightMapTexCoord : GLurl = GLurl(.HeightMap, .TexCoord)
+public let GLUrlDisplacementMapTexCoord : GLurl = GLurl(.DisplacementMap, .TexCoord)
+public let GLUrlSpecularMapTexCoord : GLurl = GLurl(.SpecularMap, .TexCoord)
+public let GLUrlGlowMapTexCoord : GLurl = GLurl(.GlowMap, .TexCoord)
+
+public let GLUrlColorMapSampler : GLurl = GLurl(.ColorMap, .Sampler)
+public let GLUrlDiffuseMapSampler : GLurl = GLurl(.DiffuseMap, .Sampler)
+public let GLUrlNormalMapSampler : GLurl = GLurl(.NormalMap, .Sampler)
+public let GLUrlBumpMapSampler : GLurl = GLurl(.BumpMap, .Sampler)
+public let GLUrlHeightMapSampler : GLurl = GLurl(.HeightMap, .Sampler)
+public let GLUrlDisplacementMapSampler : GLurl = GLurl(.DisplacementMap, .Sampler)
+public let GLUrlSpecularMapSampler : GLurl = GLurl(.SpecularMap, .Sampler)
+public let GLUrlGlowMapSampler : GLurl = GLurl(.GlowMap, .Sampler)
+
+public let GLUrlAmbientLightIntensity : GLurl = GLurl(.AmbientLight, .Intensity)
+public let GLUrlDiffuseLightIntensity : GLurl = GLurl(.DiffuseLight, .Intensity)
+public let GLUrlDiffuseLightPosition : GLurl = GLurl(.DiffuseLight, .Position)
+public let GLUrlSpecularLightIntensity : GLurl = GLurl(.SpecularLight, .Intensity)
+public let GLUrlSpecularLightPosition : GLurl = GLurl(.SpecularLight, .Position)
+public let GLUrlSpecularLightPhongExp : GLurl = GLurl(.SpecularLight, .PhongExp)
+
+public let GLUrlModelViewMatrix : GLurl = GLurl(.Model, .Transformation)
+public let GLUrlNormalViewMatrix : GLurl = GLurl(.Normal, .Transformation)
+public let GLUrlCameraViewMatrix : GLurl = GLurl(.Camera, .Transformation)
+public let GLUrlCameraProjection : GLurl = GLurl(.Camera, .Projection)
+public let GLUrlCameraPosition : GLurl = GLurl(.Camera, .Position)
