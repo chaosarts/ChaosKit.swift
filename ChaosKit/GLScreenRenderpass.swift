@@ -34,17 +34,26 @@ public class GLScreenRenderpass : GLRenderpassBase, GLRenderpass {
 		}
 		
 		var uniforms : [GLurl : GLUniform] = camera.uniforms
-		for selector in uniforms.keys {
-			var location : GLUniformLocation? = program.getUniformLocation(selector)
+		for url in uniforms.keys {
+			var location : GLUniformLocation? = program.getUniformLocation(url)
 			
 			if nil == location {continue}
 			
-			var uniform : GLUniform = uniforms[selector]!
+			var uniform : GLUniform = uniforms[url]!
 			uniform.assign(location!)
 		}
 		
 		var stage : GLStage = camera.stage!
 		for shape in stage.shapes {
+			var uniforms : [GLurl : GLUniform] = shape.uniforms
+			
+			for url in uniforms.keys {
+				var location : GLUniformLocation? = program.getUniformLocation(url)
+				var uniform : GLUniform = uniforms[url]!
+				if nil == location {continue}
+				uniform.assign(location!)
+			}
+			
 			program.draw(shape)
 		}
 		
