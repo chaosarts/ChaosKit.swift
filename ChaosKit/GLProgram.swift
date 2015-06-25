@@ -111,17 +111,17 @@ public final class GLProgram: GLBase {
 	
 	:returns:
 	*/
-	public func use () -> GLProgram {
+	public func use () -> Bool {
 		link()
 		if !linked {
 			warn("Cannot use program.")
-			return self
+			return false
 		}
 		
 		_currentProgram = self
 		glUseProgram(id)
 		
-		return self
+		return true
 	}
 	
 	
