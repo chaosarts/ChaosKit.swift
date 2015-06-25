@@ -1,5 +1,5 @@
 //
-//  GLTexture2D.swift
+//  GLTexImage2D.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 22.05.15.
@@ -9,7 +9,7 @@
 import Foundation
 
 /// Class for OpenGL 2D textures
-public class GLTexture2D : GLTextureBase, GLTexture {
+public class GLTexImage2D : GLTextureBase, GLTexture {
 	
 	/// Provides the width of the texture
 	private var _width : GLsizei
@@ -22,7 +22,6 @@ public class GLTexture2D : GLTextureBase, GLTexture {
 	
 	/// Provides the width of the texture
 	public var height : GLsizei {get {return _height}}
-	
 	
 	/**
 	Initializes the texture purely with width, height and pixels as array of floats
@@ -38,15 +37,25 @@ public class GLTexture2D : GLTextureBase, GLTexture {
 	}
 	
 	
-//	/**
-//	Initializes the texutres with passed path to an image file
-//	
-//	:param: imagefile The path to the image file
-//	*/
-//	public convenience init (image: GLimage) {
-//		calloc(image.width * image.bitsPerPixel, <#Int#>)
-////		self.init(width: image.width, height: image.height, pixels: )
-//	}
+	/**
+	Initializes the texutres with passed path to an image file
+	
+	:param: imagefile The path to the image file
+	*/
+	public convenience init (image: CGimage) {
+		let ctx : CGbmpctx = CGbmpctx(image)
+		self.init(width: image.width, height: image.height, pixels: ctx.data)
+	}
+	
+	
+	/**
+	Initializes the texutres with passed path to an image file
+	
+	:param: imagefile The path to the image file
+	*/
+	public convenience init (imageSrc: CGimgsrc) {
+		self.init(image: imageSrc.createImage(0, nil))
+	}
 	
 	/**
 	Specifies the wrap s function
