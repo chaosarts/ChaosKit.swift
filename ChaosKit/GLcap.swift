@@ -31,6 +31,11 @@ public struct GLcap {
 		_apply = enable ? glEnable : glDisable
 	}
 	
+	
+	public init (_ type: GLenum) {
+		self.init(type, true)
+	}
+	
 	/**
 	Initializes the capability
 	
@@ -39,6 +44,11 @@ public struct GLcap {
 	*/
 	public init (_ type: Int32, _ enable: Bool) {
 		self.init(GLenum(type), enable)
+	}
+	
+	
+	public init (_ type: Int32) {
+		self.init(GLenum(type), true)
 	}
 	
 	/**
