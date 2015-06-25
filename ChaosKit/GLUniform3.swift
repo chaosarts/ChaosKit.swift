@@ -34,6 +34,10 @@ public struct GLUniform3f : GLUniform {
 		_value = (x, y, z)
 	}
 	
+	public init (_ vec: vec3) {
+		self.init(vec.x, vec.y, vec.z)
+	}
+	
 	public func assign (location: GLUniformLocation) {
 		glUniform3f(GLint(location.id), _value.x, _value.y, _value.z)
 	}
