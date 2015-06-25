@@ -153,8 +153,8 @@ public struct mat4 : QuadraticMatrix {
 	:param: alpha The angle to rotate about
 	:param: vec The axis to rotate around
 	*/
-	mutating public func rotate (deg degree: GLfloat, vec: vec3) {
-		rotate(deg: degree, x: vec.x, y: vec.y, z: vec.z)
+	mutating public func rotate (deg degree: GLfloat, axis: vec3) {
+		rotate(deg: degree, x: axis.x, y: axis.y, z: axis.z)
 	}
 	
 	
@@ -164,8 +164,8 @@ public struct mat4 : QuadraticMatrix {
 	:param: alpha The angle to rotate about
 	:param: vec The axis to rotate around
 	*/
-	mutating public func rotate (rad radian: GLfloat, vec: vec3) {
-		rotate(rad: radian, x: vec.x, y: vec.y, z: vec.z)
+	mutating public func rotate (rad radian: GLfloat, axis: vec3) {
+		rotate(rad: radian, x: axis.x, y: axis.y, z: axis.z)
 	}
 	
 	
