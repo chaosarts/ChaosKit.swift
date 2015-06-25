@@ -84,9 +84,16 @@ public class GLTextureBase {
 	/// Contains the texture target like GL_TEXTURE_2D
 	public let target : GLenum
 	
+	public var level : GLint = 0
+	
+	public var internalFormat : GLint = GLint(GL_RGBA)
+	
+	public var format : GLenum = GLenum(GL_RGBA)
+	
+	public var type : GLenum = GLenum(GL_UNSIGNED_BYTE)
+	
 	/// Provides the pixel of the texture
 	public var pixels : UnsafeMutablePointer<Void> {get {return _pixels}}
-	
 	
 	/**
 	Initializes the texture with passed target
