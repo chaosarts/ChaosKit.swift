@@ -116,7 +116,7 @@ public struct GLparallelepiped : GLGeometry {
 			let c : vec3 = a - s - t
 			let d : vec3 = a - t
 			
-			_values! += [a, b, c, c, d, a, -a, -b, -c, -c, -d, -a]
+			_values! += [a, b, c, c, d, a, -a, -c, -b, -c, -a, -d]
 		}
 	}
 }
