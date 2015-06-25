@@ -208,6 +208,7 @@ public enum GLUniformType : String {
 	case Intensity = "intensity"
 	case Reflection = "reflection"
 	case PhongExp = "phongexp"
+	case Direction = "direction"
 }
 
 
@@ -247,3 +248,4 @@ public let GLUrlNormalViewMatrix : GLurl = GLurl(.Normal, .Transformation)
 public let GLUrlCameraViewMatrix : GLurl = GLurl(.Camera, .Transformation)
 public let GLUrlCameraProjection : GLurl = GLurl(.Camera, .Projection)
 public let GLUrlCameraPosition : GLurl = GLurl(.Camera, .Position)
+public let GLUrlCameraDirection : GLurl = GLurl(.Camera, .Direction)
