@@ -22,7 +22,7 @@ public class GLFragmentShader: GLShader {
 	}
 	
 	public convenience init? (resource: String, encoding: NSStringEncoding = NSUTF8StringEncoding) {
-		self.init(resource: resource, encoding: encoding)
+		self.init(resources: [resource], encoding: encoding)
 	}
 	
 	

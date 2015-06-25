@@ -151,6 +151,7 @@ public class GLShader: GLBase {
 		glPrintError_CK()
 		
 		glCompileShader(id)
+		glPrintError_CK()
 		
 		if (iv(GL_COMPILE_STATUS) != GL_TRUE) {
 			print(String.fromCString(infolog())!)
