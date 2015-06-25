@@ -98,9 +98,9 @@ public final class GLCamera {
 		get {
 			if _uniforms == nil {
 				_uniforms = [
-					GLurl(.Camera, .Transformation) : GLUniformMatrix4fv(_transformation),
-					GLurl(.Camera, .Projection) : GLUniformMatrix4fv(projection.matrix),
-					GLurl(.Camera, .Position) : GLUniform3f(position.x, position.y, position.z)
+					GLUrlCameraViewMatrix : GLUniformMatrix4fv(_transformation),
+					GLUrlCameraProjection : GLUniformMatrix4fv(projection.matrix),
+					GLUrlCameraPosition : GLUniform3f(position.x, position.y, position.z)
 				]
 			}
 			

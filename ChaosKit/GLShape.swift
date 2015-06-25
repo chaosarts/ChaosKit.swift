@@ -77,8 +77,8 @@ public class GLShape : GLDisplayObject {
 			var bufferables : [GLurl : GLBufferable] = surface.bufferables
 			
 			// Append geometry and normals (if set)
-			bufferables[GLurl(.Vertex, .Position)] = geometry
-			if geometry.normals != nil {bufferables[GLurl(.Vertex, .Normal)] = geometry.normals!}
+			bufferables[GLUrlVertexPosition] = geometry
+			if geometry.normals != nil {bufferables[GLUrlVertexNormal] = geometry.normals!}
 			
 			return bufferables
 		}
@@ -93,8 +93,8 @@ public class GLShape : GLDisplayObject {
 		// object
 		get {
 			var	uniforms : [GLurl : GLUniform] = [GLurl : GLUniform]()
-			uniforms[GLurl(.Model, .Transformation)] = GLUniformMatrix4fv(transformation)
-			uniforms[GLurl(.Normal, .Transformation)] = GLUniformMatrix4fv(normalTransformation)
+			uniforms[GLUrlModelViewMatrix] = GLUniformMatrix4fv(transformation)
+			uniforms[GLUrlNormalViewMatrix] = GLUniformMatrix4fv(normalTransformation)
 			return surface.uniforms + uniforms
 		}
 	}

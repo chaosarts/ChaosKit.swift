@@ -89,7 +89,7 @@ public class GLSurface {
 					_uniforms![GLurl(domain, .Sampler)] = GLUniform1i(GL_TEXTURE0 + index)
 					index++
 				}
-				_uniforms![GLurl(.Surface, .Reflection)] = GLUniform1f(reflection)
+				_uniforms![GLUrlSurfaceReflection] = GLUniform1f(reflection)
 			}
 			
 			return _uniforms!
@@ -100,7 +100,11 @@ public class GLSurface {
 	public var bufferables : [GLurl : GLBufferable] {
 		get {
 			var bufferables : [GLurl : GLBufferable] = [GLurl : GLBufferable]()
-			if nil != color {bufferables[GLurl(.Vertex, GLAttributeType.Color)] = color!}
+			if nil != color {bufferables[GLUrlSurfaceColor] = color!}
+			
+			for domain in _textures.keys {
+				bufferables[GLurl(domain, .TexCoord)] = _textures[domain]
+			}
 			return bufferables
 		}
 	}

@@ -24,7 +24,6 @@ Stage class to place display objects
 		get {
 			if _uniforms == nil {
 				_uniforms = [GLurl : GLUniform]()
-//				_uniforms![GLurl(.Stage, .Transformation)] = GLUniformMatrix4fv(transformation)
 			}
 			return [GLurl : GLUniform]()
 		}
