@@ -40,6 +40,21 @@ public final class GLProgram: GLBase {
 	/// Indicates if program is current
 	public var isCurrent : Bool {get {return self == _currentProgram}}
 	
+	/// Returns the number of active uniforms
+	public var activeUniforms : GLint {get {return iv(GL_ACTIVE_UNIFORMS)}}
+	
+	/// Returns the length of the longest active uniform variable name for program, including the null termination character
+	public var activeUniformMaxLength : GLint {get {return iv(GL_ACTIVE_UNIFORM_MAX_LENGTH)}}
+	
+	/// Returns the number of active attribute variables for program
+	public var activeAttributes : GLint {get {return iv(GL_ACTIVE_ATTRIBUTES)}}
+	
+	/// Returns the length of the longest active attribute name for program, including the null termination character
+	public var activeAttributeMaxLength : GLint {get {return iv(GL_ACTIVE_ATTRIBUTE_MAX_LENGTH)}}
+	
+	/// Returns the number of shader objects attached to program
+	public var attachedShaders : GLint {get {return iv(GL_ATTACHED_SHADERS)}}
+	
 	
 	/**
 	Initializes the object
@@ -78,7 +93,7 @@ public final class GLProgram: GLBase {
 	
 	:param: shader The shader to attach
 	*/
-	public func attach (shader s: GLShader) -> GLProgram {
+	public func attach (shader s: GLShader!) -> GLProgram {
 		glAttachShader(id, s.id)
 		return self
 	}
