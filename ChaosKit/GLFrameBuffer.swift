@@ -54,12 +54,12 @@ public class GLFrameBufferBase : GLBase {
 
 public class GLFrameBufferTexture1D : GLFrameBufferBase, GLFrameBuffer {
 	public func texture (attachment: Int32, level: Int) {
-		glFramebufferTexture1D(target, GLenum(attachment), texture.target, texture.id, GLint(level))
+		//glFramebufferTexture1D(target, GLenum(attachment), texture.target, texture.id, GLint(level))
 	}
 }
 
 public class GLFrameBufferTexture2D : GLFrameBufferBase, GLFrameBuffer {
 	public func texture (attachment: Int32, level: Int) {
-		glFramebufferTexture2D(target, GLenum(attachment), texture.target, texture.id, GLint(level))
+		//glFramebufferTexture2D(target, GLenum(attachment), texture.target, texture.id, GLint(level))
 	}
 }

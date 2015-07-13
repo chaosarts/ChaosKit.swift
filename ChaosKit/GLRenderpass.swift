@@ -36,9 +36,6 @@ public class GLRenderpassBase {
 	/// Contains a capability map
 	private final var _caps : [GLenum : GLcap] = [GLenum : GLcap]()
 	
-	/// Provides a list of buffer writer capabilities
-	private final var _bufwrites : [GLenum : GLbufwrite] = [GLenum : GLbufwrite]()
-	
 	/// Contains the bitfield for clearing the buffers
 	private final var _clearmasks : [GLbitfield : GLclear] = [GLbitfield : GLclear]()
 	
@@ -101,9 +98,22 @@ public class GLRenderpassBase {
 	
 	public init () {}
 	
+	/**
+	Returns the according clear object if it has been set before
+	
+	:return: Some clear object
+	*/
+	public final func getClear (bitmask: GLbitfield) -> GLclear? {
+		return _clearmasks[bitmask]
+	}
+	
+	
+	public final func getClear (bitmask: Int32) -> GLclear? {
+		return getClear(GLbitfield(bitmask))
+	}
 	
 	/** 
-	Sets a clear mask for this render pass
+	Sets a clear mask for this render pass.
 	
 	:param: mask
 	*/
@@ -144,17 +154,35 @@ public class GLRenderpassBase {
 	}
 	
 	
+	/**
+	Sets a hint for the opngl server
+	
+	:param: name The name of the hint
+	:param: value The value for the hint
+	*/
 	public final func setHint (name: Int32, _ value: GLenum?) {
 		setHint(GLenum(name), value)
 	}
 	
 	
+	/**
+	Sets a hint for the opngl server
+	
+	:param: name The name of the hint
+	:param: value The value for the hint
+	*/
 	public final func setHint (name: GLenum, _ value: Int32?) {
 		var val : GLenum? = nil == value ? nil : GLenum(value!)
 		setHint(name, val)
 	}
 	
 	
+	/**
+	Sets a hint for the opngl server
+	
+	:param: name The name of the hint
+	:param: value The value for the hint
+	*/
 	public final func setHint (name: Int32, _ value: Int32?) {
 		var val : GLenum? = nil == value ? nil : GLenum(value!)
 		setHint(GLenum(name), val)
