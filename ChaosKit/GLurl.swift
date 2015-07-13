@@ -204,6 +204,7 @@ public enum GLUniformType : String {
 	case Projection = "projection"
 	
 	case Sampler = "sampler"
+	case Enabled = "enabled"
 	
 	case Intensity = "intensity"
 	case Reflection = "reflection"
@@ -235,6 +236,15 @@ public let GLUrlHeightMapSampler : GLurl = GLurl(.HeightMap, .Sampler)
 public let GLUrlDisplacementMapSampler : GLurl = GLurl(.DisplacementMap, .Sampler)
 public let GLUrlSpecularMapSampler : GLurl = GLurl(.SpecularMap, .Sampler)
 public let GLUrlGlowMapSampler : GLurl = GLurl(.GlowMap, .Sampler)
+
+public let GLUrlColorMapEnabled : GLurl = GLurl(.ColorMap, .Enabled)
+public let GLUrlDiffuseMapEnabled : GLurl = GLurl(.DiffuseMap, .Enabled)
+public let GLUrlNormalMapEnabled : GLurl = GLurl(.NormalMap, .Enabled)
+public let GLUrlBumpMapEnabled : GLurl = GLurl(.BumpMap, .Enabled)
+public let GLUrlHeightMapEnabled : GLurl = GLurl(.HeightMap, .Enabled)
+public let GLUrlDisplacementMapEnabled : GLurl = GLurl(.DisplacementMap, .Enabled)
+public let GLUrlSpecularMapEnabled : GLurl = GLurl(.SpecularMap, .Enabled)
+public let GLUrlGlowMapEnabled : GLurl = GLurl(.GlowMap, .Enabled)
 
 public let GLUrlAmbientLightIntensity : GLurl = GLurl(.AmbientLight, .Intensity)
 public let GLUrlDiffuseLightIntensity : GLurl = GLurl(.DiffuseLight, .Intensity)
