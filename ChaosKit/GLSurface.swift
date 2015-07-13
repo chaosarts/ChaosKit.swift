@@ -20,6 +20,9 @@ public class GLSurface {
 	/// Provides a map of url domain to surface texture
 	public var _textures : [GLUrlDomain : GLSurfaceTexture] = [GLUrlDomain : GLSurfaceTexture]()
 	
+	/// Returns the count of textures this surface uses
+	public var textureCount : Int {get {return _textures.count}}
+	
 	/// Provides the refelction factor
 	public var reflection : GLfloat = 0.5
 	
