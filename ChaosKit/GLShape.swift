@@ -39,7 +39,7 @@ public class GLShape : GLDisplayObject {
 	public private(set) var target : GLBufferTarget = GLArrayBufferTarget()
 
 	/// Provides the geometry
-	public var geometry : GLGeometry {
+	public var geometry : GLGeometry = GLgeom3(false) {
 		willSet {if geometry.dynamic != newValue.dynamic {_buffers = nil}}
 		didSet {_compiled = false}
 	}
@@ -149,9 +149,15 @@ public class GLShape : GLDisplayObject {
 	/** 
 	Initialzes the Shape 
 	*/
-	public init (geometry: GLGeometry) {
+	public init (_ geometry: GLGeometry) {
 		self.geometry = geometry
 	}
+	
+	
+	/**
+	Initialzes an empty shape
+	*/
+	public override init () {}
 	
 	
 	// METHODS
