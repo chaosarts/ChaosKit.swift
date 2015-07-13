@@ -11,26 +11,20 @@ import OpenGL
 
 public class GL {
 	
-	/// Provides the int params for glGetIntegerv
-	private static var _intParams : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
-	
-	/// Provides the int params for glGetFloatv
-	private static var _floatParams : UnsafeMutablePointer<GLfloat> = UnsafeMutablePointer<GLfloat>.alloc(1)
-	
-	/// Provides the int params for glGetBooleanv
-	private static var _boolParams : UnsafeMutablePointer<GLboolean> = UnsafeMutablePointer<GLboolean>.alloc(1)
-	
 	/// Provides the value of the active multitexture unit
-	public static var ACTIVE_TEXTURE : GLint {get {return GL.getIntegerv(GL_ACTIVE_TEXTURE).memory}}
+	public static var ACTIVE_TEXTURE : GLint {get {return GL.getIntegerv(GL_ACTIVE_TEXTURE)}}
 	
 	/// Provides the name of the current active program
-	public static var CURRENT_PROGRAM : GLint {get {return GL.getIntegerv(GL_CURRENT_PROGRAM).memory}}
+	public static var CURRENT_PROGRAM : GLint {get {return GL.getIntegerv(GL_CURRENT_PROGRAM)}}
 	
 	/// Provides the maximum supported texture image
-	public static let MAX_COMBINED_TEXTURE_IMAGE_UNITS : GLint = {return GL.getIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS).memory}()
+	public static let MAX_COMBINED_TEXTURE_IMAGE_UNITS : GLint = {return GL.getIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS)}()
 	
 	/// Provides the maximum supported texture image size
-	public static let MAX_TEXTURE_SIZE : GLint = {return GL.getIntegerv(GL_MAX_TEXTURE_SIZE).memory}()
+	public static let MAX_TEXTURE_SIZE : GLint = {return GL.getIntegerv(GL_MAX_TEXTURE_SIZE)}()
+	
+	/// Returns the max amount of texture units
+	public static let MAX_TEXTURE_UNITS : GLint = {return GL.getIntegerv(GL_MAX_TEXTURE_UNITS)}()
 	
 	
 	/**
@@ -39,9 +33,25 @@ public class GL {
 	:param: pname Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
 	:return: The value or values of the specified parameter.
 	*/
-	public class func getIntegerv (pname: Int32) -> UnsafeMutablePointer<GLint> {
-		glGetIntegerv(GLenum(pname), _intParams)
-		return _intParams
+	public class func getIntegerv (pname: GLenum) -> GLint {
+		var params : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		glGetIntegerv(pname, params)
+		
+		var mem : GLint = params.memory
+		params.destroy()
+		params.dealloc(1)
+		return mem
+	}
+	
+	
+	/**
+	Just like glGetIntegerv
+	
+	:param: pname Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
+	:return: The value or values of the specified parameter.
+	*/
+	public class func getIntegerv (pname: Int32) -> GLint {
+		return getIntegerv(GLenum(pname))
 	}
 	
 	
@@ -51,9 +61,24 @@ public class GL {
 	:param: pname Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
 	:return: The value or values of the specified parameter.
 	*/
-	public class func getFloatv (pname: Int32) -> UnsafeMutablePointer<GLfloat> {
-		glGetFloatv(GLenum(pname), _floatParams)
-		return _floatParams
+	public class func getFloatv (pname: GLenum) -> GLfloat {
+		var params : UnsafeMutablePointer<GLfloat> = UnsafeMutablePointer<GLfloat>.alloc(1)
+		glGetFloatv(pname, params)
+		
+		var mem : GLfloat = params.memory
+		params.destroy()
+		params.dealloc(1)
+		return mem
+	}
+	
+	/**
+	Just like glGetFloatv
+	
+	:param: pname Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
+	:return: The value or values of the specified parameter.
+	*/
+	public class func getFloatv (pname: Int32) -> GLfloat {
+		return getFloatv(GLenum(pname))
 	}
 	
 	
@@ -63,9 +88,35 @@ public class GL {
 	:param: pname Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
 	:return: The value or values of the specified parameter.
 	*/
-	public class func getBooleanv (pname: Int32) -> UnsafeMutablePointer<GLboolean> {
-		glGetBooleanv(GLenum(pname), _boolParams)
-		return _boolParams
+	public class func getBooleanv (pname: GLenum) -> GLboolean {
+		var params : UnsafeMutablePointer<GLboolean> = UnsafeMutablePointer<GLboolean>.alloc(1)
+		glGetBooleanv(GLenum(pname), params)
+		
+		var mem : GLboolean = params.memory
+		params.destroy()
+		params.dealloc(1)
+		return mem
+	}
+	
+	
+	/**
+	Just like glGetBooleanv
+	
+	:param: pname Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
+	:return: The value or values of the specified parameter.
+	*/
+	public class func getBooleanv (pname: Int32) -> GLboolean {
+		return getBooleanv(GLenum(pname))
+	}
+	
+	
+	public class func isTrue (bool: GLboolean) -> Bool {
+		return GLboolean(GL_TRUE) == bool
+	}
+	
+	
+	public class func isFalse (bool: GLboolean) -> Bool {
+		return GLboolean(GL_TRUE) != bool
 	}
 }
 
