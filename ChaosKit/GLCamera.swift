@@ -26,8 +26,9 @@ public final class GLCamera {
 	public var transformation : mat4 {
 		get {
 			if _transformation == nil {
-				_transformation = mat4.makeTranslate(x: -x, y: -y, z: -z)
+				_transformation = mat4.identity
 				_transformation!.rotateX(rad: rx)
+				_transformation!.translate(x: -x, y: -y, z: -z)
 				_transformation!.rotateY(rad: ry)
 				_transformation!.rotate(rad: rz, axis: direction)
 			}
@@ -52,7 +53,7 @@ public final class GLCamera {
 	}
 	
 	/// Provides the x position
-	public var z : GLfloat = 1 {
+	public var z : GLfloat = 0 {
 		didSet {_transformation = nil}
 	}
 	
@@ -78,6 +79,11 @@ public final class GLCamera {
 	/// Provides the position vector relative to world space origin
 	public var position : vec3 {
 		get {return vec3(x, y, z)}
+		set {
+			x = newValue.x
+			y = newValue.y
+			z = newValue.z
+		}
 	}
 	
 	/// Provides the direction in which the camera is looking at
@@ -117,7 +123,7 @@ public final class GLCamera {
 	Initializes the camera with a orthographic projection
 	*/
 	public convenience init () {
-		self.init(projection: GLOrthographicProjection(GLViewVolume()))
+		self.init(projection: GLOrthographicProjection(GLvolume()))
 	}
 	
 	
