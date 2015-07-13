@@ -17,7 +17,7 @@ public protocol GLCameraProjection {
 	var matrix : mat4 {get}
 	
 	/// Provides the view volume of the camera
-	var volume : GLViewVolume {get set}
+	var volume : GLvolume {get set}
 }
 
 
@@ -33,7 +33,7 @@ public struct GLOrthographicProjection : GLCameraProjection {
 	public var matrix : mat4 {get {return _matrix}}
 	
 	/// Provides the view volume of the camera
-	public var volume : GLViewVolume {
+	public var volume : GLvolume {
 		didSet {
 			_matrix = mat4.makeOrtho(left: volume.left, right: volume.right, bottom: volume.bottom, top: volume.top, near: volume.near, far: volume.far)
 		}
@@ -45,7 +45,7 @@ public struct GLOrthographicProjection : GLCameraProjection {
 	
 	:param: viewVolume The view colume object
 	*/
-	public init (_ volume: GLViewVolume = GLViewVolume()) {
+	public init (_ volume: GLvolume = GLvolume()) {
 		self.volume = volume
 		_matrix = mat4.makeOrtho(left: volume.left, right: volume.right, bottom: volume.bottom, top: volume.top, near: volume.near, far: volume.far)
 	}
@@ -64,7 +64,7 @@ public struct GLPerspectiveProjection : GLCameraProjection {
 	public var matrix : mat4 {get {return _matrix}}
 	
 	/// Provides the view volume of the camera
-	public var volume : GLViewVolume {
+	public var volume : GLvolume {
 		didSet {
 			_matrix = mat4.makeFrustum(left: volume.left, right: volume.right, bottom: volume.bottom, top: volume.top, near: volume.near, far: volume.far)
 		}
@@ -76,7 +76,7 @@ public struct GLPerspectiveProjection : GLCameraProjection {
 	
 	:param: viewVolume The view colume object
 	*/
-	public init (_ viewVolume: GLViewVolume = GLViewVolume()) {
+	public init (_ viewVolume: GLvolume = GLvolume()) {
 		self.volume = viewVolume
 		_matrix = mat4.makeFrustum(left: viewVolume.left, right: viewVolume.right, bottom: viewVolume.bottom, top: viewVolume.top, near: viewVolume.near, far: viewVolume.far)
 	}
