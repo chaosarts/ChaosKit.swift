@@ -86,7 +86,7 @@ public struct GLgeom<V: Vector> : GLGeometry {
 	/**
 	Initializes the geoemtry with passed values
 	*/
-	public init (_ values: [V], _ indexed: Bool = false) {
+	public init (_ values: [V], _ indexed: Bool) {
 		self.values = values
 		if indexed {
 			_indexMap = [String : Int]()
@@ -95,13 +95,23 @@ public struct GLgeom<V: Vector> : GLGeometry {
 	}
 	
 	
-	public init (_ indexed: Bool = false) {
+	public init (_ values: [V]) {
+		self.init (values, false)
+	}
+	
+	
+	public init (_ indexed: Bool) {
 		self.init([], indexed)
 	}
 	
 	
 	public init(arrayLiteral elements: V...) {
 		self.init(elements)
+	}
+	
+	
+	public init () {
+		self.init(false)
 	}
 }
 
