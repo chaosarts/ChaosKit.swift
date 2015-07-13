@@ -33,7 +33,7 @@ public class GLBuffer {
 	/// Provides the target of the buffer. This is used for glBindBuffer or glBufferData
 	private var _target : GLenum
 	
-	private lazy var _bindingPname : Int32 = self._target == GLenum(GL_ARRAY_BUFFER) ? GL_ARRAY_BUFFER_BINDING : GL_ELEMENT_ARRAY_BUFFER_BINDING
+	private lazy var _bindingPname : GLenum = self._target == GLenum(GL_ARRAY_BUFFER) ? GLenum(GL_ARRAY_BUFFER_BINDING) : GLenum(GL_ELEMENT_ARRAY_BUFFER_BINDING)
 	
 	
 	/*
@@ -58,7 +58,7 @@ public class GLBuffer {
 	public var target : GLenum {get {return _target}}
 	
 	/// Indicates if the buffer is bound or not
-	public var bound : Bool {get {return GLuint(GL.getIntegerv(_bindingPname).memory) == name}}
+	public var bound : Bool {get {return GLuint(GL.getIntegerv(_bindingPname)) == name}}
 
 	
 	/*
@@ -75,7 +75,7 @@ public class GLBuffer {
 		_target = target
 		_usage = usage
 		_blocks = blocks
-		_bindingPname = target == GLenum(GL_ARRAY_BUFFER) ? GL_ARRAY_BUFFER_BINDING : GL_ELEMENT_ARRAY_BUFFER_BINDING
+		_bindingPname = target == GLenum(GL_ARRAY_BUFFER) ? GLenum(GL_ARRAY_BUFFER_BINDING) : GLenum(GL_ELEMENT_ARRAY_BUFFER_BINDING)
 		glGenBuffers(1, _ptr)
 	}
 	
