@@ -2,35 +2,27 @@
 //  GLAttribute.swift
 //  ChaosKit
 //
-//  Created by Fu Lam Diep on 09.06.15.
+//  Created by Fu Lam Diep on 02.06.15.
 //  Copyright (c) 2015 Fu Lam Diep. All rights reserved.
 //
 
 import Foundation
+import OpenGL
 
-public protocol GLAttribute : GLBufferable {}
 
-public class GLAttributeDataArray : GLAttribute {
+public protocol GLAttribute {
 	
-	private var _data : [GLfloat] = []
+	/// Indicates the size per attribute value
+	var size : Int {get}
 	
-	public var attribute : GLAttributeType
+	/// Indicates if the attribute is dynamic or static
+	var dynamic : Bool {get}
 	
-	public var count : Int {get {return _data.count / size}}
+	/**
+	Returns the value at given index position.
 	
-	public var size : Int
-	
-	public var dynamic : Bool = false
-	
-	public subscript (index: Int) -> [GLfloat] {
-		get {
-			var i = (index * size)
-			return Array(_data[i..<(i + size)])
-		}
-	}
-	
-	public init (attribute: GLAttributeType, size: Int) {
-		self.size = size
-		self.attribute = attribute
-	}
+	:param: index The index of the value to fetch
+	:return: The value at given index
+	*/
+	func getBufferData (atIndex index: Int) -> [GLfloat]
 }
