@@ -10,9 +10,8 @@ import Foundation
 import OpenGL
 
 public protocol GLBufferTarget {
-	var value : GLenum {get}
-	
-	func draw (mode m: GLenum, count c: GLsizei)
+	func draw (mode: GLenum, _ count: GLsizei)
+	func draw (shape: GLShape)
 }
 
 
@@ -20,29 +19,28 @@ public struct GLArrayBufferTarget : GLBufferTarget {
 	
 	public var first : GLint = 0
 	
-	public var value : GLenum {get {return GLenum(GL_ARRAY_BUFFER)}}
+	public func draw (mode: GLenum, _ count: GLsizei) {
+		glDrawArrays(mode, first, count)
+	}
 	
-	public func draw (mode m: GLenum, count c: GLsizei) {
-		glDrawArrays(m, first, c)
+	public func draw (shape: GLShape) {
+		glDrawArrays(shape.mode, first, GLsizei(shape.geometry.indexlist.count))
 	}
 }
 
 
 public struct GLElementBufferTarget : GLBufferTarget {
 	
-	public var type : GLenum
+	public var type : GLenum = GLenum(GL_UNSIGNED_BYTE)
 	
-	public var indices : [Int]
+	public var indexlist : [Int] = []
 	
-	public var value : GLenum {get {return GLenum(GL_ELEMENT_ARRAY_BUFFER)}}
-	
-	
-	public init (indices: [Int], type: Int32 = GL_UNSIGNED_BYTE) {
-		self.indices = indices
-		self.type = GLenum(type)
+	public func draw (mode: GLenum, _ count: GLsizei) {
+		glDrawElements(mode, count, type, indexlist)
 	}
 	
-	public func draw (mode m: GLenum, count c: GLsizei) {
-		glDrawElements(m, c, type, indices)
+	public func draw (shape: GLShape) {
+		var geometry : GLgeom = shape.geometry
+		glDrawElements(shape.mode, GLsizei(geometry.indexlist.count), GLenum(GL_UNSIGNED_BYTE), geometry.indexlist)
 	}
 }
