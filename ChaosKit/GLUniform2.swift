@@ -1,5 +1,5 @@
 //
-//  GLUniform2.swift
+//  GLuniform2.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 11.06.15.
@@ -17,7 +17,7 @@ import OpenGL.GL3
 |--------------------------------------------------------------------------
 */
 
-public struct GLUniform2d : GLUniform {
+public struct GLuniform2d : GLUniform {
 	
 	private let _value : (x: GLdouble, y: GLdouble)
 	
@@ -25,13 +25,13 @@ public struct GLUniform2d : GLUniform {
 		_value = (x, y)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform2d(GLint(location.id), _value.x, _value.y)
+	public func assign (location: GLuniformloc) {
+		glUniform2d(GLint(location.index), _value.x, _value.y)
 	}
 }
 
 
-public struct GLUniform2f : GLUniform {
+public struct GLuniform2f : GLUniform {
 	
 	private let _value : (x: GLfloat, y: GLfloat)
 	
@@ -39,13 +39,13 @@ public struct GLUniform2f : GLUniform {
 		_value = (x, y)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform2f(GLint(location.id), _value.x, _value.y)
+	public func assign (location: GLuniformloc) {
+		glUniform2f(GLint(location.index), _value.x, _value.y)
 	}
 }
 
 
-public struct GLUniform2i : GLUniform {
+public struct GLuniform2i : GLUniform {
 	
 	private let _value : (x: GLint, y: GLint)
 	
@@ -53,13 +53,13 @@ public struct GLUniform2i : GLUniform {
 		_value = (x, y)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform2i(GLint(location.id), _value.x, _value.y)
+	public func assign (location: GLuniformloc) {
+		glUniform2i(GLint(location.index), _value.x, _value.y)
 	}
 }
 
 
-public struct GLUniform2ui : GLUniform {
+public struct GLuniform2ui : GLUniform {
 	
 	private let _value : (x: GLuint, y: GLuint)
 	
@@ -67,7 +67,7 @@ public struct GLUniform2ui : GLUniform {
 		_value = (x, y)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform2ui(GLint(location.id), _value.x, _value.y)
+	public func assign (location: GLuniformloc) {
+		glUniform2ui(GLint(location.index), _value.x, _value.y)
 	}
 }

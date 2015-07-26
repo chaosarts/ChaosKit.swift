@@ -30,14 +30,11 @@ public struct mat3 : QuadraticMatrix {
 	// +++++++++++++++++
 	
 	// Provides a list of matrix components in major-row represenstation
-	private var _mat : [GLfloat] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+	public private(set) var array : [GLfloat] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 	
 	
 	// DERIVED PROPERTIES
 	// ++++++++++++++++++
-	
-	/// The matrix as major-row matrix
-	public var array : [GLfloat] {get{return _mat}}
 	
 	/// Provides the mdterminant of the matrix
 	public var determinant : GLfloat {
@@ -53,9 +50,9 @@ public struct mat3 : QuadraticMatrix {
 	/// Provides the transposed matrix of the matrix
 	public var transposed : mat3 {
 		return [
-			_mat[0], _mat[3], _mat[6],
-			_mat[1], _mat[4], _mat[7],
-			_mat[2], _mat[5], _mat[8]
+			array[0], array[3], array[6],
+			array[1], array[4], array[7],
+			array[2], array[5], array[8]
 		]
 	}
 	
@@ -67,14 +64,14 @@ public struct mat3 : QuadraticMatrix {
 	public subscript (row index: Int) -> vec3 {
 		get {
 			assert(valid(index), "Bad index access for mat3")
-			return vec3(_mat[index], _mat[3 + index], _mat[6 + index])
+			return vec3(array[index], array[3 + index], array[6 + index])
 		}
 		
 		set {
 			assert(valid(index), "Bad index access for mat3")
-			_mat[index] = newValue.x
-			_mat[index + 3] = newValue.y
-			_mat[index + 6] = newValue.z
+			array[index] = newValue.x
+			array[index + 3] = newValue.y
+			array[index + 6] = newValue.z
 		}
 	}
 	
@@ -82,14 +79,14 @@ public struct mat3 : QuadraticMatrix {
 	public subscript (col index: Int) -> vec3 {
 		get {
 			assert(valid(index), "Bad index access for mat3")
-			return vec3(_mat[index * 3], _mat[index * 3 + 1], _mat[index * 3 + 2])
+			return vec3(array[index * 3], array[index * 3 + 1], array[index * 3 + 2])
 		}
 		
 		set {
 			assert(valid(index), "Bad index access for mat3")
-			_mat[index * 3] = newValue.x
-			_mat[index * 3 + 1] = newValue.y
-			_mat[index * 3 + 2] = newValue.z
+			array[index * 3] = newValue.x
+			array[index * 3 + 1] = newValue.y
+			array[index * 3 + 2] = newValue.z
 		}
 	}
 	
@@ -97,12 +94,12 @@ public struct mat3 : QuadraticMatrix {
 	public subscript (row: Int, col: Int) -> GLfloat {
 		get {
 			assert(valid(row) && valid(col), "Bad index access for mat3")
-			return _mat[col * 3 + row]
+			return array[col * 3 + row]
 		}
 		
 		set {
 			assert(valid(row) && valid(col), "Bad index access for mat3")
-			_mat[col * 3 + row] = newValue
+			array[col * 3 + row] = newValue
 		}
 	}
 	
@@ -122,7 +119,7 @@ public struct mat3 : QuadraticMatrix {
 	:param: z The z component of the rotation axis
 	*/
 	public mutating func rotate (rad radian: GLfloat, x rx: GLfloat, y ry: GLfloat, z rz: GLfloat) {
-		let mat : [GLfloat] = _mat
+		let mat : [GLfloat] = array
 		
 		let m00 = mat[0], m10 = mat[1], m20 = mat[2]
 		let m01 = mat[3], m11 = mat[4], m21 = mat[5]
@@ -144,17 +141,17 @@ public struct mat3 : QuadraticMatrix {
 		let r12 = ry * rz * diffCosAngle - rx * sinAngle
 		let r22 = rz * rz * diffCosAngle + cosAngle
 		
-		_mat[0] = m00 * r00 + m01 * r10 + m02 * r20
-		_mat[1] = m10 * r00 + m11 * r10 + m12 * r20
-		_mat[2] = m20 * r00 + m21 * r10 + m22 * r20
+		array[0] = m00 * r00 + m01 * r10 + m02 * r20
+		array[1] = m10 * r00 + m11 * r10 + m12 * r20
+		array[2] = m20 * r00 + m21 * r10 + m22 * r20
 	
-		_mat[3] = m00 * r01 + m01 * r11 + m02 * r21
-		_mat[4] = m10 * r01 + m11 * r11 + m12 * r21
-		_mat[5] = m20 * r01 + m21 * r11 + m22 * r21
+		array[3] = m00 * r01 + m01 * r11 + m02 * r21
+		array[4] = m10 * r01 + m11 * r11 + m12 * r21
+		array[5] = m20 * r01 + m21 * r11 + m22 * r21
 		
-		_mat[6] = m00 * r02 + m01 * r12 + m02 * r22
-		_mat[7] = m10 * r02 + m11 * r12 + m12 * r22
-		_mat[8] = m20 * r02 + m21 * r12 + m22 * r22
+		array[6] = m00 * r02 + m01 * r12 + m02 * r22
+		array[7] = m10 * r02 + m11 * r12 + m12 * r22
+		array[8] = m20 * r02 + m21 * r12 + m22 * r22
 	}
 	
 	
@@ -199,18 +196,18 @@ public struct mat3 : QuadraticMatrix {
 	:param: rad Te anlge in radians
 	*/
 	public mutating func rotateX (rad radians: GLfloat) {
-		let m01 = _mat[3], m11 = _mat[4], m21 = _mat[5]
-		let m02 = _mat[6], m12 = _mat[7], m22 = _mat[8]
+		let m01 = array[3], m11 = array[4], m21 = array[5]
+		let m02 = array[6], m12 = array[7], m22 = array[8]
 		
 		let c = cos(radians)
 		let s = sin(radians)
 		
-		_mat[3] = m01 * c + m02 * s
-		_mat[4] = m11 * c + m12 * s
-		_mat[5] = m21 * c + m22 * s
-		_mat[6] = m01 * -s + m02 * c
-		_mat[7] = m11 * -s + m12 * c
-		_mat[8] = m21 * -s + m22 * c
+		array[3] = m01 * c + m02 * s
+		array[4] = m11 * c + m12 * s
+		array[5] = m21 * c + m22 * s
+		array[6] = m01 * -s + m02 * c
+		array[7] = m11 * -s + m12 * c
+		array[8] = m21 * -s + m22 * c
 	}
 	
 	
@@ -230,18 +227,18 @@ public struct mat3 : QuadraticMatrix {
 	:param: rad Te anlge in radians
 	*/
 	public mutating func rotateY (rad radians: GLfloat) {
-		let m00 = _mat[0], m10 = _mat[1], m20 = _mat[2]
-		let m02 = _mat[6], m12 = _mat[7], m22 = _mat[8]
+		let m00 = array[0], m10 = array[1], m20 = array[2]
+		let m02 = array[6], m12 = array[7], m22 = array[8]
 		
 		let c = cos(radians)
 		let s = sin(radians)
 		
-		_mat[0] = m00 * c + m02 * -s
-		_mat[1] = m10 * c + m12 * -s
-		_mat[2] = m20 * c + m22 * -s
-		_mat[6] = m00 * s + m02 * c
-		_mat[7] = m10 * s + m12 * c
-		_mat[8] = m20 * s + m22 * c
+		array[0] = m00 * c + m02 * -s
+		array[1] = m10 * c + m12 * -s
+		array[2] = m20 * c + m22 * -s
+		array[6] = m00 * s + m02 * c
+		array[7] = m10 * s + m12 * c
+		array[8] = m20 * s + m22 * c
 	}
 	
 	
@@ -261,18 +258,18 @@ public struct mat3 : QuadraticMatrix {
 	:param: rad Te anlge in radians
 	*/
 	public mutating func rotateZ (rad radians: GLfloat) {
-		let m00 = _mat[0], m10 = _mat[1], m20 = _mat[2]
-  		let m01 = _mat[3], m11 = _mat[4], m21 = _mat[5]
+		let m00 = array[0], m10 = array[1], m20 = array[2]
+  		let m01 = array[3], m11 = array[4], m21 = array[5]
 		
 		let c = cos(radians)
 		let s = sin(radians)
 		
-		 _mat[0] = m00 * c + m01 * s
-		_mat[1] = m10 * c + m11 * s
-		_mat[2] = m20 * c + m21 * s
-		_mat[3] = m00 * -s + m01 * c
-		_mat[4] = m10 * -s + m11 * c
-		_mat[5] = m20 * -s + m21 * c
+		 array[0] = m00 * c + m01 * s
+		array[1] = m10 * c + m11 * s
+		array[2] = m20 * c + m21 * s
+		array[3] = m00 * -s + m01 * c
+		array[4] = m10 * -s + m11 * c
+		array[5] = m20 * -s + m21 * c
 	}
 	
 	
@@ -336,9 +333,9 @@ extension mat3 {
 extension mat3 : ArrayLiteralConvertible {
 	public init(arrayLiteral elements: GLfloat...) {
 		let maximum : Int = min(mat3.elementCount, elements.count)
-		_mat = [GLfloat](count: maximum, repeatedValue: 0.0)
+		array = [GLfloat](count: maximum, repeatedValue: 0.0)
 		for index in 0..<maximum {
-			_mat[index] = elements[index]
+			array[index] = elements[index]
 		}
 	}
 }
@@ -347,7 +344,7 @@ extension mat3 : ArrayLiteralConvertible {
 extension mat3 : ArrayRepresentable {
 	public init(_ array: [GLfloat]) {
 		for index in 0..<mat3.elementCount {
-			_mat[index] = array.count > index ? array[index] : 0
+			self.array[index] = array.count > index ? array[index] : 0
 		}
 	}
 }
@@ -357,8 +354,8 @@ extension mat3 : Printable {
 	public var description : String {
 		get {
 			var maxlen : Int = 0
-			for index in 0...(_mat.count - 1) {
-				maxlen = max(maxlen, count(_mat[index].description))
+			for index in 0...(array.count - 1) {
+				maxlen = max(maxlen, count(array[index].description))
 			}
 			
 			maxlen++

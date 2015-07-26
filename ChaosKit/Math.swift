@@ -253,5 +253,8 @@ public protocol QuadraticMatrix : Matrix {
 public protocol Vector : Matrix {
 	var magnitude : GLfloat {get}
 //	subscript (index: Int) -> GLfloat {get}
-//	init<T: Vector> (_ vec: T)
+//	init (_ vec: vec1)
+//	init (_ vec: vec2)
+//	init (_ vec: vec3)
+//	init (_ vec: vec4)
 }

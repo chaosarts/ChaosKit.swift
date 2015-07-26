@@ -1,5 +1,5 @@
 //
-//  GLUniform4.swift
+//  GLuniform4.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 11.06.15.
@@ -12,7 +12,7 @@ import OpenGL.GL
 import OpenGL.GL3
 
 
-public struct GLUniform4d : GLUniform {
+public struct GLuniform4d : GLUniform {
 	
 	private let _value : (x: GLdouble, y: GLdouble, z: GLdouble, w: GLdouble)
 	
@@ -20,13 +20,13 @@ public struct GLUniform4d : GLUniform {
 		_value = (x, y, z, w)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform4d(GLint(location.id), _value.x, _value.y, _value.z, _value.w)
+	public func assign (location: GLuniformloc) {
+		glUniform4d(GLint(location.index), _value.x, _value.y, _value.z, _value.w)
 	}
 }
 
 
-public struct GLUniform4f : GLUniform {
+public struct GLuniform4f : GLUniform {
 	
 	private let _value : (x: GLfloat, y: GLfloat, z: GLfloat, w: GLfloat)
 	
@@ -38,13 +38,13 @@ public struct GLUniform4f : GLUniform {
 		self.init(value.x, value.y, value.z, value.w)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform4f(GLint(location.id), _value.x, _value.y, _value.z, _value.w)
+	public func assign (location: GLuniformloc) {
+		glUniform4f(GLint(location.index), _value.x, _value.y, _value.z, _value.w)
 	}
 }
 
 
-public struct GLUniform4i : GLUniform {
+public struct GLuniform4i : GLUniform {
 	
 	private let _value : (x: GLint, y: GLint, z: GLint, w: GLint)
 	
@@ -52,13 +52,13 @@ public struct GLUniform4i : GLUniform {
 		_value = (x, y, z, w)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform4i(GLint(location.id), _value.x, _value.y, _value.z, _value.w)
+	public func assign (location: GLuniformloc) {
+		glUniform4i(GLint(location.index), _value.x, _value.y, _value.z, _value.w)
 	}
 }
 
 
-public struct GLUniform4ui : GLUniform {
+public struct GLuniform4ui : GLUniform {
 	
 	private let _value : (x: GLuint, y: GLuint, z: GLuint, w: GLuint)
 	
@@ -66,7 +66,7 @@ public struct GLUniform4ui : GLUniform {
 		_value = (x, y, z, w)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform4ui(GLint(location.id), _value.x, _value.y, _value.z, _value.w)
+	public func assign (location: GLuniformloc) {
+		glUniform4ui(GLint(location.index), _value.x, _value.y, _value.z, _value.w)
 	}
 }

@@ -7,9 +7,3 @@
 //
 
 import Foundation
-
-public typealias GLnormals2 = GLpropa<vec2>
-public typealias GLnormals3 = GLpropa<vec3>
-
-public typealias GLnormal2 = GLprops<vec2>
-public typealias GLnormal3 = GLprops<vec3>

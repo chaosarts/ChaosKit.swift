@@ -25,7 +25,7 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	/// The attribute type
 	private let _domains : [String]
 	
-	/// String representation of the selector
+	/// String representation of the url
 	public var description : String {
 		get {return String(GLurl._delimiter).join(_domains)}
 	}
@@ -45,7 +45,7 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	
 	
 	/**
-	Initializes the selector with given type and domain
+	Initializes the url with given type and domain
 	
 	:param: type The type name for the anonymous attribute location
 	:param: domain The domain to specify the context

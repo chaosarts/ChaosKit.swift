@@ -18,7 +18,7 @@ public class GLSurface {
 	private var _uniforms : [GLurl : GLUniform]?
 	
 	/// Provides a map of url domain to surface texture
-	public var _textures : [GLUrlDomain : GLSurfaceTexture] = [GLUrlDomain : GLSurfaceTexture]()
+	public var _textures : [GLUrlDomain : GLTextureMap] = [GLUrlDomain : GLTextureMap]()
 	
 	/// Returns the count of textures this surface uses
 	public var textureCount : Int {get {return _textures.count}}
@@ -27,52 +27,55 @@ public class GLSurface {
 	public var reflection : GLfloat = 0.5
 	
 	/// Provides the color of the surface
-	public var color : GLShapeProperty?
+	public var color : GLAttribute?
+	
+	/// Provides the normals of the surface
+	public var normal : GLAttribute?
 	
 	/// Provides the surface texture for bump mapping
-	public var colormap : GLSurfaceTexture? {
+	public var colormap : GLTextureMap? {
 		get {return _textures[.ColorMap]}
 		set {_textures[.ColorMap] = newValue; _uniforms = nil}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var bumpmap : GLSurfaceTexture? {
+	public var bumpmap : GLTextureMap? {
 		get {return _textures[.BumpMap]}
 		set {_textures[.BumpMap] = newValue}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var normalmap : GLSurfaceTexture? {
+	public var normalmap : GLTextureMap? {
 		get {return _textures[.NormalMap]}
 		set {_textures[.NormalMap] = newValue}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var heightmap : GLSurfaceTexture? {
+	public var heightmap : GLTextureMap? {
 		get {return _textures[.HeightMap]}
 		set {_textures[.HeightMap] = newValue}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var displacementmap : GLSurfaceTexture? {
+	public var displacementmap : GLTextureMap? {
 		get {return _textures[.DisplacementMap]}
 		set {_textures[.DisplacementMap] = newValue}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var glowmap : GLSurfaceTexture? {
+	public var glowmap : GLTextureMap? {
 		get {return _textures[.GlowMap]}
 		set {_textures[.GlowMap] = newValue}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var diffusemap : GLSurfaceTexture? {
+	public var diffusemap : GLTextureMap? {
 		get {return _textures[.DiffuseMap]}
 		set {_textures[.DiffuseMap] = newValue}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var specularmap : GLSurfaceTexture? {
+	public var specularmap : GLTextureMap? {
 		get {return _textures[.SpecularMap]}
 		set {_textures[.SpecularMap] = newValue}
 	}
@@ -92,7 +95,7 @@ public class GLSurface {
 					_uniforms![GLurl(domain, .Sampler)] = GLUniformTexture(_textures[domain]!.texture, index)
 					index++
 				}
-				_uniforms![GLUrlSurfaceReflection] = GLUniform1f(reflection)
+				_uniforms![GLUrlSurfaceReflection] = GLuniform1f(reflection)
 			}
 			
 			return _uniforms!
@@ -100,9 +103,9 @@ public class GLSurface {
 	}
 	
 	/// Provides the bufferable properties
-	public var bufferables : [GLurl : GLBufferable] {
+	public var bufferables : [GLurl : GLAttribute] {
 		get {
-			var bufferables : [GLurl : GLBufferable] = [GLurl : GLBufferable]()
+			var bufferables : [GLurl : GLAttribute] = [GLurl : GLAttribute]()
 			if nil != color {bufferables[GLUrlSurfaceColor] = color!}
 			
 			for domain in _textures.keys {

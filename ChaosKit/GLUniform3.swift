@@ -1,5 +1,5 @@
 //
-//  GLUniform3.swift
+//  GLuniform3.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 11.06.15.
@@ -12,7 +12,7 @@ import OpenGL.GL
 import OpenGL.GL3
 
 
-public struct GLUniform3d : GLUniform {
+public struct GLuniform3d : GLUniform {
 	
 	private let _value : (x: GLdouble, y: GLdouble, z: GLdouble)
 	
@@ -20,13 +20,13 @@ public struct GLUniform3d : GLUniform {
 		_value = (x, y, z)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform3d(GLint(location.id), _value.x, _value.y, _value.z)
+	public func assign (location: GLuniformloc) {
+		glUniform3d(GLint(location.index), _value.x, _value.y, _value.z)
 	}
 }
 
 
-public struct GLUniform3f : GLUniform {
+public struct GLuniform3f : GLUniform {
 	
 	private let _value : (x: GLfloat, y: GLfloat, z: GLfloat)
 	
@@ -38,13 +38,13 @@ public struct GLUniform3f : GLUniform {
 		self.init(vec.x, vec.y, vec.z)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform3f(GLint(location.id), _value.x, _value.y, _value.z)
+	public func assign (location: GLuniformloc) {
+		glUniform3f(GLint(location.index), _value.x, _value.y, _value.z)
 	}
 }
 
 
-public struct GLUniform3i : GLUniform {
+public struct GLuniform3i : GLUniform {
 	
 	private let _value : (x: GLint, y: GLint, z: GLint)
 	
@@ -52,13 +52,13 @@ public struct GLUniform3i : GLUniform {
 		_value = (x, y, z)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform3i(GLint(location.id), _value.x, _value.y, _value.z)
+	public func assign (location: GLuniformloc) {
+		glUniform3i(GLint(location.index), _value.x, _value.y, _value.z)
 	}
 }
 
 
-public struct GLUniform3ui : GLUniform {
+public struct GLuniform3ui : GLUniform {
 	
 	private let _value : (x: GLuint, y: GLuint, z: GLuint)
 	
@@ -66,7 +66,7 @@ public struct GLUniform3ui : GLUniform {
 		_value = (x, y, z)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform3ui(GLint(location.id), _value.x, _value.y, _value.z)
+	public func assign (location: GLuniformloc) {
+		glUniform3ui(GLint(location.index), _value.x, _value.y, _value.z)
 	}
 }

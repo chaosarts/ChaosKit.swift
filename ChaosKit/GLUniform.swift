@@ -10,7 +10,7 @@ import Foundation
 import OpenGL
 
 public protocol GLUniform {
-	func assign (location: GLUniformLocation)
+	func assign (location: GLuniformloc)
 }
 
 
@@ -21,7 +21,7 @@ public protocol GLUniform {
 */
 
 
-public struct GLUniformMatrix2fv : GLUniform {
+public struct GLuniformMat2fv : GLUniform {
 	
 	private let _value : UnsafePointer<GLfloat>
 	
@@ -53,13 +53,13 @@ public struct GLUniformMatrix2fv : GLUniform {
 		self.transpose = GLboolean(transpose ? GL_TRUE : GL_FALSE)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniformMatrix2fv(GLint(location.id), count, transpose, _value)
+	public func assign (location: GLuniformloc) {
+		glUniformMatrix2fv(GLint(location.index), count, transpose, _value)
 	}
 }
 
 
-public struct GLUniformMatrix2dv : GLUniform {
+public struct GLuniformMat2dv : GLUniform {
 	
 	private let _value : UnsafePointer<GLdouble>
 	
@@ -74,13 +74,13 @@ public struct GLUniformMatrix2dv : GLUniform {
 		self.transpose = GLboolean(transpose ? GL_TRUE : GL_FALSE)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniformMatrix2dv(GLint(location.id), count, transpose, _value)
+	public func assign (location: GLuniformloc) {
+		glUniformMatrix2dv(GLint(location.index), count, transpose, _value)
 	}
 }
 
 
-public struct GLUniformMatrix3fv : GLUniform {
+public struct GLuniformMat3fv : GLUniform {
 	
 	private let _value : UnsafePointer<GLfloat>
 	
@@ -105,13 +105,13 @@ public struct GLUniformMatrix3fv : GLUniform {
 		self.init(array, GLsizei(value.count), transpose)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniformMatrix3fv(GLint(location.id), count, transpose, _value)
+	public func assign (location: GLuniformloc) {
+		glUniformMatrix3fv(GLint(location.index), count, transpose, _value)
 	}
 }
 
 
-public struct GLUniformMatrix3dv : GLUniform {
+public struct GLuniformMat3dv : GLUniform {
 	
 	private let _value : UnsafePointer<GLdouble>
 	
@@ -126,13 +126,13 @@ public struct GLUniformMatrix3dv : GLUniform {
 		self.transpose = GLboolean(transpose ? GL_TRUE : GL_FALSE)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniformMatrix3dv(GLint(location.id), count, transpose, _value)
+	public func assign (location: GLuniformloc) {
+		glUniformMatrix3dv(GLint(location.index), count, transpose, _value)
 	}
 }
 
 
-public struct GLUniformMatrix4fv : GLUniform {
+public struct GLuniformMat4fv : GLUniform {
 	
 	private let _value : UnsafePointer<GLfloat>
 	
@@ -157,13 +157,13 @@ public struct GLUniformMatrix4fv : GLUniform {
 		self.init([value])
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniformMatrix4fv(GLint(location.id), count, transpose, _value)
+	public func assign (location: GLuniformloc) {
+		glUniformMatrix4fv(GLint(location.index), count, transpose, _value)
 	}
 }
 
 
-public struct GLUniformMatrix4dv : GLUniform {
+public struct GLuniformMat4dv : GLUniform {
 	
 	private let _value : UnsafePointer<GLdouble>
 	
@@ -178,7 +178,7 @@ public struct GLUniformMatrix4dv : GLUniform {
 		self.transpose = GLboolean(transpose ? GL_TRUE : GL_FALSE)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniformMatrix4dv(GLint(location.id), count, transpose, _value)
+	public func assign (location: GLuniformloc) {
+		glUniformMatrix4dv(GLint(location.index), count, transpose, _value)
 	}
 }

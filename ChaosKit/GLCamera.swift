@@ -100,10 +100,10 @@ public final class GLCamera {
 	public var uniforms : [GLurl : GLUniform] {
 		get {
 			return [
-				GLUrlCameraViewMatrix : GLUniformMatrix4fv(transformation),
-				GLUrlCameraProjection : GLUniformMatrix4fv(projection.matrix),
-				GLUrlCameraPosition : GLUniform3f(x, y, z),
-				GLUrlCameraDirection : GLUniform3f(direction)
+				GLUrlCameraViewMatrix : GLuniformMat4fv(transformation),
+				GLUrlCameraProjection : GLuniformMat4fv(projection.matrix),
+				GLUrlCameraPosition : GLuniform3f(x, y, z),
+				GLUrlCameraDirection : GLuniform3f(direction)
 			]
 		}
 	}

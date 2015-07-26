@@ -35,7 +35,7 @@ public class GLScreenRenderpass : GLRenderpassBase, GLRenderpass {
 		
 		var uniforms : [GLurl : GLUniform] = camera.uniforms
 		for url in uniforms.keys {
-			var location : GLUniformLocation? = program.getUniformLocation(url)
+			var location : GLuniformloc? = program.getUniformLocation(url)
 			
 			if nil == location {continue}
 			
@@ -48,7 +48,7 @@ public class GLScreenRenderpass : GLRenderpassBase, GLRenderpass {
 			var uniforms : [GLurl : GLUniform] = shape.uniforms
 			
 			for url in uniforms.keys {
-				var location : GLUniformLocation? = program.getUniformLocation(url)
+				var location : GLuniformloc? = program.getUniformLocation(url)
 				var uniform : GLUniform = uniforms[url]!
 				if nil == location {continue}
 				uniform.assign(location!)

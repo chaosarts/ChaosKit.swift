@@ -58,6 +58,10 @@ public struct vec1 : Vector {
 		self.x = x
 	}
 	
+	public init (_ v: vec1) {
+		x = v.x
+	}
+	
 	
 	/**
 	Initializes the vector with vec3. The z component will be discarded

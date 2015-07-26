@@ -13,8 +13,34 @@ import OpenGL
 /**
 Struct that holds information about a uniform location within a program
 */
-public class GLUniformLocation : GLLocation {
+public struct GLuniformloc : GLLocation {
+	
+	/// The variable name of the uniform
+	public let name : String
+	
+	/// The location index of the uniform
+	public let index : GLuint
+	
+	/// The description of the uniform
+	public var description : String {
+		get {return "\(name) (index: \(index))"}
+	}
+	
+	/**
+	Initializes the uniform location with the index and name
+	
+	:param: index The index of the uniform
+	:param: name The name of the uniform
+	*/
 	public init (index: GLuint, name: String) {
-		super.init(index, name)
+		self.name = name
+		self.index = index
+	}
+	
+	/**
+	Assigns a 
+	*/
+	public func assign (value: GLUniform) {
+		value.assign(self)
 	}
 }

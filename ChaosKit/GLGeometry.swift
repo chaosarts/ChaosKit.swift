@@ -17,17 +17,26 @@ import Foundation
 /** 
 Protocol for shape geometry
 */
-public protocol GLGeometry : GLShapeProperty {
-	
-	/// Indicates the count of vertices the geometry contains
-	var count : Int {mutating get}
-	
-	/// Indicates wether the geometry uses shared vertices or not
-	var indexed : Bool {get}
-	
+public protocol GLGeometry : GLAttribute {
+		
 	/// Provides the list of indices
-	var indexlist : [Int]? {get}
+	var indexlist : [Int] {get}
 	
-	/// Provides the normals of the geometry
-	var normals : GLShapeProperty? {mutating get}
+	/// Provides the list of vertice
+	var values : [vec3] {get}
+	
+	/** 
+	Appends a new value to the geometry
+	
+	:param: value The value to append
+	*/
+	mutating func append (value: vec3) -> Int
+	
+	
+	/**
+	Adds one or more values to the geometry
+	
+	:param: values A list of value to add to the geometry
+	*/
+	mutating func extend (values: [vec3])
 }

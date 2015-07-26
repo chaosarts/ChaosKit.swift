@@ -1,5 +1,5 @@
 //
-//  GLSurfaceTexture.swift
+//  GLTextureMap.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 08.06.15.
@@ -8,37 +8,80 @@
 
 import Foundation
 
-public protocol GLSurfaceTexture : GLShapeProperty {
-	var texture : GLTexture {get}
-}
-
-public struct GLtexmap2 : GLSurfaceTexture {
+///
+public struct GLtexmap<V: Vector> : GLTextureMap {
 	
-	public var size : Int {get {return 2}}
+	// STORED PROPERTIES
+	// +++++++++++++++++
 	
+	/// Provides the texture to use for texture mapping
 	public private(set) var texture : GLTexture
 	
-	public private(set) var coords : [vec2]
-
+	/// Provides the texture coordinates for texture mapping
+	public private(set) var values : [vec2]
+	
+	/// Indicates whether the coords a re used for dynamic or static draw
 	public var dynamic : Bool = false
 
 	
+	// DERIVED PROPERTIES
+	// ++++++++++++++++++
+	
+	/// Provides the attribute size of one vertex
+	public var size : Int {get {return V.elementCount}}
+	
+	
+	// SUBSCIPTS
+	// +++++++++
+	
+	/**
+	Used to append new texture cooridnates
+	*/
 	public subscript () -> vec2 {
 		get {return vec2()}
-		set {coords.append(newValue)}
+		set {values.append(newValue)}
 	}
 	
-	public subscript (index: Int) -> [GLfloat] {
-		get {return coords[index].array}
-	}
 	
+	// INITIALIZERS
+	// ++++++++++++
+	
+	/**
+	Initializes the text map
+	
+	:param: texture The texture to use for mapping
+	:param: coords The texture coordinates of the vertice
+	*/
 	public init (_ texture: GLTexture, _ coords : [vec2]) {
 		self.texture = texture
-		self.coords = coords
+		self.values = coords
 	}
 	
 	
+	/**
+	Initializes the text map without texture coordinates
+	
+	:param: texture The texture to use for mapping
+	*/
 	public init (_ texture: GLTexture) {
 		self.init(texture, [])
 	}
+	
+	
+	// METHODS
+	// +++++++
+	
+	/**
+	Returns the buffer data for the vertex at given index
+	
+	:param: atIndex The index of the vertex to get the data from
+	:returns: The buffer data as float list
+	*/
+	public func getBufferData (atIndex index: Int) -> [GLfloat] {
+		return values[index].array
+	}
 }
+
+public typealias GLtexmap1 = GLtexmap<vec1>
+public typealias GLtexmap2 = GLtexmap<vec2>
+public typealias GLtexmap3 = GLtexmap<vec3>

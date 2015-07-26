@@ -52,6 +52,186 @@ public struct vec3 : Vector {
 		get {return _vec.z} set {_vec.z = newValue}
 	}
 	
+	/// The xy components as vec2
+	public var xx : vec2 {
+		get {return vec2(_vec.x, _vec.x)}
+	}
+	
+	/// The xy components as vec2
+	public var xy : vec2 {
+		get {return vec2(_vec.x, _vec.y)}
+	}
+	
+	/// The xy components as vec2
+	public var xz : vec2 {
+		get {return vec2(_vec.x, _vec.z)}
+	}
+	
+	/// The xy components as vec2
+	public var yx : vec2 {
+		get {return vec2(_vec.y, _vec.x)}
+	}
+	
+	/// The xy components as vec2
+	public var yy : vec2 {
+		get {return vec2(_vec.y, _vec.y)}
+	}
+	
+	/// The xy components as vec2
+	public var yz : vec2 {
+		get {return vec2(_vec.y, _vec.z)}
+	}
+	
+	/// The xy components as vec2
+	public var zx : vec2 {
+		get {return vec2(_vec.z, _vec.x)}
+	}
+	
+	/// The xy components as vec2
+	public var zy : vec2 {
+		get {return vec2(_vec.z, _vec.y)}
+	}
+	
+	/// The xy components as vec2
+	public var zz : vec2 {
+		get {return vec2(_vec.z, _vec.z)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var xxx : vec3 {
+		get {return vec3(_vec.x, _vec.x, _vec.x)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var xxy : vec3 {
+		get {return vec3(_vec.x, _vec.x, _vec.y)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var xxz : vec3 {
+		get {return vec3(_vec.x, _vec.x, _vec.z)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var xyx : vec3 {
+		get {return vec3(_vec.x, _vec.y, _vec.x)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var xyy : vec3 {
+		get {return vec3(_vec.x, _vec.y, _vec.y)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var xyz : vec3 {
+		get {return vec3(_vec.x, _vec.y, _vec.z)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var xzx : vec3 {
+		get {return vec3(_vec.x, _vec.z, _vec.x)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var xzy : vec3 {
+		get {return vec3(_vec.x, _vec.z, _vec.y)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var xzz : vec3 {
+		get {return vec3(_vec.x, _vec.z, _vec.z)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var yxx : vec3 {
+		get {return vec3(_vec.y, _vec.x, _vec.x)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var yxy : vec3 {
+		get {return vec3(_vec.y, _vec.x, _vec.y)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var yxz : vec3 {
+		get {return vec3(_vec.y, _vec.x, _vec.z)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var yyx : vec3 {
+		get {return vec3(_vec.y, _vec.y, _vec.x)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var yyy : vec3 {
+		get {return vec3(_vec.y, _vec.y, _vec.y)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var yyz : vec3 {
+		get {return vec3(_vec.y, _vec.y, _vec.z)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var yzx : vec3 {
+		get {return vec3(_vec.y, _vec.z, _vec.x)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var yzy : vec3 {
+		get {return vec3(_vec.y, _vec.z, _vec.y)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var yzz : vec3 {
+		get {return vec3(_vec.y, _vec.z, _vec.z)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var zxx : vec3 {
+		get {return vec3(_vec.z, _vec.x, _vec.x)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var zxy : vec3 {
+		get {return vec3(_vec.z, _vec.x, _vec.y)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var zxz : vec3 {
+		get {return vec3(_vec.z, _vec.x, _vec.z)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var zyx : vec3 {
+		get {return vec3(_vec.z, _vec.y, _vec.x)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var zyy : vec3 {
+		get {return vec3(_vec.z, _vec.y, _vec.y)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var zyz : vec3 {
+		get {return vec3(_vec.z, _vec.y, _vec.z)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var zzx : vec3 {
+		get {return vec3(_vec.z, _vec.z, _vec.x)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var zzy : vec3 {
+		get {return vec3(_vec.z, _vec.z, _vec.y)}
+	}
+	
+	/// Selector to return a vec3 with components as the varname is written
+	public var zzz : vec3 {
+		get {return vec3(_vec.z, _vec.z, _vec.z)}
+	}
+	
 	/// The array representation of the vector
 	public var array : [GLfloat] {
 		return [x, y, z]
@@ -85,6 +265,14 @@ public struct vec3 : Vector {
 	*/
 	public init (_ x: GLfloat, _ y: GLfloat, _ z: GLfloat) {
 		_vec = (x, y, z)
+	}
+	
+	
+	/**
+	Initializes the vector with all components having given value
+	*/
+	public init (_ value : GLfloat) {
+		_vec = (value, value, value)
 	}
 	
 	

@@ -1,5 +1,5 @@
 //
-//  GLUniform1.swift
+//  GLuniform1.swift
 //  ChaosKit
 //
 //  Created by Fu Lam Diep on 11.06.15.
@@ -17,7 +17,7 @@ import OpenGL.GL3
 |--------------------------------------------------------------------------
 */
 
-public struct GLUniform1d : GLUniform, FloatLiteralConvertible {
+public struct GLuniform1d : GLUniform, FloatLiteralConvertible {
 	
 	private let _value : GLdouble
 	
@@ -29,13 +29,13 @@ public struct GLUniform1d : GLUniform, FloatLiteralConvertible {
 		self.init(value)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform1d(GLint(location.id), _value)
+	public func assign (location: GLuniformloc) {
+		glUniform1d(GLint(location.index), _value)
 	}
 }
 
 
-public struct GLUniform1f : GLUniform, FloatLiteralConvertible {
+public struct GLuniform1f : GLUniform, FloatLiteralConvertible {
 	
 	private let _value : GLfloat
 	
@@ -47,13 +47,13 @@ public struct GLUniform1f : GLUniform, FloatLiteralConvertible {
 		self.init(value)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform1f(GLint(location.id), _value)
+	public func assign (location: GLuniformloc) {
+		glUniform1f(GLint(location.index), _value)
 	}
 }
 
 
-public struct GLUniform1i : GLUniform, IntegerLiteralConvertible {
+public struct GLuniform1i : GLUniform, IntegerLiteralConvertible {
 	
 	private let _value : GLint
 	
@@ -65,13 +65,13 @@ public struct GLUniform1i : GLUniform, IntegerLiteralConvertible {
 		self.init(value)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform1i(GLint(location.id), _value)
+	public func assign (location: GLuniformloc) {
+		glUniform1i(GLint(location.index), _value)
 	}
 }
 
 
-public struct GLUniform1ui : GLUniform, IntegerLiteralConvertible {
+public struct GLuniform1ui : GLUniform, IntegerLiteralConvertible {
 	
 	private let _value : GLuint
 	
@@ -85,8 +85,8 @@ public struct GLUniform1ui : GLUniform, IntegerLiteralConvertible {
 	}
 
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform1ui(GLint(location.id), _value)
+	public func assign (location: GLuniformloc) {
+		glUniform1ui(GLint(location.index), _value)
 	}
 }
 
@@ -97,7 +97,7 @@ public struct GLUniform1ui : GLUniform, IntegerLiteralConvertible {
 |--------------------------------------------------------------------------
 */
 
-public struct GLUniform1dv : GLUniform {
+public struct GLuniform1dv : GLUniform {
 	
 	private let _value : UnsafePointer<GLdouble>
 	
@@ -108,13 +108,13 @@ public struct GLUniform1dv : GLUniform {
 		_value = toUnsafePointer(value)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform1dv(GLint(location.id), count, _value)
+	public func assign (location: GLuniformloc) {
+		glUniform1dv(GLint(location.index), count, _value)
 	}
 }
 
 
-public struct GLUniform1fv : GLUniform {
+public struct GLuniform1fv : GLUniform {
 	
 	private let _value : UnsafePointer<GLfloat>
 	
@@ -125,13 +125,13 @@ public struct GLUniform1fv : GLUniform {
 		_value = toUnsafePointer(value)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform1fv(GLint(location.id), count, _value)
+	public func assign (location: GLuniformloc) {
+		glUniform1fv(GLint(location.index), count, _value)
 	}
 }
 
 
-public struct GLUniform1iv : GLUniform {
+public struct GLuniform1iv : GLUniform {
 	
 	private let _value : UnsafePointer<GLint>
 	
@@ -142,13 +142,13 @@ public struct GLUniform1iv : GLUniform {
 		_value = toUnsafePointer(value)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform1iv(GLint(location.id), count, _value)
+	public func assign (location: GLuniformloc) {
+		glUniform1iv(GLint(location.index), count, _value)
 	}
 }
 
 
-public struct GLUniform1uiv : GLUniform {
+public struct GLuniform1uiv : GLUniform {
 	
 	private let _value : UnsafePointer<GLuint>
 	
@@ -159,8 +159,8 @@ public struct GLUniform1uiv : GLUniform {
 		_value = toUnsafePointer(value)
 	}
 	
-	public func assign (location: GLUniformLocation) {
-		glUniform1uiv(GLint(location.id), count, _value)
+	public func assign (location: GLuniformloc) {
+		glUniform1uiv(GLint(location.index), count, _value)
 	}
 }
 
@@ -182,10 +182,10 @@ public struct GLUniformTexture : GLUniform {
 	}
 	
 	
-	public func assign (location: GLUniformLocation) {
+	public func assign (location: GLuniformloc) {
 		let index : GLenum = GLenum(GL_TEXTURE0 + Int32(_index))
 		glActiveTexture(index)
 		_texture.bind()
-		glUniform1i(GLint(location.id), GLint(_index))
+		glUniform1i(GLint(location.index), GLint(_index))
 	}
 }

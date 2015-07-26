@@ -18,21 +18,9 @@ import OpenGL
 /**
 Base class for shader program locations
 */
-public class GLLocation : GLBase, Printable {
+public protocol GLLocation : Printable {
 	
 	/// The varname string in the shader program
-	public let name : String
-	
-	public var description : String {
-		get {return "\(name) (id: \(id))"}
-	}
-	
-	/**
-	Initializes the location with passed id (index) and varname
-	*/
-	internal init (_ id: GLuint, _ name: String) {
-		self.name = name
-		super.init(id)
-	}
+	var name : String {get}
 }
 

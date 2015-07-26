@@ -30,7 +30,7 @@ public struct mat4 : QuadraticMatrix {
 	// +++++++++++++++++
 	
 	// Provides a list of matrix components in major-row represenstation
-	private var _mat : [GLfloat] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	public private(set) var array : [GLfloat] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	
 	
 	// DERIVED PROPERTIES
@@ -61,11 +61,6 @@ public struct mat4 : QuadraticMatrix {
 		]
 	}
 	
-	/// The matrix represented as array
-	public var array : [GLfloat] {
-		get {return _mat}
-	}
-	
 	
 	// SUBSCRIPTS
 	// ++++++++++
@@ -74,15 +69,15 @@ public struct mat4 : QuadraticMatrix {
 	public subscript(row index: Int) -> vec4 {
 		get {
 			assert(valid(index), "Invalid mat4 index access.")
-			return vec4(_mat[index], _mat[index + 4], _mat[index + 8], _mat[index + 12])
+			return vec4(array[index], array[index + 4], array[index + 8], array[index + 12])
 		}
 		
 		set {
 			assert(valid(index), "Invalid mat4 index access.")
-			_mat[index] = newValue.x
-			_mat[index + 4] = newValue.y
-			_mat[index + 8] = newValue.z
-			_mat[index + 12] = newValue.w
+			array[index] = newValue.x
+			array[index + 4] = newValue.y
+			array[index + 8] = newValue.z
+			array[index + 12] = newValue.w
 		}
 	}
 	
@@ -90,16 +85,16 @@ public struct mat4 : QuadraticMatrix {
 	public subscript(col index: Int) -> vec4 {
 		get {
 		assert(valid(index), "Invalid mat4 index access.")
-		return vec4(_mat[index * 4], _mat[index * 4 + 1], _mat[index * 4 + 2], _mat[index * 4 + 3])
+		return vec4(array[index * 4], array[index * 4 + 1], array[index * 4 + 2], array[index * 4 + 3])
 		}
 		
 		set {
 			assert(valid(index), "Invalid mat4 index access.")
 			let i : Int = index * 4
-			_mat[i] = newValue.x
-			_mat[i + 1] = newValue.y
-			_mat[i + 2] = newValue.z
-			_mat[i + 3] = newValue.w
+			array[i] = newValue.x
+			array[i + 1] = newValue.y
+			array[i + 2] = newValue.z
+			array[i + 3] = newValue.w
 		}
 	}
 	
@@ -107,12 +102,12 @@ public struct mat4 : QuadraticMatrix {
 	public subscript(row: Int, col: Int) -> GLfloat {
 		get {
 			assert(valid(row) && valid(col), "Invalid mat4 index access.")
-			return _mat[col * 4 + row]
+			return array[col * 4 + row]
 		}
 		
 		set {
 			assert(valid(row) && valid(col), "Invalid mat4 index access.")
-			_mat[col * 4 + row] = newValue
+			array[col * 4 + row] = newValue
 		}
 	}
 	
@@ -139,7 +134,7 @@ public struct mat4 : QuadraticMatrix {
 		for r in 0..<mat4.rows {
 			for c in 0..<mat4.cols {
 				if r == rowIndex || c == colIndex {continue}
-				m.append(_mat[c * 4 + r])
+				m.append(array[c * 4 + r])
 			}
 		}
 		
@@ -188,10 +183,10 @@ public struct mat4 : QuadraticMatrix {
 	:param: vec The axis to rotate around
 	*/
 	mutating public func rotate (rad radian: GLfloat, x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) {
-		let m00 = _mat[0], m10 = _mat[1], m20 = _mat[2], m30 = _mat[3]
-		let m01 = _mat[4], m11 = _mat[5], m21 = _mat[6], m31 = _mat[7]
-		let m02 = _mat[8], m12 = _mat[9], m22 = _mat[10], m32 = _mat[11]
-		let m03 = _mat[12], m13 = _mat[13], m23 = _mat[14], m33 = _mat[15]
+		let m00 = array[0], m10 = array[1], m20 = array[2], m30 = array[3]
+		let m01 = array[4], m11 = array[5], m21 = array[6], m31 = array[7]
+		let m02 = array[8], m12 = array[9], m22 = array[10], m32 = array[11]
+		let m03 = array[12], m13 = array[13], m23 = array[14], m33 = array[15]
 		
 		let cosAngle = cos(radian)
 		let sinAngle = sin(radian)
@@ -210,25 +205,25 @@ public struct mat4 : QuadraticMatrix {
 		let r22 = dz * dz * diffCosAngle + cosAngle
 		
 		
-		_mat[0]  = m00 * r00 + m01 * r10 + m02 * r20
-		_mat[1]  = m10 * r00 + m11 * r10 + m12 * r20
-		_mat[2]  = m20 * r00 + m21 * r10 + m22 * r20
-		_mat[3]  = m30 * r00 + m31 * r10 + m32 * r20
+		array[0]  = m00 * r00 + m01 * r10 + m02 * r20
+		array[1]  = m10 * r00 + m11 * r10 + m12 * r20
+		array[2]  = m20 * r00 + m21 * r10 + m22 * r20
+		array[3]  = m30 * r00 + m31 * r10 + m32 * r20
 		
-		_mat[4]  = m00 * r01 + m01 * r11 + m02 * r21
-		_mat[5]  = m10 * r01 + m11 * r11 + m12 * r21
-		_mat[6]  = m20 * r01 + m21 * r11 + m22 * r21
-		_mat[7]  = m30 * r01 + m31 * r11 + m32 * r21
+		array[4]  = m00 * r01 + m01 * r11 + m02 * r21
+		array[5]  = m10 * r01 + m11 * r11 + m12 * r21
+		array[6]  = m20 * r01 + m21 * r11 + m22 * r21
+		array[7]  = m30 * r01 + m31 * r11 + m32 * r21
 		
-		_mat[8]  = m00 * r02 + m01 * r12 + m02 * r22
-		_mat[9]  = m10 * r02 + m11 * r12 + m12 * r22
-		_mat[10] = m20 * r02 + m21 * r12 + m22 * r22
-		_mat[11] = m30 * r02 + m31 * r12 + m32 * r22
+		array[8]  = m00 * r02 + m01 * r12 + m02 * r22
+		array[9]  = m10 * r02 + m11 * r12 + m12 * r22
+		array[10] = m20 * r02 + m21 * r12 + m22 * r22
+		array[11] = m30 * r02 + m31 * r12 + m32 * r22
 		
-		_mat[12] = m03
-		_mat[13] = m13
-		_mat[14] = m23
-		_mat[15] = m33
+		array[12] = m03
+		array[13] = m13
+		array[14] = m23
+		array[15] = m33
 	}
 	
 	
@@ -249,20 +244,20 @@ public struct mat4 : QuadraticMatrix {
 	:param: alpha The angle
 	*/
 	mutating public func rotateX (rad radian: GLfloat) {
-		let m01 = _mat[4], m11 = _mat[5], m21 = _mat[6], m31 = _mat[7]
-		let m02 = _mat[8], m12 = _mat[9], m22 = _mat[10], m32 = _mat[11]
+		let m01 = array[4], m11 = array[5], m21 = array[6], m31 = array[7]
+		let m02 = array[8], m12 = array[9], m22 = array[10], m32 = array[11]
 		
 		let c = cos(radian)
 		let s = sin(radian)
 		
-		_mat[4] = m01 * c + m02 * s
-		_mat[5] = m11 * c + m12 * s
-		_mat[6] = m21 * c + m22 * s
-		_mat[7] = m31 * c + m32 * s
-		_mat[8] = m01 * -s + m02 * c
-		_mat[9] = m11 * -s + m12 * c
-		_mat[10] = m21 * -s + m22 * c
-		_mat[11] = m31 * -s + m32 * c
+		array[4] = m01 * c + m02 * s
+		array[5] = m11 * c + m12 * s
+		array[6] = m21 * c + m22 * s
+		array[7] = m31 * c + m32 * s
+		array[8] = m01 * -s + m02 * c
+		array[9] = m11 * -s + m12 * c
+		array[10] = m21 * -s + m22 * c
+		array[11] = m31 * -s + m32 * c
 	}
 	
 	
@@ -287,20 +282,20 @@ public struct mat4 : QuadraticMatrix {
 	*/
 	mutating public func rotateY (rad radian: GLfloat) {
 		
-		let m00 = _mat[0], m10 = _mat[4], m20 = _mat[8], m30 = _mat[12]
-		let m02 = _mat[2], m12 = _mat[6], m22 = _mat[10], m32 = _mat[14]
+		let m00 = array[0], m10 = array[4], m20 = array[8], m30 = array[12]
+		let m02 = array[2], m12 = array[6], m22 = array[10], m32 = array[14]
 		
 		let c = cos(radian)
 		let s = sin(radian)
 		
-		_mat[0] = m00 * c + m02 * -s
-		_mat[4] = m10 * c + m12 * -s
-		_mat[8] = m20 * c + m22 * -s
-		_mat[12] = m30 * c + m32 * -s
-		_mat[2] = m00 * s + m02 * c
-		_mat[6] = m10 * s + m12 * c
-		_mat[10] = m20 * s + m22 * c
-		_mat[14] = m30 * s + m32 * c
+		array[0] = m00 * c + m02 * -s
+		array[4] = m10 * c + m12 * -s
+		array[8] = m20 * c + m22 * -s
+		array[12] = m30 * c + m32 * -s
+		array[2] = m00 * s + m02 * c
+		array[6] = m10 * s + m12 * c
+		array[10] = m20 * s + m22 * c
+		array[14] = m30 * s + m32 * c
 	}
 	
 	
@@ -320,20 +315,20 @@ public struct mat4 : QuadraticMatrix {
 	:param: rad The angle in radians
 	*/
 	mutating public func rotateZ (rad radian: GLfloat) {
-		let m00 = _mat[0], m10 = _mat[1], m20 = _mat[2], m30 = _mat[3]
-		let m01 = _mat[4], m11 = _mat[5], m21 = _mat[6], m31 = _mat[7]
+		let m00 = array[0], m10 = array[1], m20 = array[2], m30 = array[3]
+		let m01 = array[4], m11 = array[5], m21 = array[6], m31 = array[7]
 		
 		let c = cos(radian)
 		let s = sin(radian)
 		
-		_mat[0] = m00 * c + m01 * s
-		_mat[1] = m10 * c + m11 * s
-		_mat[2] = m20 * c + m21 * s
-		_mat[3] = m30 * c + m31 * s
-		_mat[4] = m00 * -s + m01 * c
-		_mat[5] = m10 * -s + m11 * c
-		_mat[6] = m20 * -s + m21 * c
-		_mat[7] = m30 * -s + m31 * c
+		array[0] = m00 * c + m01 * s
+		array[1] = m10 * c + m11 * s
+		array[2] = m20 * c + m21 * s
+		array[3] = m30 * c + m31 * s
+		array[4] = m00 * -s + m01 * c
+		array[5] = m10 * -s + m11 * c
+		array[6] = m20 * -s + m21 * c
+		array[7] = m30 * -s + m31 * c
 	}
 	
 	
@@ -343,10 +338,10 @@ public struct mat4 : QuadraticMatrix {
 	:param: x
 	*/
 	public mutating func translateX (tx: GLfloat) {
-		let x : GLfloat = _mat[0] * tx + _mat[12]
-		let y : GLfloat = _mat[1] * tx + _mat[13]
-		let z : GLfloat = _mat[2] * tx + _mat[14]
-		let w : GLfloat = _mat[3] * tx + _mat[15]
+		let x : GLfloat = array[0] * tx + array[12]
+		let y : GLfloat = array[1] * tx + array[13]
+		let z : GLfloat = array[2] * tx + array[14]
+		let w : GLfloat = array[3] * tx + array[15]
 		
 		self[col: 3] = vec4(x, y, z, w)
 	}
@@ -358,10 +353,10 @@ public struct mat4 : QuadraticMatrix {
 	:param: y
 	*/
 	public mutating func translateY (ty: GLfloat) {
-		let x : GLfloat = _mat[4] * ty + _mat[12]
-		let y : GLfloat = _mat[5] * ty + _mat[13]
-		let z : GLfloat = _mat[6] * ty + _mat[14]
-		let w : GLfloat = _mat[7] * ty + _mat[15]
+		let x : GLfloat = array[4] * ty + array[12]
+		let y : GLfloat = array[5] * ty + array[13]
+		let z : GLfloat = array[6] * ty + array[14]
+		let w : GLfloat = array[7] * ty + array[15]
 		
 		self[col: 3] = vec4(x, y, z, w)
 	}
@@ -373,10 +368,10 @@ public struct mat4 : QuadraticMatrix {
 	:param: z
 	*/
 	public mutating func translateZ (tz: GLfloat) {
-		let x : GLfloat = _mat[8] * tz + _mat[12]
-		let y : GLfloat = _mat[9] * tz + _mat[13]
-		let z : GLfloat = _mat[10] * tz + _mat[14]
-		let w : GLfloat = _mat[11] * tz + _mat[15]
+		let x : GLfloat = array[8] * tz + array[12]
+		let y : GLfloat = array[9] * tz + array[13]
+		let z : GLfloat = array[10] * tz + array[14]
+		let w : GLfloat = array[11] * tz + array[15]
 		
 		self[col: 3] = vec4(x, y, z, w)
 	}
@@ -390,21 +385,21 @@ public struct mat4 : QuadraticMatrix {
 	:param: z The z component of the translation vector
 	*/
 	mutating public func translate (x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) {
-		let ax : GLfloat = _mat[0] * dx
-		let bx : GLfloat = _mat[4] * dy
-		let cx : GLfloat = _mat[8] * dz + _mat[12]
+		let ax : GLfloat = array[0] * dx
+		let bx : GLfloat = array[4] * dy
+		let cx : GLfloat = array[8] * dz + array[12]
 		
-		let ay : GLfloat = _mat[1] * dx
-		let by : GLfloat = _mat[5] * dy
-		let cy : GLfloat = _mat[9] * dz + _mat[13]
+		let ay : GLfloat = array[1] * dx
+		let by : GLfloat = array[5] * dy
+		let cy : GLfloat = array[9] * dz + array[13]
 		
-		let az : GLfloat = _mat[2] * dx
-		let bz : GLfloat = _mat[6] * dy
-		let cz : GLfloat = _mat[10] * dz + _mat[14]
+		let az : GLfloat = array[2] * dx
+		let bz : GLfloat = array[6] * dy
+		let cz : GLfloat = array[10] * dz + array[14]
 		
-		let aw : GLfloat = _mat[3] * dx
-		let bw : GLfloat = _mat[7] * dy
-		let cw : GLfloat = _mat[11] * dz + _mat[15]
+		let aw : GLfloat = array[3] * dx
+		let bw : GLfloat = array[7] * dy
+		let cw : GLfloat = array[11] * dz + array[15]
 		
 		self[col: 3] = vec4(ax + bx + cx, ay + by + cy, az + bz + cz, aw + bw + cw)
 	}
@@ -455,9 +450,8 @@ Array representable initalizer
 extension mat4 : ArrayRepresentable {
 	public init(_ array: [GLfloat]) {
 		let maximum : Int = min(mat4.elementCount, array.count)
-		_mat = [GLfloat](count: maximum, repeatedValue: 0.0)
 		for index in 0..<maximum {
-			_mat[index] = array[index]
+			self.array[index] = array[index]
 		}
 	}
 }
@@ -470,7 +464,7 @@ extension mat4 : Equatable {}
 
 public func ==(left: mat4, right: mat4) -> Bool {
 	for index in 0...15 {
-		if left._mat[index] != right._mat[index] {return false}
+		if left.array[index] != right.array[index] {return false}
 	}
 	
 	return true
@@ -484,8 +478,8 @@ extension mat4 : Printable {
 	public var description : String {
 		get {
 			var maxlen : Int = 0
-			for index in 0...(_mat.count - 1) {
-				maxlen = max(maxlen, count(_mat[index].description))
+			for index in 0...(array.count - 1) {
+				maxlen = max(maxlen, count(array[index].description))
 			}
 			
 			maxlen++
@@ -641,25 +635,25 @@ extension mat4 {
 		let s = sin(a)
 		
 		var m : mat4 = mat4()
-		m._mat[0] = ax * ax * d + c
-		m._mat[1] = ax * ay * d + az * s
-		m._mat[2] = ax * az * d - ay * s
-		m._mat[3] = 0
+		m.array[0] = ax * ax * d + c
+		m.array[1] = ax * ay * d + az * s
+		m.array[2] = ax * az * d - ay * s
+		m.array[3] = 0
 
-		m._mat[4] = ax * ay * d - az * s
-		m._mat[5] = ay * ay * d + c
-		m._mat[6] = ay * az * d + ax * s
-		m._mat[7] = 0
+		m.array[4] = ax * ay * d - az * s
+		m.array[5] = ay * ay * d + c
+		m.array[6] = ay * az * d + ax * s
+		m.array[7] = 0
 
-		m._mat[8] = ax * az * d + ay * s
-		m._mat[9] = ay * az * d - ax * s
-		m._mat[10] = az * az * d + c
-		m._mat[11] = 0
+		m.array[8] = ax * az * d + ay * s
+		m.array[9] = ay * az * d - ax * s
+		m.array[10] = az * az * d + c
+		m.array[11] = 0
 
-		m._mat[12] = 0
-		m._mat[13] = 0
-		m._mat[14] = 0
-		m._mat[15] = 1
+		m.array[12] = 0
+		m.array[13] = 0
+		m.array[14] = 0
+		m.array[15] = 1
 		return m
 	}
 	

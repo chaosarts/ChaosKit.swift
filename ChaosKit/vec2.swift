@@ -21,16 +21,16 @@ public struct vec2 : Vector {
 	public static var elementCount : Int {get {return rows * cols}}
 	
 	/** The internal representation of the vector */
-	private var vec : (x: GLfloat, y: GLfloat) = (0, 0)
+	private var _vec : (x: GLfloat, y: GLfloat) = (0, 0)
 	
 	/** The x component of the vector */
 	public var x: GLfloat {
-		get {return vec.x} set {vec.x = newValue}
+		get {return _vec.x} set {_vec.x = newValue}
 	}
 	
 	/** The y component of the vector */
 	public var y: GLfloat {
-		get {return vec.y} set {vec.y = newValue}
+		get {return _vec.y} set {_vec.y = newValue}
 	}
 	
 	/** Provides the vector as array */
@@ -61,6 +61,10 @@ public struct vec2 : Vector {
 	public init () {}
 	
 	
+	public init (_ x: GLfloat) {
+		_vec = (x, x)
+	}
+	
 	/** 
 	Initializes the vector with x and y arguments 
 	
@@ -68,7 +72,21 @@ public struct vec2 : Vector {
 	:param: y
 	*/
 	public init (_ x: GLfloat, _ y: GLfloat) {
-		vec = (x, y)
+		_vec = (x, y)
+	}
+	
+	/**
+	Initializes the vector with vec3. The z component will be discarded
+	*/
+	public init (_ v: vec1) {
+		_vec = (v.x, 0.0)
+	}
+	
+	/**
+	Initializes the vector with vec3. The z component will be discarded
+	*/
+	public init (_ v: vec2) {
+		_vec = (v.x, v.y)
 	}
 	
 	
@@ -76,7 +94,7 @@ public struct vec2 : Vector {
 	Initializes the vector with vec3. The z component will be discarded
 	*/
 	public init (_ v: vec3) {
-		vec = (v.x, v.y)
+		_vec = (v.x, v.y)
 	}
 	
 	
@@ -84,7 +102,7 @@ public struct vec2 : Vector {
 	Initializes the vector with vec3. The z and w component will be discarded
 	*/
 	public init (_ v: vec4) {
-		vec = (v.x, v.y)
+		_vec = (v.x, v.y)
 	}
 	
 	

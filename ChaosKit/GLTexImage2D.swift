@@ -9,15 +9,24 @@
 import Foundation
 import OpenGL
 
-/// Class for OpenGL 2D textures
+/**
+Class to wrap 2D opengl textures.
+*/
 public class GLTexImage2D : GLTexture {
 	
+	/// Provides the width of the texture
 	public var width : Int = 0
 	
 	public var height : Int = 0
 	
 	public init () {
 		super.init(GLenum(GL_TEXTURE_2D))
+		bind()
+		unpackAlignment = 1
+		wrapS = GLint(GL_CLAMP)
+		wrapT = GLint(GL_CLAMP)
+		minFilter = GLint(GL_LINEAR)
+		magFilter = GLint(GL_LINEAR)
 	}
 	
 	
