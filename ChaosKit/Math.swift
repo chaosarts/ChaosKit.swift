@@ -52,22 +52,22 @@ public func restrict<C: Comparable> (value: C, minValue: C, maxValue: C) -> C {
 
 
 public func deg2rad (value: Float) -> Float {
-	return Float(M_PI / 180) * value
+	return Float(M_PI / 180.0) * value
 }
 
 
 public func deg2rad (value: Double) -> Double {
-	return M_PI / 180 * value
+	return M_PI / 180.0 * value
 }
 
 
 public func rad2deg (value: Float) -> Float {
-	return Float(180 / M_PI) * value
+	return Float(180.0 / M_PI) * value
 }
 
 
 public func rad2deg (value: Double) -> Double {
-	return 180 / M_PI * value
+	return 180.0 / M_PI * value
 }
 
 

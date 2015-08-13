@@ -21,7 +21,7 @@ types of attributes (Position, Color, Normals) as lists of vectors contained
 in corresponding GLAttribData objects.
 */
 @objc
-public class GLShape : GLDisplayObject {
+public class GLShape : GLDisplayObject, GLAttributeContainer {
 	
 	// STORED PROPERTIES
 	// +++++++++++++++++
@@ -36,7 +36,7 @@ public class GLShape : GLDisplayObject {
 	internal var _normalTransformation : mat4?
 
 	/// Provides the geometry
-	public var geometry : GLgeom = GLgeom() {
+	public var geometry : GLGeometry = GLgeom() {
 		didSet {_compiled = false}
 	}
 	
@@ -59,11 +59,6 @@ public class GLShape : GLDisplayObject {
 	// DERIVED PROPERTIES
 	// ++++++++++++++++++
 	
-	/// Provides the target
-	public var target : GLBufferTarget {
-		get {return geometry.forElementBuffer ? GLElementBufferTarget(indices: geometry.indexlist) : GLArrayBufferTarget()}
-	}
-	
 	/// Contains the model view matrix
 	public var normalTransformation : mat4 {
 		get {
@@ -72,20 +67,22 @@ public class GLShape : GLDisplayObject {
 		}
 	}
 	
-	/// Provides the bufferables
-	public var bufferables : [GLurl : GLAttribute] {
+	/// Returns the sub attribute containers
+	public var attributeContainers : [GLAttributeContainer] {get {return [surface]}}
+	
+	/// Provides the attributes
+	public var attributes : [GLurl : GLAttribute] {
 		// Since this dictionary will mainly be called for buffering,
 		// it's okay to generate the dictionary, without caching
 		get {
-			// Get the bufferables from surface
-			var bufferables : [GLurl : GLAttribute] = additionalProperties + surface.bufferables
+			// Get the attributes from surface
+			var attributes : [GLurl : GLAttribute] = additionalProperties + surface.attributes
 			
-			// Append geometry and normals (if set)
-			bufferables[GLUrlVertexPosition] = geometry
-			return bufferables
+			// Append geometry
+			attributes[GLUrlVertexPosition] = geometry
+			return attributes
 		}
-	}
-	
+	}	
 	
 	/// Returns all uniforms for a draw call
 	public var uniforms : [GLurl : GLUniform] {
@@ -109,10 +106,11 @@ public class GLShape : GLDisplayObject {
 			
 			if _compiled {return _buffers!}
 			
-			/// Since calling self.bufferables will always have to generate
+			/// Since calling self.attributes will always have to generate
 			/// the dictionary, store it in a local variable. May save a little
 			/// time.
-			var bufferables : [GLurl : GLAttribute] = self.bufferables
+			let attributes : [GLurl : GLAttribute] = self.attributes
+			let count : Int = geometry.count
 			
 			/// It can be assumed, that after _configureBuffer call, that
 			/// buffers are available
@@ -124,12 +122,12 @@ public class GLShape : GLDisplayObject {
 				/// Fetch data with the count of vertice in geometry
 				/// Make sure all other properties serve at least the
 				/// same amount of values.
-				for index in 0..<geometry.count {
+				for index in 0..<count {
 					
 					/// Read how to format the data for the buffer
 					for block in buffer.blocks {
-						var bufferable : GLAttribute = bufferables[block.url]!
-						data += bufferable.getValue(atIndex: index)
+						var attribute : GLAttribute = attributes[block.url]!
+						data += attribute.getBufferData(atIndex: index)
 					}
 				}
 				
@@ -177,31 +175,33 @@ public class GLShape : GLDisplayObject {
 		
 		_buffers = []
 		
-		// Store static bufferables in this array to configure static buffer later
+		// Store static attributes in this array to configure static buffer later
 		var staticBufferables : [GLurl : GLAttribute] = [GLurl : GLAttribute]()
 		
 		// Store the stride
 		var stride : Int = 0
 		
+		var target : GLenum = GLenum(geometry.sharedVertice ? GL_ELEMENT_ARRAY_BUFFER : GL_ARRAY_BUFFER)
+		
 		// Configure dynamic buffers and preconfigure static buffer
-		for url in bufferables.keys {
+		for url in attributes.keys {
 			
-			var bufferable : GLAttribute = bufferables[url]!
+			var attribute : GLAttribute = attributes[url]!
 			
 			// Handle only non-dynmaic buffers
-			if bufferable.dynamic {
+			if attribute.dynamic {
 				/// Creates one buffer per dynamic
-				var block : GLBufferBlock = GLBufferBlock(url, bufferable.size, GL_FLOAT, true, 0, 0)
-				var buffer : GLBuffer = GLBuffer(target: target.value, usage: GLenum(GL_DYNAMIC_DRAW), blocks: [block])
+				var block : GLBufferBlock = GLBufferBlock(url, attribute.size, GL_FLOAT, true, 0, 0)
+				var buffer : GLBuffer = GLBuffer(target: target, usage: GLenum(GL_DYNAMIC_DRAW), blocks: [block])
 				_buffers!.append(buffer)
 				continue
 			}
 			
 			// Append buffer to static group
-			staticBufferables[url] = bufferable
+			staticBufferables[url] = attribute
 			
 			// Increase stride with new appended static attribute
-			stride += bufferable.size
+			stride += attribute.size
 		}
 		
 		
@@ -209,14 +209,13 @@ public class GLShape : GLDisplayObject {
 		var offset : Int = 0
 		var blocks : [GLBufferBlock] = []
 		for url in staticBufferables.keys {
-			var bufferable : GLAttribute = bufferables[url]!
-			var block : GLBufferBlock = GLBufferBlock(url, bufferable.size, GL_FLOAT, true, stride, offset)
+			var attribute : GLAttribute = attributes[url]!
+			var block : GLBufferBlock = GLBufferBlock(url, attribute.size, GL_FLOAT, true, stride, offset)
 			blocks.append(block)
 			offset += Int(block.size)
 		}
 		
-		_buffers!.append(GLBuffer(target: target.value, usage: GLenum(GL_STATIC_DRAW), blocks: blocks))
-		target = geometry.useIndexlist ? GLElementBufferTarget(indices: geometry.indexlist) : GLArrayBufferTarget()
+		_buffers!.append(GLBuffer(target: target, usage: GLenum(GL_STATIC_DRAW), blocks: blocks))
 		_compiled = false
 	}
 }

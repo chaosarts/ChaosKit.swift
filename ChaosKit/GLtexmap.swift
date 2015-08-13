@@ -18,10 +18,13 @@ public struct GLtexmap<V: Vector> : GLTextureMap {
 	public private(set) var texture : GLTexture
 	
 	/// Provides the texture coordinates for texture mapping
-	public private(set) var values : [vec2]
+	public private(set) var values : [V]
 	
 	/// Indicates whether the coords a re used for dynamic or static draw
 	public var dynamic : Bool = false
+	
+	/// Provides the tangent of the tangent space
+	public private(set) var tangent : GLvarattrib4?
 
 	
 	// DERIVED PROPERTIES
@@ -37,8 +40,8 @@ public struct GLtexmap<V: Vector> : GLTextureMap {
 	/**
 	Used to append new texture cooridnates
 	*/
-	public subscript () -> vec2 {
-		get {return vec2()}
+	public subscript () -> V {
+		get {return V()}
 		set {values.append(newValue)}
 	}
 	
@@ -52,7 +55,7 @@ public struct GLtexmap<V: Vector> : GLTextureMap {
 	:param: texture The texture to use for mapping
 	:param: coords The texture coordinates of the vertice
 	*/
-	public init (_ texture: GLTexture, _ coords : [vec2]) {
+	public init (_ texture: GLTexture, _ coords : [V]) {
 		self.texture = texture
 		self.values = coords
 	}

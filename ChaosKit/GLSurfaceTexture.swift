@@ -10,4 +10,6 @@ import Foundation
 
 public protocol GLTextureMap : GLAttribute {
 	var texture : GLTexture {get}
+	
+	var tangent : GLvarattrib4? {get}
 }

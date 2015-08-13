@@ -59,6 +59,24 @@ public struct GLvarattrib<V: Vector> : GLAttribute, ArrayLiteralConvertible {
 	public func getBufferData (atIndex index: Int) -> [GLfloat] {
 		return values[index].array
 	}
+	
+	
+	
+	public mutating func append (value: V) {
+		values.append(value)
+	}
+	
+	
+	public mutating func extend (values: [V]) {
+		for val in values {
+			append(val)
+		}
+	}
+	
+	
+	public mutating func extend (values: V...) {
+		extend(values)
+	}
 }
 
 

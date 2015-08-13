@@ -140,23 +140,28 @@ public class GLShader: GLBase {
 	Sets the source for this shader. The shader will be compiled immediatley
 	*/
 	private func setSources (sources: [String]) {
-		var cstrings : UnsafeMutablePointer<UnsafePointer<GLchar>> = UnsafeMutablePointer<UnsafePointer<GLchar>>.alloc(1)
-		var length : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		
-		var cstring : [GLchar] = ("\n".join(sources)).cStringUsingEncoding(NSUTF8StringEncoding)!
-		cstrings.initialize(toUnsafePointer(cstring))
-		length.initialize(GLint(cstring.count))
+//		let lengthArray : [GLint] = sources.map({element in GLint(count(element))})
+//		var lengths : UnsafeMutablePointer<GLint> = UnsafeMutablePointer(lengthArray)
 		
-		glShaderSource(id, GLsizei(1), cstrings, length)
+		var cstrings : UnsafeMutablePointer<UnsafePointer<GLchar>> = UnsafeMutablePointer<UnsafePointer<GLchar>>.alloc(sources.count)
+		
+		for index in 0..<sources.count {
+			let chars : [GLchar] = sources[index].cStringUsingEncoding(NSUTF8StringEncoding)!
+			cstrings.advancedBy(index).memory = UnsafePointer(chars)
+		}
+		
+		glShaderSource(id, GLsizei(sources.count), cstrings, nil)
 		glPrintError_CK()
 		
 		glCompileShader(id)
 		glPrintError_CK()
 		
+		cstrings.destroy()
+		cstrings.dealloc(sources.count)
+		
 		if (iv(GL_COMPILE_STATUS) != GL_TRUE) {
 			print(String.fromCString(infolog())!)
 		}
-		
-		
 	}
 }

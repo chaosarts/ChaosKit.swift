@@ -395,6 +395,11 @@ public func *(l: GLfloat, r: vec3) -> vec3 {
 }
 
 
+public func /(l: vec3, r: Float) -> vec3 {
+	return l * (1.0 / r)
+}
+
+
 public func dot (l: vec3, r: vec3) -> GLfloat {
 	return l.x * r.x + l.y * r.y + l.z * r.z
 }
@@ -414,6 +419,23 @@ public func gramschmidt (a: vec3, b: vec3, c: vec3) -> [vec3] {
 	let xdot : Float = dot(x, x)
 	let y : vec3 = b - (dot(x, b) / xdot) * x
 	let z : vec3 = c - (dot(x, c) / xdot) * x - (dot(y, c) / dot(y, y)) * y
+	return [x, y, z]
+}
+
+
+public func orthogonalize (a: vec3, b: vec3, c: vec3) -> [vec3] {
+	let x : vec3 = a
+	let xdot : Float = dot(x, x)
+	let y : vec3 = b - (dot(x, b) / xdot) * x
+	let z : vec3 = c - (dot(x, c) / xdot) * x - (dot(y, c) / dot(y, y)) * y
+	return [x, y, z]
+}
+
+
+public func orthonormalize (a: vec3, b: vec3, c: vec3) -> [vec3] {
+	let x : vec3 = a.normalized
+	let y : vec3 = (b - dot(x, b) * x).normalized
+	let z : vec3 = (c - dot(x, c) * x - dot(y, c) * y).normalized
 	return [x, y, z]
 }
 

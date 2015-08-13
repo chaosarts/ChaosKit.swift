@@ -431,6 +431,14 @@ public struct vec4 : Vector {
 		_vec = (v.x, v.y, v.z, 0)
 	}
 	
+	public init (_ v: vec3, _ w: Float) {
+		_vec = (v.x, v.y, v.z, w)
+	}
+	
+	public init (_x: Float, _ v: vec3) {
+		_vec = (x, v.x, v.y, v.z)
+	}
+	
 	
 	public init(_ array: [GLfloat]) {
 		x = array.count > 0 ? array[0] : 0

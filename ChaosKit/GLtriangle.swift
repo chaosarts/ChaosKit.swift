@@ -79,6 +79,67 @@ public struct GLtriangle : GLPrimitive {
 			-ds2 * q1.z + ds1 * q2.z
 		) * quotient
 		
-		return GLtangentspace(t: tangent, b: bitangent, n: normal)
+		return GLtangentspace(tangent: tangent, bitangent: bitangent, normal: normal)
 	}
+	
+	
+	public static func fromGeometry (geom: GLGeometry) -> [GLtriangle] {
+		var triangles : [GLtriangle] = []
+		var queue : Queue = Queue(geom.indexlist)
+		do {
+			let a : vec3 = geom.values[queue.dequeue()!]
+			let b : vec3 = geom.values[queue.dequeue()!]
+			let c : vec3 = geom.values[queue.dequeue()!]
+			triangles.append(GLtriangle(a, b, c))
+		} while(queue.count > 2)
+		
+		return triangles
+	}
+	
+	
+	public static func fromGeometry (geom: GLGeometry, _ index: Int) -> GLtriangle? {
+		let startIndex : Int = index * 3
+		if startIndex + 2 >= geom.indexlist.count {return nil}
+		
+		let a : vec3 = geom.values[geom.indexlist[startIndex]]
+		let b : vec3 = geom.values[geom.indexlist[startIndex + 1]]
+		let c : vec3 = geom.values[geom.indexlist[startIndex + 2]]
+		
+		return GLtriangle(a, b, c)
+	}
+	
+	
+	public static func fromGeometry (geom: GLGeometry, _ point: vec3) -> [GLtriangle] {
+		
+		let index : Int! = geom.indexOf(point)
+		if nil == index {return []}
+		
+		var triangles : [GLtriangle] = []
+		
+		for i in 0..<geom.indexlist.count - 2 {
+			if geom.indexlist[i] != index {continue}
+			
+			let modulo : Int = i % 3
+			let startIndex : Int = i - modulo
+			
+			/// Use `point` as first triangle point and keep
+			/// order by circling through index with modulo
+			let a : vec3 = geom.values[geom.indexlist[startIndex + modulo]]
+			let b : vec3 = geom.values[geom.indexlist[startIndex + (modulo + 1) % 3]]
+			let c : vec3 = geom.values[geom.indexlist[startIndex + (modulo + 2) % 3]]
+			
+			triangles.append(GLtriangle(a, b, c))
+		}
+		
+		return triangles
+	}
+}
+
+
+extension GLtriangle : Equatable {
+
+}
+
+public func ==(lhs: GLtriangle, rhs: GLtriangle) -> Bool {
+	return lhs.a == rhs.a && lhs.b == rhs.b && lhs.c == rhs.c
 }

@@ -15,24 +15,22 @@ import Foundation
 */
 
 /**
-This struct is used for shapes to describe their geometry. No vertex added to 
-this struct is stored twice. Instead an indexlist is used to indicate the order
-of vertice for vertex stream. For `glDrawElements` use the order of values as it is
-stored in the `values` property to the buffer and pass the `indexlist` property.
+This struct is used for shapes to describe their geometry. It's not neccessary
+to set the indexlist explicitly. A index list is created simultanously as a new
+vertex is added to this geometry. Depending on `sharedVertice`, the method
+`getBufferData` returns the vertice as they are stored in `values` or in order
+of `indexlist`.
 */
-public struct GLgeom : GLAttribute, ArrayLiteralConvertible {
+public struct GLgeom : GLGeometry, ArrayLiteralConvertible {
 	
 	// STORED PROPERTIES
 	// +++++++++++++++++
 	
 	/// Provides the vertex position to index
-	private var _indexMap : [String : Int] = [String : Int]()
+	private var _indexmap : [String : Int] = [String : Int]()
 	
 	/// Provides a list of positions of the geometry
 	public private(set) var values : [vec3] = []
-	
-	/// Indicates whether the vertices change often or not
-	public var dynamic : Bool = false
 	
 	/// Provides the size of a vertex
 	public let size : Int = 3
@@ -40,38 +38,25 @@ public struct GLgeom : GLAttribute, ArrayLiteralConvertible {
 	/// Provides the index list
 	public private(set) var indexlist : [Int] = []
 	
+	/// Indicates whether the vertices change often or not
+	public var dynamic : Bool = false
+	
+	/// Indicates if the vertice are shared (element array) or not (array)
+	public var sharedVertice : Bool = false
+	
+	/// Provides the count of vertice, which are uploaded to the buffer, 
+	/// depending on `sharedVertice`
+	public var count : Int {get {return sharedVertice ? values.count : indexlist.count}}
+	
 	
 	// DERIVED PROPERTIES
 	// ++++++++++++++++++
 	
 	/// Provides a list of line according to value/indexlist
-	public var lines : [GLline] {
-		get {
-			var lines : [GLline] = []
-			var line : GLline? = getLine(atIndex: 0)
-			
-			while line != nil {
-				lines.append(line!)
-				line = getLine(atIndex: lines.count)
-			}
-			return lines
-		}
-	}
+	public var lines : [GLline] {get {return getLines(self)}}
 	
 	/// Provides a list of triangles according to value/indexlist
-	public var triangles : [GLtriangle] {
-		get {
-			var triangles : [GLtriangle] = []
-			var triangle : GLtriangle? = getTriangle(atIndex: 0)
-			
-			while nil != triangle {
-				triangles.append(triangle!)
-				triangle = getTriangle(atIndex: triangles.count)
-			}
-			
-			return triangles
-		}
-	}
+	public var triangles : [GLtriangle] {get {return GLtriangle.fromGeometry(self)}}
 	
 	
 	// SUBSCRIPTS
@@ -95,7 +80,7 @@ public struct GLgeom : GLAttribute, ArrayLiteralConvertible {
 	public subscript (index: Int) -> vec3 {
 		get {return values[indexlist[index]]}
 		set {
-			var newIndex : Int? = _indexMap[newValue.description]
+			var newIndex : Int? = _indexmap[newValue.description]
 			if nil == newIndex {
 				newIndex = append(newValue)
 			}
@@ -111,7 +96,7 @@ public struct GLgeom : GLAttribute, ArrayLiteralConvertible {
 	:returns: The index
 	*/
 	public subscript (value: vec3) -> Int? {
-		get {return _indexMap[value.description]}
+		get {return indexOf(value)}
 	}
 	
 	
@@ -122,7 +107,9 @@ public struct GLgeom : GLAttribute, ArrayLiteralConvertible {
 	Initializes the geoemtry with passed values
 	*/
 	public init (_ values: [vec3]) {
-		self.values = values
+		for value in values {
+			append(value)
+		}
 	}
 	
 	
@@ -144,6 +131,13 @@ public struct GLgeom : GLAttribute, ArrayLiteralConvertible {
 	}
 	
 	
+	public init (_ geom: GLGeometry) {
+		self.init(geom.values)
+		self.sharedVertice = geom.sharedVertice
+		self.dynamic = geom.dynamic
+	}
+	
+	
 	/**
 	Returns the value according to the
 	
@@ -151,7 +145,7 @@ public struct GLgeom : GLAttribute, ArrayLiteralConvertible {
 	:return: The vector at given index
 	*/
 	public func getBufferData (atIndex index: Int) -> [GLfloat] {
-		return values[index].array
+		return sharedVertice ? values[index].array : values[indexlist[index]].array
 	}
 	
 	
@@ -161,12 +155,12 @@ public struct GLgeom : GLAttribute, ArrayLiteralConvertible {
 	:param: value The value to append
  	*/
 	public mutating func append (value: vec3) -> Int {
-		var index : Int? = _indexMap[value.description]
+		var index : Int? = _indexmap[value.description]
 		
 		// Value is not in list yet
 		if nil == index {
 			index = values.count
-			_indexMap[value.description] = index!
+			_indexmap[value.description] = index!
 			values.append(value)
 		}
 		
@@ -187,71 +181,7 @@ public struct GLgeom : GLAttribute, ArrayLiteralConvertible {
 	}
 	
 	
-	/**
-	Returns the triangle with given index
-	
-	:param: atIndex The index of the triangle
-	:returns: The triangle
-	*/
-	public func getLine (atIndex index: Int) -> GLline? {
-		let startIndex : Int = index * 2
-		if startIndex + 1 >= indexlist.count {return nil}
-		return GLline(self[startIndex], self[startIndex + 1])
-	}
-	
-	
-	/**
-	Returns the triangle with given index
-	
-	:param: atIndex The index of the triangle
-	:return: The triangle
-	*/
-	public func getTriangle (atIndex index: Int) -> GLtriangle? {
-		let startIndex : Int = index * 3
-		if startIndex + 2 >= indexlist.count {return nil}
-		return GLtriangle(self[startIndex], self[startIndex + 1], self[startIndex + 2])
-	}
-	
-	
-	/**
-	Returns all lines, to which the given point belongs to
-	
-	:param: forPoint The point for which to fetch the lines
-	:return: A list of all lines including the passed point
-	*/
-	public func getLines (forPoint point: vec3) -> [GLline] {
-		let index : Int? = _indexMap[point.description]
-		if nil == index {return []}
-		
-		var lines : [GLline] = []
-		for i in 0..<indexlist.count {
-			if indexlist[i] != index! {continue}
-			let firstIndex : Int = i - i % 2
-			if firstIndex + 1 >= indexlist.count {break}
-			lines.append(GLline(self[firstIndex], self[firstIndex + 1]))
-		}
-		
-		return lines
-	}
-	
-	
-	/**
-	Returns all lines, to which the given point belongs to
-	
-	:param: forPoint The point for which to fetch the lines
-	:return: A list of all lines including the passed point
-	*/
-	public func getTriangles (forPoint point: vec3) -> [GLtriangle] {
-		let index : Int! = _indexMap[point.description]
-		if nil == index {return []}
-		
-		var triangles : [GLtriangle] = []
-		for i in 0..<indexlist.count {
-			if indexlist[i] != index {continue}
-			let firstIndex : Int = i - i % 3
-			if firstIndex + 2 >= indexlist.count {break}
-			triangles.append(GLtriangle(self[firstIndex], self[firstIndex + 1], self[firstIndex + 2]))
-		}
-		return triangles
+	public func indexOf (value: vec3) -> Int? {
+		return _indexmap[value.description]
 	}
 }

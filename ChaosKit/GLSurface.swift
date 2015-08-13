@@ -12,13 +12,13 @@ import OpenGL
 /**
 Surface struct for shapes
 */
-public class GLSurface {
+public class GLSurface : GLAttributeContainer {
 	
 	/// Caches the uniforms
 	private var _uniforms : [GLurl : GLUniform]?
 	
 	/// Provides a map of url domain to surface texture
-	public var _textures : [GLUrlDomain : GLTextureMap] = [GLUrlDomain : GLTextureMap]()
+	public private(set) var _textures : [GLUrlDomain : GLTextureMap] = [GLUrlDomain : GLTextureMap]()
 	
 	/// Returns the count of textures this surface uses
 	public var textureCount : Int {get {return _textures.count}}
@@ -30,7 +30,7 @@ public class GLSurface {
 	public var color : GLAttribute?
 	
 	/// Provides the normals of the surface
-	public var normal : GLAttribute?
+	public var normal : GLnormal?
 	
 	/// Provides the surface texture for bump mapping
 	public var colormap : GLTextureMap? {
@@ -80,6 +80,32 @@ public class GLSurface {
 		set {_textures[.SpecularMap] = newValue}
 	}
 	
+	/// 
+	public var attributeContainers : [GLAttributeContainer] {
+		get {
+			var containers : [GLAttributeContainer] = []
+			return containers
+		}
+	}
+	
+	/// Provides the attribute properties
+	public var attributes : [GLurl : GLAttribute] {
+		get {
+			var attributes : [GLurl : GLAttribute] = [GLurl : GLAttribute]()
+			if nil != color {attributes[GLUrlSurfaceColor] = color!}
+			if nil != normal {attributes[GLUrlVertexNormal] = normal!}
+			
+			for domain in _textures.keys {
+				attributes[GLurl(domain, .TexCoord)] = _textures[domain]!
+				
+				if _textures[domain]!.tangent != nil {
+					attributes[GLurl(domain, .Tangent)] = _textures[domain]!.tangent!
+				}
+			}
+			return attributes
+		}
+	}
+	
 	
 	/// Provides the uniforms to apply to program when using this surface
 	public var uniforms : [GLurl : GLUniform] {
@@ -99,19 +125,6 @@ public class GLSurface {
 			}
 			
 			return _uniforms!
-		}
-	}
-	
-	/// Provides the bufferable properties
-	public var bufferables : [GLurl : GLAttribute] {
-		get {
-			var bufferables : [GLurl : GLAttribute] = [GLurl : GLAttribute]()
-			if nil != color {bufferables[GLUrlSurfaceColor] = color!}
-			
-			for domain in _textures.keys {
-				bufferables[GLurl(domain, .TexCoord)] = _textures[domain]
-			}
-			return bufferables
 		}
 	}
 	

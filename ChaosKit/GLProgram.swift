@@ -20,10 +20,10 @@ public final class GLProgram: GLBase {
 	private var _attribLocations : [String : GLattribloc] = [String : GLattribloc]()
 	
 	/// Contains a uniform alias to variable name map
-	private var _uniformSelectors : [GLurl : String] = [GLurl : String]()
+	private var _uniformUrlMap : [GLurl : String] = [GLurl : String]()
 	
 	/// Contains a attribute alias to variable name map
-	private var _attributeSelectors : [GLurl : String] = [GLurl : String]()
+	private var _attributeUrlMap : [GLurl : String] = [GLurl : String]()
 	
 	
 	// Derived properties
@@ -59,8 +59,16 @@ public final class GLProgram: GLBase {
 	/**
 	Initializes the object
 	*/
-	public init () {
-		super.init(glCreateProgram())
+	public convenience init () {
+		self.init(glCreateProgram())
+	}
+	
+	
+	/** 
+	Initializes the program with given program id from glCreateProgram
+	*/
+	public override init (_ program: GLuint) {
+		super.init(program)
 	}
 	
 	
@@ -131,14 +139,6 @@ public final class GLProgram: GLBase {
 	*/
 	public func attachShader (shader: GLShader!) -> GLProgram {
 		return attachShader(shader.id)
-	}
-	
-	
-	/**
-	Attaches the shader to the program
- 	*/
-	public func attach (shader s: GLShader!) -> GLProgram {
-		return attachShader(s)
 	}
 	
 	
@@ -260,20 +260,6 @@ public final class GLProgram: GLBase {
 	}
 	
 	
-	/**
-	Draws the shape by compiling and uploading the data first
-	
-	:param: shape The shape to draw
- 	*/
-	public func draw (shape: GLShape) {		
-		upload(shape.buffers)
-		glLineWidth(shape.linewidth)
-		glPointSize(shape.pointsize)
-		shape.target.draw(mode: shape.mode, count: GLsizei(shape.geometry.count))
-		unload(shape.buffers)
-	}
-	
-	
 	/** 
 	Retrieves information about an attribute variable in this shader program
 	
@@ -300,7 +286,7 @@ public final class GLProgram: GLBase {
 	:return: The attribute location struct
 	*/
 	public func getAttribLocation (url: GLurl) -> GLattribloc? {
-		var varname : String? = _attributeSelectors[url]
+		var varname : String? = _attributeUrlMap[url]
 		if varname == nil {println("Could not resolve attribute url '\(url)'.Have you set it before?"); return nil}
 		return getAttribLocation(varname!)
 	}
@@ -312,7 +298,7 @@ public final class GLProgram: GLBase {
 	:param: url The attribute url
 	*/
 	public func setAttributeUrl (url: GLurl, forLocation varname: String) {
-		_attributeSelectors[url] = varname
+		_attributeUrlMap[url] = varname
 	}
 	
 	
@@ -340,7 +326,7 @@ public final class GLProgram: GLBase {
 	:param: url The url, which is associated with the target uniform variable
 	*/
 	public func getUniformLocation (url: GLurl) -> GLuniformloc? {
-		var varname : String? = _uniformSelectors[url]
+		var varname : String? = _uniformUrlMap[url]
 		if varname == nil {println("Could not resolve uniform url '\(url)'.Have you set it before?"); return nil}
 		return getUniformLocation(varname!)
 	}
@@ -353,7 +339,7 @@ public final class GLProgram: GLBase {
 	:param: varname The variablename
 	*/
 	public func setUniformUrl (url: GLurl, forLocation varname: String) {
-		_uniformSelectors[url] = varname
+		_uniformUrlMap[url] = varname
 	}
 }
 

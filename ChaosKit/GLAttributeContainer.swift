@@ -7,3 +7,11 @@
 //
 
 import Foundation
+
+public protocol GLAttributeContainer {
+	/// Returns the sub attribute containers
+	var attributeContainers : [GLAttributeContainer] {get}
+	
+	/// Provides a map of attribute objects
+	var attributes : [GLurl : GLAttribute] {get}
+}

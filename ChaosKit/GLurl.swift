@@ -196,6 +196,7 @@ public enum GLAttributeType : String {
 	case Normal = "normal"
 	case Color = "color"
 	case TexCoord = "texcoord"
+	case Tangent = "tangent"
 }
 
 
@@ -227,6 +228,15 @@ public let GLUrlHeightMapTexCoord : GLurl = GLurl(.HeightMap, .TexCoord)
 public let GLUrlDisplacementMapTexCoord : GLurl = GLurl(.DisplacementMap, .TexCoord)
 public let GLUrlSpecularMapTexCoord : GLurl = GLurl(.SpecularMap, .TexCoord)
 public let GLUrlGlowMapTexCoord : GLurl = GLurl(.GlowMap, .TexCoord)
+
+public let GLUrlColorMapTangent : GLurl = GLurl(.ColorMap, .Tangent)
+public let GLUrlDiffuseMapTangent : GLurl = GLurl(.DiffuseMap, .Tangent)
+public let GLUrlNormalMapTangent : GLurl = GLurl(.NormalMap, .Tangent)
+public let GLUrlBumpMapTangent : GLurl = GLurl(.BumpMap, .Tangent)
+public let GLUrlHeightMapTangent : GLurl = GLurl(.HeightMap, .Tangent)
+public let GLUrlDisplacementMapTangent : GLurl = GLurl(.DisplacementMap, .Tangent)
+public let GLUrlSpecularMapTangent : GLurl = GLurl(.SpecularMap, .Tangent)
+public let GLUrlGlowMapTangent : GLurl = GLurl(.GlowMap, .Tangent)
 
 public let GLUrlColorMapSampler : GLurl = GLurl(.ColorMap, .Sampler)
 public let GLUrlDiffuseMapSampler : GLurl = GLurl(.DiffuseMap, .Sampler)
