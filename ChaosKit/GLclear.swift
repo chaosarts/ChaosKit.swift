@@ -57,7 +57,7 @@ public struct GLcolclear : GLclear {
 	/** 
 	Initializes the color mask with given color code
 	
-	:param: color The color to use for color clear
+	- parameter color: The color to use for color clear
 	*/
 	public init (_ color: RGBAColor) {
 		value = color
@@ -73,10 +73,10 @@ public struct GLcolclear : GLclear {
 	/**
 	Initializes the color mask with given color code
 	
-	:param: r The red component of the color code
-	:param: g The green component of the color code
-	:param: b The blue component of the color code
-	:param: a The alpha component of the color code
+	- parameter r: The red component of the color code
+	- parameter g: The green component of the color code
+	- parameter b: The blue component of the color code
+	- parameter a: The alpha component of the color code
 	*/
 	public init (_ r: GLfloat, _ g: GLfloat, _ b: GLfloat, _ a: GLfloat) {
 		self.init ((r, g, b, a))
@@ -104,7 +104,7 @@ public struct GLdepthclear : GLclear {
 	/**
 	Initializes the clear mask with passed depth value
 	
-	:param: depth The depth value to clear
+	- parameter depth: The depth value to clear
 	*/
 	public init (_ depth: GLclampd) {
 		value = depth
@@ -137,7 +137,7 @@ public struct GLstencilclear : GLclear {
 	/**
 	Initializes the clear mask with passed depth value
 	
-	:param: stencil The depth value to clear
+	- parameter stencil: The depth value to clear
 	*/
 	public init (_ stencil: Int) {
 		value = stencil

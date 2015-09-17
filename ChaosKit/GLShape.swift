@@ -20,7 +20,7 @@ The base class for a 3d object in OpenGL. A shape is described by different
 types of attributes (Position, Color, Normals) as lists of vectors contained 
 in corresponding GLAttribData objects.
 */
-@objc
+
 public class GLShape : GLDisplayObject, GLAttributeContainer {
 	
 	// STORED PROPERTIES
@@ -129,7 +129,7 @@ public class GLShape : GLDisplayObject, GLAttributeContainer {
 					
 					/// Read how to format the data for the buffer
 					for block in buffer.blocks {
-						var attribute : GLAttribute = attributes[block.url]!
+						let attribute : GLAttribute = attributes[block.url]!
 						data += attribute.getBufferData(atIndex: index)
 					}
 				}
@@ -167,7 +167,7 @@ public class GLShape : GLDisplayObject, GLAttributeContainer {
 	// +++++++
 	
 	
-	public func draw (#program: GLProgram) -> GLvao! {
+	public func draw (program program: GLProgram) -> GLvao! {
 		var vao : GLvao? = _vaos[program.id]
 		
 		if nil == vao {
@@ -207,18 +207,18 @@ public class GLShape : GLDisplayObject, GLAttributeContainer {
 		// Store the stride
 		var stride : Int = 0
 		
-		var target : GLenum = GLenum(geometry.sharedVertice ? GL_ELEMENT_ARRAY_BUFFER : GL_ARRAY_BUFFER)
+		let target : GLenum = GLenum(geometry.sharedVertice ? GL_ELEMENT_ARRAY_BUFFER : GL_ARRAY_BUFFER)
 		
 		// Configure dynamic buffers and preconfigure static buffer
 		for url in attributes.keys {
 			
-			var attribute : GLAttribute = attributes[url]!
+			let attribute : GLAttribute = attributes[url]!
 			
 			// Handle only non-dynmaic buffers
 			if attribute.dynamic {
 				/// Creates one buffer per dynamic
-				var block : GLBufferBlock = GLBufferBlock(url, attribute.size, GL_FLOAT, true, 0, 0)
-				var buffer : GLBuffer = GLBuffer(target: target, usage: GLenum(GL_DYNAMIC_DRAW), blocks: [block])
+				let block : GLBufferBlock = GLBufferBlock(url, attribute.size, GL_FLOAT, true, 0, 0)
+				let buffer : GLBuffer = GLBuffer(target: target, usage: GLenum(GL_DYNAMIC_DRAW), blocks: [block])
 				_buffers!.append(buffer)
 				continue
 			}
@@ -235,8 +235,8 @@ public class GLShape : GLDisplayObject, GLAttributeContainer {
 		var offset : Int = 0
 		var blocks : [GLBufferBlock] = []
 		for url in staticBufferables.keys {
-			var attribute : GLAttribute = attributes[url]!
-			var block : GLBufferBlock = GLBufferBlock(url, attribute.size, GL_FLOAT, true, stride, offset)
+			let attribute : GLAttribute = attributes[url]!
+			let block : GLBufferBlock = GLBufferBlock(url, attribute.size, GL_FLOAT, true, stride, offset)
 			blocks.append(block)
 			offset += Int(block.size)
 		}

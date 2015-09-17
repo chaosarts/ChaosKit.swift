@@ -13,7 +13,7 @@ Base class for displayable objects. Does not implement the GLDisplayable
 protocol, since it is 'abstract' and therefore it is unknown what to do in 
 display method.
 */
-@objc
+
 public class GLDisplayObject : Identifiable {
 	
 	// STORED PROPERTIES

@@ -247,7 +247,7 @@ public struct vec3 : Vector {
 	
 	/// The magnitude of the vector
 	public var magnitude : GLfloat {
-		return sqrt(dot(self, self))
+		return sqrt(dot(self, r: self))
 	}
 	
 	/// Provides the normalized (unit length) of this vector
@@ -275,9 +275,9 @@ public struct vec3 : Vector {
 	/**
 	Initializes the vector with x, y and z component
 	
-	:param: x The x component
-	:param: y The y component
-	:param: z The z component
+	- parameter x: The x component
+	- parameter y: The y component
+	- parameter z: The z component
 	*/
 	public init (_ x: GLfloat, _ y: GLfloat, _ z: GLfloat) {
 		_vec = (x, y, z)
@@ -295,8 +295,8 @@ public struct vec3 : Vector {
 	/**
 	Initializes the vector from a vec2 and a scalar
 	
-	:param: x The x component
-	:param: v The vector containing two components for this vector
+	- parameter x: The x component
+	- parameter v: The vector containing two components for this vector
 	*/
 	public init (_ x: GLfloat, _ v: vec2) {
 		_vec = (x, v.x, v.y)
@@ -306,8 +306,8 @@ public struct vec3 : Vector {
 	/**
 	Initializes the vector from a vec2 and a scalar
 	
-	:param: v The vector containing two components for this vector
-	:param: z The z component
+	- parameter v: The vector containing two components for this vector
+	- parameter z: The z component
 	*/
 	public init (_ v: vec2, _ z: GLfloat = 0.0) {
 		_vec = (v.x, v.y, z)
@@ -317,7 +317,7 @@ public struct vec3 : Vector {
 	/**
 	Initializes the vector from a vec4 by taking x, y and z
 	
-	:param: v The vector containing three components for this vector
+	- parameter v: The vector containing three components for this vector
 	*/
 	public init (_ v: vec4) {
 		_vec = (v.x, v.y, v.z)
@@ -327,7 +327,7 @@ public struct vec3 : Vector {
 	/**
 	Initializes the vector from an array
 	
-	:param: array
+	- parameter array:
 	*/
 	public init(_ array: [GLfloat]) {
 		x = array.count > 0 ? array[0] : 0
@@ -370,7 +370,7 @@ extension vec3 : ArrayLiteralConvertible {
 	}
 }
 
-extension vec3 : Printable {
+extension vec3 : CustomStringConvertible {
 	public var description : String {get {return "(\(x), \(y), \(z))"}}
 }
 
@@ -432,35 +432,35 @@ public func cross(l: vec3, r: vec3) -> vec3 {
 
 public func gramschmidt (a: vec3, b: vec3, c: vec3) -> [vec3] {
 	let x : vec3 = a
-	let xdot : Float = dot(x, x)
-	let y : vec3 = b - (dot(x, b) / xdot) * x
-	let z : vec3 = c - (dot(x, c) / xdot) * x - (dot(y, c) / dot(y, y)) * y
+	let xdot : Float = dot(x, r: x)
+	let y : vec3 = b - (dot(x, r: b) / xdot) * x
+	let z : vec3 = c - (dot(x, r: c) / xdot) * x - (dot(y, r: c) / dot(y, r: y)) * y
 	return [x.normalized, y.normalized, z.normalized]
 }
 
 
 public func orthogonalize (a: vec3, b: vec3, c: vec3) -> [vec3] {
 	let x : vec3 = a
-	let xdot : Float = dot(x, x)
-	let y : vec3 = b - (dot(x, b) / xdot) * x
-	let z : vec3 = c - (dot(x, c) / xdot) * x - (dot(y, c) / dot(y, y)) * y
+	let xdot : Float = dot(x, r: x)
+	let y : vec3 = b - (dot(x, r: b) / xdot) * x
+	let z : vec3 = c - (dot(x, r: c) / xdot) * x - (dot(y, r: c) / dot(y, r: y)) * y
 	return [x, y, z]
 }
 
 
 public func orthonormalize (a: vec3, b: vec3, c: vec3) -> [vec3] {
 	let x : vec3 = a.normalized
-	let y : vec3 = (b - dot(x, b) * x).normalized
-	let z : vec3 = (c - dot(x, c) * x - dot(y, c) * y).normalized
+	let y : vec3 = (b - dot(x, r: b) * x).normalized
+	let z : vec3 = (c - dot(x, r: c) * x - dot(y, r: c) * y).normalized
 	return [x, y, z]
 }
 
 
 public func makeRightHandBasis (a: vec3, b: vec3, c: vec3) -> [vec3] {
-	return [a, b, dot(cross(a, b), c) > 0 ? c : -c]
+	return [a, b, dot(cross(a, r: b), r: c) > 0 ? c : -c]
 }
 
 
 public func makeLeftHandBasis (a: vec3, b: vec3, c: vec3) -> [vec3] {
-	return [a, b, dot(cross(a, b), c) < 0 ? c : -c]
+	return [a, b, dot(cross(a, r: b), r: c) < 0 ? c : -c]
 }

@@ -18,7 +18,7 @@ import Foundation
 This struct is used to select attribute locations from a GLProgram object
 anonymously.
 */
-public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLiteralConvertible {
+public struct GLurl : CustomStringConvertible, Hashable, StringLiteralConvertible, ArrayLiteralConvertible {
 	
 	private static var _delimiter : Character = "."
 	
@@ -27,7 +27,7 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	
 	/// String representation of the url
 	public var description : String {
-		get {return String(GLurl._delimiter).join(_domains)}
+		get {return _domains.joinWithSeparator(String(GLurl._delimiter))}
 	}
 	
 	/// Hashvalue representation
@@ -37,7 +37,7 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	/**
 	Initializes the url with passed domains, where index 0 is top level
 	
-	:param: domains
+	- parameter domains:
  	*/
 	public init (_ domains: [String]) {
 		_domains = domains
@@ -47,8 +47,8 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	/**
 	Initializes the url with given type and domain
 	
-	:param: type The type name for the anonymous attribute location
-	:param: domain The domain to specify the context
+	- parameter type: The type name for the anonymous attribute location
+	- parameter domain: The domain to specify the context
 	*/
 	public init (arrayLiteral domains: String...) {
 		self.init(domains)
@@ -58,9 +58,9 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	/**
 	Initializes the url with given domain
 	
-	:param: domain
-	:param: subdomain
-	:param: subdomains
+	- parameter domain:
+	- parameter subdomain:
+	- parameter subdomains:
 	*/
 	public init (_ domain: String, _ subdomain: GLAttributeType, _ subdomains: String...) {
 		self.init([domain, subdomain.rawValue] + subdomains)
@@ -70,9 +70,9 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	/**
 	Initializes the url with given domain
 	
-	:param: domain
-	:param: subdomain
-	:param: subdomains
+	- parameter domain:
+	- parameter subdomain:
+	- parameter subdomains:
 	*/
 	public init (_ domain: GLUrlDomain, _ subdomain: GLAttributeType, _ subdomains: String...) {
 		self.init([domain.rawValue, subdomain.rawValue] + subdomains)
@@ -82,8 +82,8 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	/**
 	Initializes the url with default top level domain
 	
-	:param: subdomain
-	:param: subdomains
+	- parameter subdomain:
+	- parameter subdomains:
  	*/
 	public init (_ subdomain: GLAttributeType, _ subdomains: String...) {
 		self.init([GLUrlDomain.Default.rawValue, subdomain.rawValue] + subdomains)
@@ -93,9 +93,9 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	/**
 	Initializes the url with given domain
 	
-	:param: domain
-	:param: subdomain
-	:param: subdomains
+	- parameter domain:
+	- parameter subdomain:
+	- parameter subdomains:
 	*/
 	public init (_ domain: String, _ subdomain: GLUniformType, _ subdomains: String...) {
 		self.init([domain, subdomain.rawValue] + subdomains)
@@ -105,9 +105,9 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	/**
 	Initializes the url with given domain
 	
-	:param: domain
-	:param: subdomain
-	:param: subdomains
+	- parameter domain:
+	- parameter subdomain:
+	- parameter subdomains:
 	*/
 	public init (_ domain: GLUrlDomain, _ subdomain: GLUniformType, _ subdomains: String...) {
 		self.init([domain.rawValue, subdomain.rawValue] + subdomains)
@@ -117,8 +117,8 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	/**
 	Initializes the url with default top level domain
 	
-	:param: subdomain
-	:param: subdomains
+	- parameter subdomain:
+	- parameter subdomains:
 	*/
 	public init (_ subdomain: GLUniformType, _ subdomains: String...) {
 		self.init([GLUrlDomain.Default.rawValue, subdomain.rawValue] + subdomains)
@@ -128,17 +128,17 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	/**
 	Initalizer to assign a selecotr variable with a string literal
 	
-	:param: stringLiteral
+	- parameter stringLiteral:
 	*/
 	public init(stringLiteral value: String) {
-		self.init(split(value, maxSplit: 1, allowEmptySlices: false, isSeparator: {(value: Character) -> Bool in return value == GLurl._delimiter}))
+		self.init(value.characters.split(1, allowEmptySlices: false, isSeparator: {(value: Character) -> Bool in return value == GLurl._delimiter}).map { String($0) })
 	}
 	
 	
 	/**
 	Initalizer to assign a selecotr variable with a string literal
 	
-	:param: stringLiteral
+	- parameter stringLiteral:
 	*/
 	public init(unicodeScalarLiteral value: String) {
 		self.init(stringLiteral: value)
@@ -148,7 +148,7 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 	/**
 	Initalizer to assign a selecotr variable with a string literal
 	
-	:param: stringLiteral
+	- parameter stringLiteral:
 	*/
 	public init(extendedGraphemeClusterLiteral value: String) {
 		self.init(stringLiteral: value)
@@ -159,8 +159,8 @@ public struct GLurl : Printable, Hashable, StringLiteralConvertible, ArrayLitera
 /**
 Compare function for Hashable/Equatable protocol
 
-:param: left
-:param: right
+- parameter left:
+- parameter right:
 :return: Returns true when the hashables has the same values
 */
 public func ==(left: GLurl, right: GLurl) -> Bool {

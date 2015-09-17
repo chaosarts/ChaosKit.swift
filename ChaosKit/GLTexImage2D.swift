@@ -38,9 +38,9 @@ public class GLTexImage2D : GLTexture {
 	
 	
 	public func useImage (image: CGImage) {
-		var width : Int = CGImageGetWidth(image)
-		var height : Int = CGImageGetHeight(image)
-		var bitmap : NSBitmapImageRep = NSBitmapImageRep(CGImage: image)
+		let width : Int = CGImageGetWidth(image)
+		let height : Int = CGImageGetHeight(image)
+		let bitmap : NSBitmapImageRep = NSBitmapImageRep(CGImage: image)
 		
 		setPixels(bitmap.bitmapData, width: width, height: height, format: format, type: type)
 	}
@@ -57,13 +57,13 @@ public class GLTexImage2D : GLTexture {
 	
 	
 	public func loadFromFilepath (filepath: String!) {
-		var url : NSURL? = NSURL.fileURLWithPath(filepath)
+		let url : NSURL? = NSURL.fileURLWithPath(filepath)
 		loadFromUrl(url)
 	}
 	
 	
 	public func loadFromResource (resource: String, ofType type: String?) {
-		var path : String? = NSBundle.mainBundle().pathForResource(resource, ofType: type)
+		let path : String? = NSBundle.mainBundle().pathForResource(resource, ofType: type)
 		loadFromFilepath(path)
 	}
 }

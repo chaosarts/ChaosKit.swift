@@ -131,8 +131,8 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Returns the submatrix by removing a row and column at given indices
 	
-	:param: row The row index to remove
-	:param: col The col index to remove
+	- parameter row: The row index to remove
+	- parameter col: The col index to remove
 	*/
 	public func submatrix(row rowIndex: Int, col colIndex: Int) -> mat3 {
 		assert(valid(rowIndex) && valid(colIndex), "Bad index access for mat4")
@@ -152,8 +152,8 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Rotates the matrix around an arbitrary axis, given by vec
 	
-	:param: alpha The angle to rotate about
-	:param: vec The axis to rotate around
+	- parameter alpha: The angle to rotate about
+	- parameter vec: The axis to rotate around
 	*/
 	mutating public func rotate (deg degree: GLfloat, axis: vec3) {
 		rotate(deg: degree, x: axis.x, y: axis.y, z: axis.z)
@@ -163,8 +163,8 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Rotates the matrix around an arbitrary axis, given by vec
 	
-	:param: alpha The angle to rotate about
-	:param: vec The axis to rotate around
+	- parameter alpha: The angle to rotate about
+	- parameter vec: The axis to rotate around
 	*/
 	mutating public func rotate (rad radian: GLfloat, axis: vec3) {
 		rotate(rad: radian, x: axis.x, y: axis.y, z: axis.z)
@@ -174,8 +174,8 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Rotates the matrix around an arbitrary axis, given by the vector components
 	
-	:param: alpha The angle to rotate about
-	:param: vec The axis to rotate around
+	- parameter alpha: The angle to rotate about
+	- parameter vec: The axis to rotate around
 	*/
 	mutating public func rotate (deg degree: GLfloat, x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) {
 		let radian : GLfloat = deg2rad(degree)
@@ -186,8 +186,8 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Rotates the matrix around an arbitrary axis, given by the vector components
 	
-	:param: alpha The angle to rotate about
-	:param: vec The axis to rotate around
+	- parameter alpha: The angle to rotate about
+	- parameter vec: The axis to rotate around
 	*/
 	mutating public func rotate (rad radian: GLfloat, x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) {
 		let m00 = array[0], m10 = array[1], m20 = array[2], m30 = array[3]
@@ -237,7 +237,7 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Rotates the matrix around the x axis
 	
-	:param: alpha The angle
+	- parameter alpha: The angle
 	*/
 	mutating public func rotateX (deg degree: GLfloat) {
 		let rad : GLfloat = deg2rad(degree)
@@ -248,7 +248,7 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Rotates the matrix around the x axis
 	
-	:param: alpha The angle
+	- parameter alpha: The angle
 	*/
 	mutating public func rotateX (rad radian: GLfloat) {
 		let m01 = array[4], m11 = array[5], m21 = array[6], m31 = array[7]
@@ -271,7 +271,7 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Rotates the matrix around the y axis
 	
-	:param: alpha The angle
+	- parameter alpha: The angle
 	*/
 	mutating public func rotateY (deg degree: GLfloat) {
 		let rad : GLfloat = deg2rad(degree)
@@ -282,10 +282,10 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Rotates the matrix around the y axis
 	
-	:param: alpha The angle
-	:param: x Component of the rotation vector
-	:param: y Component of the rotation vector
-	:param: z Component of the rotation vector
+	- parameter alpha: The angle
+	- parameter x: Component of the rotation vector
+	- parameter y: Component of the rotation vector
+	- parameter z: Component of the rotation vector
 	*/
 	mutating public func rotateY (rad radian: GLfloat) {
 		
@@ -309,7 +309,7 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Rotates the matrix around the z axis
 	
-	:param: deg The angle in degrees
+	- parameter deg: The angle in degrees
 	*/
 	mutating public func rotateZ (deg degree: GLfloat) {
 		let rad : GLfloat = deg2rad(degree)
@@ -319,7 +319,7 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Rotates the matrix around the z axis
 	
-	:param: rad The angle in radians
+	- parameter rad: The angle in radians
 	*/
 	mutating public func rotateZ (rad radian: GLfloat) {
 		let m00 = array[0], m10 = array[1], m20 = array[2], m30 = array[3]
@@ -342,7 +342,7 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Translates in x direction
 	
-	:param: x
+	- parameter x:
 	*/
 	public mutating func translateX (tx: GLfloat) {
 		let x : GLfloat = array[0] * tx + array[12]
@@ -357,7 +357,7 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Translates in y direction
 	
-	:param: y
+	- parameter y:
 	*/
 	public mutating func translateY (ty: GLfloat) {
 		let x : GLfloat = array[4] * ty + array[12]
@@ -372,7 +372,7 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Translates in z direction
 	
-	:param: z
+	- parameter z:
 	*/
 	public mutating func translateZ (tz: GLfloat) {
 		let x : GLfloat = array[8] * tz + array[12]
@@ -387,9 +387,9 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Translates the matrix along the vector passed as single components
 	
-	:param: x The x component of the translation vector
-	:param: y The y component of the translation vector
-	:param: z The z component of the translation vector
+	- parameter x: The x component of the translation vector
+	- parameter y: The y component of the translation vector
+	- parameter z: The z component of the translation vector
 	*/
 	mutating public func translate (x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) {
 		let ax : GLfloat = array[0] * dx
@@ -415,7 +415,7 @@ public struct mat4 : QuadraticMatrix {
 	/**
 	Translates the matrix along the passed vector
 	
-	:param: vec The vector to translate along
+	- parameter vec: The vector to translate along
 	*/
 	mutating public func translate (vec: vec3) {
 		translate(x: vec.x, y: vec.y, z: vec.z)
@@ -426,8 +426,8 @@ public struct mat4 : QuadraticMatrix {
 	Determines if the passed index is valid for accessing components
 	of the matrix.
 	
-	:param: index The index to validate
-	:returns: True when index is valid (between 0 and 3), otherwise false
+	- parameter index: The index to validate
+	- returns: True when index is valid (between 0 and 3), otherwise false
 	*/
 	private func valid (index: Int) -> Bool {
 		return index >= 0 && index < 4
@@ -481,7 +481,7 @@ public func ==(left: mat4, right: mat4) -> Bool {
 /** 
 Printable
 */
-extension mat4 : Printable {
+extension mat4 : CustomStringConvertible {
 	public var description : String {get {return toString(self)}}
 }
 
@@ -503,8 +503,8 @@ extension mat4 {
 	/**
 	Creates a rotation matrix with rotation angle alpha around the x axis
 	
-	:param: alpha The rotation angle in radians
-	:returns: The rotation matrix
+	- parameter alpha: The rotation angle in radians
+	- returns: The rotation matrix
 	*/
 	public static func makeRotationX (rad radian: GLfloat) -> mat4 {
 		let cosine = cos(radian)
@@ -522,8 +522,8 @@ extension mat4 {
 	/**
 	Creates a rotation matrix with rotation angle alpha around the x axis
 	
-	:param: alpha The rotation angle in degrees
-	:returns: The rotation matrix
+	- parameter alpha: The rotation angle in degrees
+	- returns: The rotation matrix
 	*/
 	public static func makeRotationX (deg degree: GLfloat) -> mat4 {
 		let radian : GLfloat = deg2rad(degree)
@@ -534,8 +534,8 @@ extension mat4 {
 	/**
 	Creates a rotation matrix with rotation angle alpha around the y axis
 	
-	:param: alpha The rotation angle in radians
-	:returns: The rotation matrix
+	- parameter alpha: The rotation angle in radians
+	- returns: The rotation matrix
 	*/
 	public static func makeRotationY (rad radian: GLfloat) -> mat4 {
 		let cosine = cos(radian)
@@ -552,8 +552,8 @@ extension mat4 {
 	/**
 	Creates a rotation matrix with rotation angle alpha around the y axis
 	
-	:param: alpha The rotation angle in degrees
-	:returns: The rotation matrix
+	- parameter alpha: The rotation angle in degrees
+	- returns: The rotation matrix
 	*/
 	public static func makeRotationY (deg degree: GLfloat) -> mat4 {
 		let radian : GLfloat = deg2rad(degree)
@@ -564,8 +564,8 @@ extension mat4 {
 	/**
 	Creates a z rotation matrix with rotation angle alpha
 	
-	:param: alpha The rotation angle
-	:returns: The rotation matrix
+	- parameter alpha: The rotation angle
+	- returns: The rotation matrix
 	*/
 	public static func makeRotationZ (rad radian: GLfloat) -> mat4 {
 		let cosine = cos(radian)
@@ -582,8 +582,8 @@ extension mat4 {
 	/**
 	Creates a rotation matrix with rotation angle alpha around the z axis
 	
-	:param: alpha The rotation angle in degrees
-	:returns: The rotation matrix
+	- parameter alpha: The rotation angle in degrees
+	- returns: The rotation matrix
 	*/
 	public static func makeRotationZ (deg degree: GLfloat) -> mat4 {
 		let radian : GLfloat = deg2rad(degree)
@@ -594,9 +594,9 @@ extension mat4 {
 	/**
 	Creates a rotation matrix for an arbitrary axis with rotation angle alpha
 	
-	:param: alpha The rotation angle
-	:param: axis The vector to rotate around
-	:returns: The rotation matrix
+	- parameter alpha: The rotation angle
+	- parameter axis: The vector to rotate around
+	- returns: The rotation matrix
 	*/
 	public static func makeRotation (alpha a: GLfloat, axis: vec3) -> mat4 {
 		return mat4.makeRotation(alpha: a, x: axis.x, y: axis.y, z: axis.z)
@@ -606,11 +606,11 @@ extension mat4 {
 	/**
 	Creates a rotation matrix for an arbitrary axis with rotation angle alpha
 	
-	:param: alpha The rotation angle
-	:param: x The x component of the translation vector
-	:param: y The y component of the translation vector
-	:param: z The z component of the translation vector
-	:returns: The rotation matrix
+	- parameter alpha: The rotation angle
+	- parameter x: The x component of the translation vector
+	- parameter y: The y component of the translation vector
+	- parameter z: The z component of the translation vector
+	- returns: The rotation matrix
 	*/
 	public static func makeRotation (alpha a: GLfloat, x ax: GLfloat, y ay: GLfloat, z az: GLfloat) -> mat4 {
 		
@@ -645,7 +645,7 @@ extension mat4 {
 	/**
 	Returns a matrix with translation in given direction
 	
-	:param: direction The direction for the translation
+	- parameter direction: The direction for the translation
 	:return: The translation matrix
 	*/
 	public static func makeTranslate (direction: vec3) -> mat4 {
@@ -656,9 +656,9 @@ extension mat4 {
 	/**
 	Returns a matrix with translation in given direction
 	
-	:param: x The x direction for the translation
-	:param: y The y direction for the translation
-	:param: z The z direction for the translation
+	- parameter x: The x direction for the translation
+	- parameter y: The y direction for the translation
+	- parameter z: The z direction for the translation
 	:return: The translation matrix
 	*/
 	public static func makeTranslate (x dx: GLfloat, y dy: GLfloat, z dz: GLfloat) -> mat4 {
@@ -674,12 +674,12 @@ extension mat4 {
 	/** 
 	Returns a orthographic projection matrix
 	
-	:param: left The left bound of the view volume
-	:param: right The right bound of the view volume
-	:param: bottom The bottom bound of the view volume
-	:param: top The top bound of the view volume
-	:param: near The near bound of the view volume
-	:param: far The far bound of the view volume
+	- parameter left: The left bound of the view volume
+	- parameter right: The right bound of the view volume
+	- parameter bottom: The bottom bound of the view volume
+	- parameter top: The top bound of the view volume
+	- parameter near: The near bound of the view volume
+	- parameter far: The far bound of the view volume
 	*/
 	public static func makeOrtho (left l: GLfloat, right: GLfloat, bottom: GLfloat,
 		top: GLfloat, near: GLfloat, far: GLfloat) -> mat4 {
@@ -703,12 +703,12 @@ extension mat4 {
 	/**
 	Creates a perspective projection matrix
 	
-	:param: left The left boundary of the viewport
-	:param: right The right boundary of the viewport
-	:param: top The top boundary of the viewport
-	:param: bottom The bottom boundary of the viewport
-	:param: near The near boundary
-	:param: far The far boundary
+	- parameter left: The left boundary of the viewport
+	- parameter right: The right boundary of the viewport
+	- parameter top: The top boundary of the viewport
+	- parameter bottom: The bottom boundary of the viewport
+	- parameter near: The near boundary
+	- parameter far: The far boundary
 	*/
 	public static func makeFrustum (left l: GLfloat, right: GLfloat, bottom: GLfloat, top: GLfloat, near: GLfloat, far: GLfloat) -> mat4 {
 		let x = (2 * near) / (right - l)
@@ -730,10 +730,10 @@ extension mat4 {
 	/**
 	Returns a perspective projection matrix
 	
-	:param:  fovy
-	:param:  aspect
-	:param:  near
-	:param:  far
+	- parameter  fovy:
+	- parameter  aspect:
+	- parameter  near:
+	- parameter  far:
  	*/
 	public static func makePerspective (fovy f: GLfloat, aspect: GLfloat, near: GLfloat, far: GLfloat) -> mat4 {
 		
@@ -852,14 +852,14 @@ public func *(l: mat4, r: mat4) -> mat4 {
 //,/ Left side multiplication of a matrix and a vector. The vector is
 /// considered as a column vector
 public func *(l: mat4, r: vec4) -> vec4 {
-	return [dot(l[row: 0], r), dot(l[row: 1], r), dot(l[row: 2], r), dot(l[row: 3], r)]
+	return [dot(l[row: 0], r: r), dot(l[row: 1], r: r), dot(l[row: 2], r: r), dot(l[row: 3], r: r)]
 }
 
 
 /// Right side multiplication of a matrix and a vector. The vector is
 /// considered as a row vector
 public func *(l: vec4, r: mat4) -> vec4 {
-	return [dot(l, r[col: 0]), dot(l, r[col: 1]), dot(l, r[col: 2]), dot(l, r[col: 3])]
+	return [dot(l, r: r[col: 0]), dot(l, r: r[col: 1]), dot(l, r: r[col: 2]), dot(l, r: r[col: 3])]
 }
 
 

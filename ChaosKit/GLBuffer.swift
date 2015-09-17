@@ -83,7 +83,7 @@ public class GLBuffer {
 	/**
 	Initilaizes the data buffer
 	
-	:param: usage The usage of this buffer (GL_STATIC_DRAW, GL_DYNAMIC_DRAW)
+	- parameter usage: The usage of this buffer (GL_STATIC_DRAW, GL_DYNAMIC_DRAW)
 	*/
 	public convenience init (target: Int32, usage: Int32, blocks: [GLBufferBlock] = []) {
 		self.init(target: GLenum(target), usage: GLenum(usage), blocks: blocks)
@@ -101,7 +101,7 @@ public class GLBuffer {
 	
 	
 	public func iv (pname: Int32) -> GLint {
-		var params : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		let params : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		glGetBufferParameteriv(target, GLenum(pname), params)
 		return params.memory
 	}
@@ -109,8 +109,8 @@ public class GLBuffer {
 	/**
 	Buffers the buffer to the targeted buffer
 	
-	:param: target The targeted buffer (GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER)
-	:param: data The data to buffer
+	- parameter target: The targeted buffer (GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER)
+	- parameter data: The data to buffer
 	*/
 	public func buffer (data: [GLfloat]) {
 		_count = data.count
@@ -120,8 +120,8 @@ public class GLBuffer {
 	/**
 	Updates sub data in the buffer
 	
-	:param: target The targeted buffer type
-	:param: data The sub data to buffer
+	- parameter target: The targeted buffer type
+	- parameter data: The sub data to buffer
 	*/
 	public func update (data: [GLfloat], offset: Int) {
 		glBufferSubData(target, GLintptr(offset) , data.count * sizeof(GLfloat), data)
@@ -131,7 +131,7 @@ public class GLBuffer {
 	/**
 	Binds the buffer with passed target
 	
-	:param: target The targeted buffer
+	- parameter target: The targeted buffer
  	*/
 	public func bind () {
 		glBindBuffer(target, name)
@@ -141,7 +141,7 @@ public class GLBuffer {
 	/** 
 	Frees the buffer
 	
-	:param: target
+	- parameter target:
 	*/
 	public func unbind () {
 		glBindBuffer(target, 0)

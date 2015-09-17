@@ -9,7 +9,7 @@
 import Foundation
 
 
-public struct Cstring : Printable {
+public struct Cstring : CustomStringConvertible {
 	
 	///
 	public private(set) var chars : [CChar]

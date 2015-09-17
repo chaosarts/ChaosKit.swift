@@ -55,8 +55,8 @@ public struct GLtexmap2 : GLTextureMap2D {
 	/**
 	Initializes the text map
 	
-	:param: texture The texture to use for mapping
-	:param: coords The texture coordinates of the vertice
+	- parameter texture: The texture to use for mapping
+	- parameter coords: The texture coordinates of the vertice
 	*/
 	public init (_ texture: GLTexImage2D, _ coords : [vec2]) {
 		self.texture = texture
@@ -67,7 +67,7 @@ public struct GLtexmap2 : GLTextureMap2D {
 	/**
 	Initializes the text map without texture coordinates
 	
-	:param: texture The texture to use for mapping
+	- parameter texture: The texture to use for mapping
 	*/
 	public init (_ texture: GLTexImage2D) {
 		self.init(texture, [])
@@ -80,8 +80,8 @@ public struct GLtexmap2 : GLTextureMap2D {
 	/**
 	Returns the buffer data for the vertex at given index
 	
-	:param: atIndex The index of the vertex to get the data from
-	:returns: The buffer data as float list
+	- parameter atIndex: The index of the vertex to get the data from
+	- returns: The buffer data as float list
 	*/
 	public func getBufferData (atIndex index: Int) -> [GLfloat] {
 		return values[index].array

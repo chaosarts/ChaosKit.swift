@@ -38,7 +38,7 @@ public struct GLdepthmask : GLbufmask {
 	/** 
 	Initilaizes the buffer writer capability with passed flag
 	
-	:param: flag To enable or disable buffer writer
+	- parameter flag: To enable or disable buffer writer
 	*/
 	public init (_ flag: Bool) {
 		self.flag = GLboolean(flag ? GL_TRUE : GL_FALSE)
@@ -65,7 +65,7 @@ public struct GLstencilmask : GLbufmask {
 	/**
 	Initilaizes the buffer writer capability with passed flag
 	
-	:param: flag To enable or disable buffer writer
+	- parameter flag: To enable or disable buffer writer
 	*/
 	public init (_ mask: GLuint) {
 		self.mask = mask
@@ -101,10 +101,10 @@ public struct GLcolormask : GLbufmask {
 	/**
 	Initilaizes the buffer writer capability with passed color code
 	
-	:param: red Indicates if color buffer writer is en- or disabled for red component
-	:param: green Indicates if color buffer writer is en- or disabled for green component
-	:param: blue Indicates if color buffer writer is en- or disabled for blue component
-	:param: alpha Indicates if color buffer writer is en- or disabled for alpha component
+	- parameter red: Indicates if color buffer writer is en- or disabled for red component
+	- parameter green: Indicates if color buffer writer is en- or disabled for green component
+	- parameter blue: Indicates if color buffer writer is en- or disabled for blue component
+	- parameter alpha: Indicates if color buffer writer is en- or disabled for alpha component
 	*/
 	public init (_ red: Bool, _ green: Bool, _ blue: Bool, _ alpha: Bool) {
 		r = GLboolean(red ? GL_TRUE : GL_FALSE)

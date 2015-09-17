@@ -29,27 +29,27 @@ public class GLScreenRenderpass : GLRenderpassBase, GLRenderpass {
 		clear()
 		
 		if camera.stage == nil {
-			println("No stage set for camera.")
+			print("No stage set for camera.")
 			return
 		}
 		
 		var uniforms : [GLurl : GLUniform] = camera.uniforms
 		for url in uniforms.keys {
-			var location : GLuniformloc? = program.getUniformLocation(url)
+			let location : GLuniformloc? = program.getUniformLocation(url)
 			
 			if nil == location {continue}
 			
-			var uniform : GLUniform = uniforms[url]!
+			let uniform : GLUniform = uniforms[url]!
 			uniform.assign(location!)
 		}
 		
-		var stage : GLStage = camera.stage!
+		let stage : GLStage = camera.stage!
 		for shape in stage.shapes {
 			var uniforms : [GLurl : GLUniform] = shape.uniforms
 			
 			for url in uniforms.keys {
-				var location : GLuniformloc? = program.getUniformLocation(url)
-				var uniform : GLUniform = uniforms[url]!
+				let location : GLuniformloc? = program.getUniformLocation(url)
+				let uniform : GLUniform = uniforms[url]!
 				if nil == location {continue}
 				uniform.assign(location!)
 			}

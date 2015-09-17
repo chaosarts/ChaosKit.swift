@@ -35,14 +35,14 @@ public class GL {
 	/**
 	Just like glGetIntegerv
 	
-	:param: pname Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
+	- parameter pname: Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
 	:return: The value or values of the specified parameter.
 	*/
 	public class func getIntegerv (pname: GLenum) -> GLint {
-		var params : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		let params : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		glGetIntegerv(pname, params)
 		
-		var mem : GLint = params.memory
+		let mem : GLint = params.memory
 		params.destroy()
 		params.dealloc(1)
 		return mem
@@ -52,7 +52,7 @@ public class GL {
 	/**
 	Just like glGetIntegerv
 	
-	:param: pname Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
+	- parameter pname: Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
 	:return: The value or values of the specified parameter.
 	*/
 	public class func getIntegerv (pname: Int32) -> GLint {
@@ -63,14 +63,14 @@ public class GL {
 	/**
 	Just like glGetFloatv
 	
-	:param: pname Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
+	- parameter pname: Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
 	:return: The value or values of the specified parameter.
 	*/
 	public class func getFloatv (pname: GLenum) -> GLfloat {
-		var params : UnsafeMutablePointer<GLfloat> = UnsafeMutablePointer<GLfloat>.alloc(1)
+		let params : UnsafeMutablePointer<GLfloat> = UnsafeMutablePointer<GLfloat>.alloc(1)
 		glGetFloatv(pname, params)
 		
-		var mem : GLfloat = params.memory
+		let mem : GLfloat = params.memory
 		params.destroy()
 		params.dealloc(1)
 		return mem
@@ -79,7 +79,7 @@ public class GL {
 	/**
 	Just like glGetFloatv
 	
-	:param: pname Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
+	- parameter pname: Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
 	:return: The value or values of the specified parameter.
 	*/
 	public class func getFloatv (pname: Int32) -> GLfloat {
@@ -90,14 +90,14 @@ public class GL {
 	/**
 	Just like glGetBooleanv
 	
-	:param: pname Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
+	- parameter pname: Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
 	:return: The value or values of the specified parameter.
 	*/
 	public class func getBooleanv (pname: GLenum) -> GLboolean {
-		var params : UnsafeMutablePointer<GLboolean> = UnsafeMutablePointer<GLboolean>.alloc(1)
+		let params : UnsafeMutablePointer<GLboolean> = UnsafeMutablePointer<GLboolean>.alloc(1)
 		glGetBooleanv(GLenum(pname), params)
 		
-		var mem : GLboolean = params.memory
+		let mem : GLboolean = params.memory
 		params.destroy()
 		params.dealloc(1)
 		return mem
@@ -107,7 +107,7 @@ public class GL {
 	/**
 	Just like glGetBooleanv
 	
-	:param: pname Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
+	- parameter pname: Specifies the parameter value to be returned. The symbolic constants in the list below are accepted.
 	:return: The value or values of the specified parameter.
 	*/
 	public class func getBooleanv (pname: Int32) -> GLboolean {

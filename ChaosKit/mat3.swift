@@ -124,7 +124,7 @@ public struct mat3 : QuadraticMatrix {
 	/**
 	Initializes the matrix by setting the diaginal with given value.
 	
-	:param: value
+	- parameter value:
 	*/
 	public init (_ value: Float) {
 		array = [value, 0, 0, 0, value, 0, 0, 0, value]
@@ -134,7 +134,7 @@ public struct mat3 : QuadraticMatrix {
 	/**
 	Initializes the matrix with given array
 	
-	:param: array
+	- parameter array:
 	*/
 	public init(_ array: [GLfloat]) {
 		for index in 0..<mat3.elementCount {
@@ -146,10 +146,10 @@ public struct mat3 : QuadraticMatrix {
 	/**
 	Rotates the matrix by given angle in radians around the axis given by x, y and z
 	
-	:param: rad The angle in radians
-	:param: x The x component of the rotation axis
-	:param: y The y component of the rotation axis
-	:param: z The z component of the rotation axis
+	- parameter rad: The angle in radians
+	- parameter x: The x component of the rotation axis
+	- parameter y: The y component of the rotation axis
+	- parameter z: The z component of the rotation axis
 	*/
 	public mutating func rotate (rad radian: GLfloat, x rx: GLfloat, y ry: GLfloat, z rz: GLfloat) {
 		let mat : [GLfloat] = array
@@ -191,10 +191,10 @@ public struct mat3 : QuadraticMatrix {
 	/**
 	Rotates the matrix by given angle in degrees around the axis given by x, y and z
 	
-	:param: deg The angle in degrees
-	:param: x The x component of the rotation axis
-	:param: y The y component of the rotation axis
-	:param: z The z component of the rotation axis
+	- parameter deg: The angle in degrees
+	- parameter x: The x component of the rotation axis
+	- parameter y: The y component of the rotation axis
+	- parameter z: The z component of the rotation axis
 	*/
 	public mutating func rotate (deg degree: GLfloat, x rx: GLfloat, y ry: GLfloat, z rz: GLfloat) {
 		rotate(rad: deg2rad(degree), x: rx, y: ry, z: rz)
@@ -204,8 +204,8 @@ public struct mat3 : QuadraticMatrix {
 	/**
 	Adds a rotation transformation to the matrix around given axis and given angle in radians
 	
-	:param: rad The angle in radians
-	:param: axis The axis to rotate around
+	- parameter rad: The angle in radians
+	- parameter axis: The axis to rotate around
 	*/
 	public mutating func rotate (rad radians: GLfloat, axis: vec3) {
 		rotate(rad: radians, x: axis.x, y: axis.y, z: axis.z)
@@ -215,8 +215,8 @@ public struct mat3 : QuadraticMatrix {
 	/**
 	Adds a rotation transformation to the matrix around given axis and given angle in degrees
 	
-	:param: deg The angle in degrees
-	:param: axis The axis to rotate around
+	- parameter deg: The angle in degrees
+	- parameter axis: The axis to rotate around
 	*/
 	public mutating func rotate (deg degrees: GLfloat, axis: vec3) {
 		rotate(rad: deg2rad(degrees), x: axis.x, y: axis.y, z: axis.z)
@@ -226,7 +226,7 @@ public struct mat3 : QuadraticMatrix {
 	/**
 	Rotates the matrix around the x axis
 	
-	:param: rad Te anlge in radians
+	- parameter rad: Te anlge in radians
 	*/
 	public mutating func rotateX (rad radians: GLfloat) {
 		let m01 = array[3], m11 = array[4], m21 = array[5]
@@ -247,7 +247,7 @@ public struct mat3 : QuadraticMatrix {
 	/**
 	Rotates the matrix around the x axis
 	
-	:param: deg The anlge in degrees
+	- parameter deg: The anlge in degrees
 	*/
 	public mutating func rotateX (deg degrees: GLfloat) {
 		rotateX(rad: deg2rad(degrees))
@@ -257,7 +257,7 @@ public struct mat3 : QuadraticMatrix {
 	/**
 	Rotates the matrix around the y axis
 	
-	:param: rad Te anlge in radians
+	- parameter rad: Te anlge in radians
 	*/
 	public mutating func rotateY (rad radians: GLfloat) {
 		let m00 = array[0], m10 = array[1], m20 = array[2]
@@ -278,7 +278,7 @@ public struct mat3 : QuadraticMatrix {
 	/**
 	Rotates the matrix around the x axis
 	
-	:param: deg The anlge in degrees
+	- parameter deg: The anlge in degrees
 	*/
 	public mutating func rotateY (deg degrees: GLfloat) {
 		rotateY(rad: deg2rad(degrees))
@@ -288,7 +288,7 @@ public struct mat3 : QuadraticMatrix {
 	/**
 	Rotates the matrix around the z axis
 	
-	:param: rad Te anlge in radians
+	- parameter rad: Te anlge in radians
 	*/
 	public mutating func rotateZ (rad radians: GLfloat) {
 		let m00 = array[0], m10 = array[1], m20 = array[2]
@@ -309,7 +309,7 @@ public struct mat3 : QuadraticMatrix {
 	/**
 	Rotates the matrix around the z axis
 	
-	:param: deg The anlge in degrees
+	- parameter deg: The anlge in degrees
 	*/
 	public mutating func rotateZ (deg degrees: GLfloat) {
 		rotateZ(rad: deg2rad(degrees))
@@ -319,7 +319,7 @@ public struct mat3 : QuadraticMatrix {
 	/**
 	Determines if the passed is a valid matrix index
 	
-	:param: index
+	- parameter index:
 	:return: bool
 	*/
 	private func valid(index: Int) -> Bool {
@@ -370,7 +370,7 @@ extension mat3 : ArrayLiteralConvertible {
 }
 
 
-extension mat3 : Printable {
+extension mat3 : CustomStringConvertible {
 	public var description : String {get {return toString(self)}}
 }
 
@@ -417,15 +417,15 @@ public func -(l: mat3, r: mat3) -> mat3 {
 
 public func *(l: mat3, r: mat3) -> mat3 {
 	return [
-		dot(l[row: 0], r[col: 0]), dot(l[row: 0], r[col: 1]), dot(l[row: 0], r[col: 2]),
-		dot(l[row: 1], r[col: 0]), dot(l[row: 1], r[col: 1]), dot(l[row: 1], r[col: 2]),
-		dot(l[row: 2], r[col: 0]), dot(l[row: 2], r[col: 1]), dot(l[row: 2], r[col: 2])
+		dot(l[row: 0], r: r[col: 0]), dot(l[row: 0], r: r[col: 1]), dot(l[row: 0], r: r[col: 2]),
+		dot(l[row: 1], r: r[col: 0]), dot(l[row: 1], r: r[col: 1]), dot(l[row: 1], r: r[col: 2]),
+		dot(l[row: 2], r: r[col: 0]), dot(l[row: 2], r: r[col: 1]), dot(l[row: 2], r: r[col: 2])
 	]
 }
 
 
 public func *(l: mat3, r: vec3) -> vec3 {
-	return [dot(l[row: 0], r), dot(l[row: 1], r), dot(l[row: 2], r)]
+	return [dot(l[row: 0], r: r), dot(l[row: 1], r: r), dot(l[row: 2], r: r)]
 }
 
 

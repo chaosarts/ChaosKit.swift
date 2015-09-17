@@ -31,8 +31,8 @@ public struct GLattribloc : GLLocation {
 	/**
 	Initializes the attribute location
 	
-	:param: index The attribute location fetched by glGetAttribLocation
-	:param: name The string variable name of the attribute
+	- parameter index: The attribute location fetched by glGetAttribLocation
+	- parameter name: The string variable name of the attribute
 	*/
 	public init (index: GLuint, name: String) {
 		self.index = index
@@ -46,7 +46,7 @@ public struct GLattribloc : GLLocation {
 	/**
 	En- or disables the attribute location for the accroding program
 	
-	:param: enable
+	- parameter enable:
 	*/
 	public func setEnabled (enable: Bool) {
 		if enable {self.enable()}
@@ -67,7 +67,7 @@ public struct GLattribloc : GLLocation {
 	/**
 	Shortcut for glVertexAttribPointer
 	
-	:param: block The buffer block that holds the information for the attribute within the accroding buffer
+	- parameter block: The buffer block that holds the information for the attribute within the accroding buffer
 	*/
 	public func setVertexAttribPointer (block: GLBufferBlock) {
 		var floatSize : Int = sizeof(GLfloat)
@@ -78,11 +78,11 @@ public struct GLattribloc : GLLocation {
 	/**
 	Shortcut for glVertexAttribPointer
 	
-	:param: size The size of the attribute value per vertex in the buffer
-	:param: type The data type of an element of an attribute values
-	:param: normalized
-	:param: stride
-	:param: pointer
+	- parameter size: The size of the attribute value per vertex in the buffer
+	- parameter type: The data type of an element of an attribute values
+	- parameter normalized:
+	- parameter stride:
+	- parameter pointer:
 	*/
 	public func setVertexAttribPointer (size: GLint, _ type: GLenum, _ normalized: Bool, _ stride: Int) {
 		setVertexAttribPointer(size, type, normalized, stride, _ptr.memory)
@@ -92,11 +92,11 @@ public struct GLattribloc : GLLocation {
 	/**
 	Shortcut for glVertexAttribPointer
 	
-	:param: size The size of the attribute value per vertex in the buffer
-	:param: type The data type of an element of an attribute values
-	:param: normalized
-	:param: stride
-	:param: pointer
+	- parameter size: The size of the attribute value per vertex in the buffer
+	- parameter type: The data type of an element of an attribute values
+	- parameter normalized:
+	- parameter stride:
+	- parameter pointer:
 	*/
 	public func setVertexAttribPointer (size: GLint, _ type: GLenum, _ normalized: Bool, _ stride: Int, _ offset: Int) {
 		setVertexAttribPointer(size, type, normalized, stride, _ptr.memory.advancedBy(sizeof(GLfloat) * offset))
@@ -106,11 +106,11 @@ public struct GLattribloc : GLLocation {
 	/**
 	Shortcut for glVertexAttribPointer
 	
-	:param: size The size of the attribute value per vertex in the buffer
-	:param: type The data type of an element of an attribute values
-	:param: normalized
-	:param: stride
-	:param: pointer
+	- parameter size: The size of the attribute value per vertex in the buffer
+	- parameter type: The data type of an element of an attribute values
+	- parameter normalized:
+	- parameter stride:
+	- parameter pointer:
 	*/
 	public func setVertexAttribPointer (size: GLint, _ type: GLenum, _ normalized: Bool, _ stride: Int, _ pointer: UnsafeMutablePointer<Void>) {
 		glVertexAttribPointer(index, size, type, GLboolean(normalized ? GL_TRUE : GL_FALSE), GLsizei(stride * sizeof(GLfloat)), pointer)

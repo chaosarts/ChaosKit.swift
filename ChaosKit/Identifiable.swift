@@ -12,7 +12,7 @@ public protocol Identifiable {
 	var id : Identifier {get}
 }
 
-public struct Identifier : Printable, Hashable, StringLiteralConvertible {
+public struct Identifier : CustomStringConvertible, Hashable, StringLiteralConvertible {
 	
 	private var _value : String
 	

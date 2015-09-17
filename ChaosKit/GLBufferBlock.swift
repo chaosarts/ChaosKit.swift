@@ -37,8 +37,8 @@ public struct GLBufferBlock {
 	/**
 	Initializes the block
 	
-	:param: attribute The target symbol which represents an attribute in the shader
-	:param: size The size of the block per vertex. Mus be either 1, 2, 3 or 4
+	- parameter attribute: The target symbol which represents an attribute in the shader
+	- parameter size: The size of the block per vertex. Mus be either 1, 2, 3 or 4
 	*/
 	public init (_ attribute: GLurl, _ size: Int, _ type : Int32, _ normalized: Bool, _ stride: Int, _ offset: Int) {
 		self.url = attribute

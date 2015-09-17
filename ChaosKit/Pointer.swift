@@ -12,13 +12,13 @@ import Foundation
 /**
 Returns a pointer to the beginning of an array
 
-:param: value The value to wrap in to a pointer struct
+- parameter value: The value to wrap in to a pointer struct
 :return: A pointer
 */
 public func toUnsafePointer<T> (value: [T]) -> UnsafePointer<T> {
-	var mptr : UnsafeMutablePointer<T> = UnsafeMutablePointer<T>.alloc(value.count)
+	let mptr : UnsafeMutablePointer<T> = UnsafeMutablePointer<T>.alloc(value.count)
 	mptr.initializeFrom(value)
-	var ptr = UnsafePointer<T>(mptr)
+	let ptr = UnsafePointer<T>(mptr)
 	return ptr
 }
 
@@ -26,11 +26,11 @@ public func toUnsafePointer<T> (value: [T]) -> UnsafePointer<T> {
 /**
 Returns a pointer with passed value in memory
 
-:param: value The value to wrap in to a pointer struct
+- parameter value: The value to wrap in to a pointer struct
 :return: A pointer
 */
 public func toUnsafePointer<T>(value: T) -> UnsafePointer<T> {
-	var ptr : UnsafeMutablePointer<T> = UnsafeMutablePointer<T>.alloc(1)
+	let ptr : UnsafeMutablePointer<T> = UnsafeMutablePointer<T>.alloc(1)
 	ptr.initialize(value)
 	return UnsafePointer<T>(ptr)
 }
@@ -39,7 +39,7 @@ public func toUnsafePointer<T>(value: T) -> UnsafePointer<T> {
 /** 
 Converts the passed value to an unsafe void pointer
 
-:param: value The value to wrap in to a pointer struct
+- parameter value: The value to wrap in to a pointer struct
 :return: A void pointer
 */
 public func toUnsafeVoidPointer<T> (value: T) -> UnsafePointer<Void> {
@@ -50,7 +50,7 @@ public func toUnsafeVoidPointer<T> (value: T) -> UnsafePointer<Void> {
 /**
 Converts the passed array to an unsafe void pointer
 
-:param: value The value to wrap in to a pointer struct
+- parameter value: The value to wrap in to a pointer struct
 :return: A void pointer
 */
 public func toUnsafeVoidPointer<T> (value: [T]) -> UnsafePointer<Void> {

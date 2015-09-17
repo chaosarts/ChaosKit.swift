@@ -29,8 +29,8 @@ public struct GLuniformloc : GLLocation {
 	/**
 	Initializes the uniform location with the index and name
 	
-	:param: index The index of the uniform
-	:param: name The name of the uniform
+	- parameter index: The index of the uniform
+	- parameter name: The name of the uniform
 	*/
 	public init (index: GLuint, name: String) {
 		self.name = name

@@ -43,30 +43,30 @@ public extension NSOpenGLPixelFormat {
 	]
 	
 	public convenience init (attributes: [NSOpenGLPixelFormatAttribute]) {
-		var pointer : UnsafeMutablePointer<NSOpenGLPixelFormatAttribute> = UnsafeMutablePointer<NSOpenGLPixelFormatAttribute>(attributes)
+		let pointer : UnsafeMutablePointer<NSOpenGLPixelFormatAttribute> = UnsafeMutablePointer<NSOpenGLPixelFormatAttribute>(attributes)
 		self.init(attributes: pointer)
 	}
 	
 	public convenience init (pixelFormat: NSOpenGLPixelFormat, attributeMap: [NSOpenGLPixelFormatAttribute : NSOpenGLPixelFormatAttribute]) {
 		
-		var valuePointer : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		let valuePointer : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		var attributes : [NSOpenGLPixelFormatAttribute] = []
 		
 		for attributeKey in NSOpenGLPixelFormat.allAttributeKeys {
 			var attributeValue : NSOpenGLPixelFormatAttribute? = attributeMap[attributeKey]
 			if nil == attributeValue {
 				pixelFormat.getValues(valuePointer, forAttribute: attributeKey, forVirtualScreen: 0)
-				println("\(attributeKey): \(valuePointer.memory)")
+				print("\(attributeKey): \(valuePointer.memory)")
 				attributeValue = NSOpenGLPixelFormatAttribute(valuePointer.memory)
 			}
 			
-			attributes.extend([attributeKey, attributeValue!])
+			attributes.appendContentsOf([attributeKey, attributeValue!])
 		}
 		
 		valuePointer.dealloc(1)
 		valuePointer.destroy()
 		
-		var pointer : UnsafeMutablePointer<NSOpenGLPixelFormatAttribute> = UnsafeMutablePointer<NSOpenGLPixelFormatAttribute>(attributes)
+		let pointer : UnsafeMutablePointer<NSOpenGLPixelFormatAttribute> = UnsafeMutablePointer<NSOpenGLPixelFormatAttribute>(attributes)
 		self.init(attributes: pointer)
 	}
 }

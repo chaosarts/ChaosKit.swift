@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct GLsrcfile : StringLiteralConvertible, Printable {
+public struct GLsrcfile : StringLiteralConvertible, CustomStringConvertible {
 	
 	/// Provides the source code of the shader
 	public private(set) var content : String
@@ -20,7 +20,7 @@ public struct GLsrcfile : StringLiteralConvertible, Printable {
 	public var description : String {get {return content}}
 	
 	/// Provides the length of the source string as chars
-	public var length : Int! {get {return count(content)}}
+	public var length : Int! {get {return content.characters.count}}
 	
 	/// Provides the cstring version of the source
 	public var cstring : Cstring? {get {return Cstring(string: content, encoding: encoding)}}
@@ -29,7 +29,7 @@ public struct GLsrcfile : StringLiteralConvertible, Printable {
 	/**
 	Initializes the source with given string
 	
-	:param: src The source as string
+	- parameter src: The source as string
 	*/
 	public init (content: String) {
 		self.content = content
@@ -47,13 +47,20 @@ public struct GLsrcfile : StringLiteralConvertible, Printable {
 	/**
 	Initializes the source with given path
 	
-	:param: path The source path to read
-	:param: encoding The encoding to use for reading the path
-	:param: pointer A pointer for errors
+	- parameter path: The source path to read
+	- parameter encoding: The encoding to use for reading the path
+	- parameter pointer: A pointer for errors
 	*/
-	public init? (path: String, encoding: NSStringEncoding, pointer: NSErrorPointer) {
-		let content : String? = String(contentsOfFile: path, encoding: encoding, error: pointer)
-		if nil == content {return nil}
+	public init (path: String, encoding: NSStringEncoding) throws {
+		var pointer: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
+		let content : String?
+		do {
+			content = try String(contentsOfFile: path, encoding: encoding)
+		} catch var error as NSError {
+			pointer = error
+			content = nil
+		}
+		if nil == content {throw pointer}
 		self.init(content: content!)
 	}
 	
@@ -61,63 +68,64 @@ public struct GLsrcfile : StringLiteralConvertible, Printable {
 	/**
 	Initializes the source with given path
 	
-	:param: path The source path to read
-	:param: encoding The encoding to use for reading the path
+	- parameter path: The source path to read
+	- parameter encoding: The encoding to use for reading the path
 	*/
 	public init? (path: String, encoding: NSStringEncoding) {
-		self.init(path: path, encoding: encoding, pointer: nil)
+		try? self.init(path: path, encoding: encoding)
 	}
 	
 	
 	/**
 	Initializes the source with given path
 	
-	:param: path The source path to read
+	- parameter path: The source path to read
 	*/
 	public init? (path: String) {
-		self.init(path: path, encoding: NSUTF8StringEncoding, pointer: nil)
+		try? self.init(path: path, encoding: NSUTF8StringEncoding)
 	}
 	
 	
 	/**
 	Initializes the source with given resource
 	
-	:param: resource The resource path to read
-	:param: encoding The encoding to use for reading the path
-	:param: pointer A pointer for errors
+	- parameter resource: The resource path to read
+	- parameter encoding: The encoding to use for reading the path
+	- parameter pointer: A pointer for errors
 	*/
-	public init? (resource: String, encoding: NSStringEncoding, pointer: NSErrorPointer) {
+	public init (resource: String, encoding: NSStringEncoding) throws {
+		var pointer: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
 		let path : String? = NSBundle.mainBundle().pathForResource(resource, ofType: nil)
-		if nil == path {return nil}
-		self.init (path: path!, encoding: encoding, pointer: pointer)
+		if nil == path {throw pointer}
+		try self.init (path: path!, encoding: encoding)
 	}
 	
 	
 	/**
 	Initializes the source with given resource
 	
-	:param: resource The resource path to read
-	:param: encoding The encoding to use for reading the path
+	- parameter resource: The resource path to read
+	- parameter encoding: The encoding to use for reading the path
 	*/
 	public init? (resource: String, encoding: NSStringEncoding) {
-		self.init(resource: resource, encoding: encoding, pointer: nil)
+		try? self.init(resource: resource, encoding: encoding)
 	}
 	
 	
 	/**
 	Initializes the source with given resource
 	
-	:param: resource The resource path to read
+	- parameter resource: The resource path to read
 	*/
 	public init? (resource: String) {
-		self.init(resource: resource, encoding: NSUTF8StringEncoding, pointer: nil)
+		try? self.init(resource: resource, encoding: NSUTF8StringEncoding)
 	}
 	
 	
 	/**
 	Initializer to assign string literals to a shader source object
 	
-	:param: stringLiteral The source as string
+	- parameter stringLiteral: The source as string
 	*/
 	public init (stringLiteral value: String) {
 		self.init(content: value)
@@ -127,7 +135,7 @@ public struct GLsrcfile : StringLiteralConvertible, Printable {
 	/**
 	Initializer to assign string literals to a shader source object
 	
-	:param: stringLiteral The source as string
+	- parameter stringLiteral: The source as string
 	*/
 	public init(extendedGraphemeClusterLiteral value: String) {
 		self.init(content: value)
@@ -137,7 +145,7 @@ public struct GLsrcfile : StringLiteralConvertible, Printable {
 	/**
 	Initializer to assign string literals to a shader source object
 	
-	:param: stringLiteral The source as string
+	- parameter stringLiteral: The source as string
 	*/
 	public init(unicodeScalarLiteral value: String) {
 		self.init(content: value)

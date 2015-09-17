@@ -50,9 +50,9 @@ public struct GLparallelogram : GLGeometry {
 	Initializes the parallelogram with three vectors. The resulting geometry consists
 	of the points at p, p + s,  p +s + t and p + t
 	
-	:param: p The position to start the parallelogram from
-	:param: s
-	:param: t
+	- parameter p: The position to start the parallelogram from
+	- parameter s:
+	- parameter t:
 	*/
 	public init (_ p: vec3, _ s: vec3, _ t: vec3) {
 		values = [p, p + s, p + s + t, p + t]
@@ -63,8 +63,8 @@ public struct GLparallelogram : GLGeometry {
 	/**
 	Initializes the geometry, so that center of the parallelogram is at vec3(0, 0, 0)
 	
-	:param: s
-	:param: t
+	- parameter s:
+	- parameter t:
 	*/
 	public init (_ s: vec3, _ t: vec3) {
 		self.init(-0.5 * (s + t), s, t)
@@ -77,8 +77,8 @@ public struct GLparallelogram : GLGeometry {
 	/**
 	Returns the buffer data for vertex at given index 
 	
-	:param: atIndex The index of the vertex as array
-	:returns:
+	- parameter atIndex: The index of the vertex as array
+	- returns:
 	*/
 	public func getBufferData(atIndex index: Int) -> [GLfloat] {
 		return sharedVertice ? values[index].array : values[indexlist[index]].array
@@ -93,6 +93,6 @@ public struct GLparallelogram : GLGeometry {
 	public func extend(values: [vec3]) {}
 	
 	public func indexOf(value: vec3) -> Int? {
-		return find(values, value)
+		return values.indexOf(value)
 	}
 }

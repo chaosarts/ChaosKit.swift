@@ -21,7 +21,7 @@ public protocol GLAttribute {
 	/**
 	Returns the value at given index position.
 	
-	:param: index The index of the value to fetch
+	- parameter index: The index of the value to fetch
 	:return: The value at given index
 	*/
 	func getBufferData (atIndex index: Int) -> [GLfloat]

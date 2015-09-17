@@ -28,7 +28,7 @@ public struct GLconstattrib<V: Vector> : GLAttribute {
 	/**
 	Initializes the constant attribute with given value
 	
-	:param: value The value to use for this constant
+	- parameter value: The value to use for this constant
 	*/
 	public init (_ value: V) {
 		self.value = value
@@ -46,7 +46,7 @@ public struct GLconstattrib<V: Vector> : GLAttribute {
 	/**
 	Returns always the same float list for each index
 	
-	:param: index The index of the vertex to fetch the vertex attribute value
+	- parameter index: The index of the vertex to fetch the vertex attribute value
 	*/
 	public func getBufferData (atIndex index: Int) -> [GLfloat] {
 		return value.array

@@ -17,7 +17,7 @@ import Cocoa
 /** 
 Stage class to place display objects
 */
-@objc public class GLStage : GLContainer {
+public class GLStage : GLContainer {
 	
 	
 	public var uniforms : [GLurl : GLUniform] {
@@ -46,7 +46,7 @@ Stage class to place display objects
 	/**
 	Adds a display object to this stage
 	
-	:param: child The object to add
+	- parameter child: The object to add
 	*/
 	public override func addChild(child: GLDisplayObject) {
 		super.addChild(child)
@@ -57,10 +57,10 @@ Stage class to place display objects
 	/**
 	Removes a child from this stage
 	
-	:param: child The child to remove
+	- parameter child: The child to remove
 	*/
 	public override func removeChild(child: GLDisplayObject) -> Int? {
-		var index : Int? = super.removeChild(child)
+		let index : Int? = super.removeChild(child)
 		child.stage = nil
 		return index
 	}
@@ -69,10 +69,10 @@ Stage class to place display objects
 	/**
 	Removes a child at given index from this stage
 	
-	:param: index The index of the child to remove
+	- parameter index: The index of the child to remove
 	*/
 	public override func removeChildAt(index: Int) -> GLDisplayObject? {
-		var child = super.removeChildAt(index)
+		let child = super.removeChildAt(index)
 		child?.stage = nil
 		return child
 	}

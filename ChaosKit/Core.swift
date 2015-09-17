@@ -29,9 +29,9 @@ public enum IndexWrapType {
 typealias IndexWrapper = (val: Int, minVal: Int, maxVal: Int) -> Int
 
 func repeatIndex (val: Int, minVal: Int, maxVal: Int) -> Int {
-	var minimum : Int = min(minVal, maxVal)
-	var maximum : Int = max(minVal, maxVal)
-	var distance : Int = abs(maximum - minimum)
+	let minimum : Int = min(minVal, maxVal)
+	let maximum : Int = max(minVal, maxVal)
+	let distance : Int = abs(maximum - minimum)
 	return (val - minimum) % distance + minimum
 }
 

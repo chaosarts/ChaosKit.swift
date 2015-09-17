@@ -115,7 +115,7 @@ public class GLRenderpassBase {
 	/** 
 	Sets a clear mask for this render pass.
 	
-	:param: mask
+	- parameter mask:
 	*/
 	public final func setClear (mask: GLclear) {
 		_clearmasks[mask.bitmask] = mask
@@ -125,7 +125,7 @@ public class GLRenderpassBase {
 	/**
 	Returns the value for the passed hint
 	
-	:param: hint
+	- parameter hint:
 	*/
 	public final func getHint (name: GLenum) -> GLenum? {
 		return _hints[name]
@@ -135,7 +135,7 @@ public class GLRenderpassBase {
 	/**
 	Returns the value for the passed hint
 	
-	:param: hint
+	- parameter hint:
 	*/
 	public final func getHint (name: Int32) -> GLenum? {
 		return getHint(GLenum(name))
@@ -145,8 +145,8 @@ public class GLRenderpassBase {
 	/**
 	Sets a hint for the opngl server
 	
-	:param: name The name of the hint
-	:param: value The value for the hint
+	- parameter name: The name of the hint
+	- parameter value: The value for the hint
 	*/
 	public final func setHint (name: GLenum, _ value: GLenum?) {
 		if value != nil {_hints[name] = value}
@@ -157,8 +157,8 @@ public class GLRenderpassBase {
 	/**
 	Sets a hint for the opngl server
 	
-	:param: name The name of the hint
-	:param: value The value for the hint
+	- parameter name: The name of the hint
+	- parameter value: The value for the hint
 	*/
 	public final func setHint (name: Int32, _ value: GLenum?) {
 		setHint(GLenum(name), value)
@@ -168,11 +168,11 @@ public class GLRenderpassBase {
 	/**
 	Sets a hint for the opngl server
 	
-	:param: name The name of the hint
-	:param: value The value for the hint
+	- parameter name: The name of the hint
+	- parameter value: The value for the hint
 	*/
 	public final func setHint (name: GLenum, _ value: Int32?) {
-		var val : GLenum? = nil == value ? nil : GLenum(value!)
+		let val : GLenum? = nil == value ? nil : GLenum(value!)
 		setHint(name, val)
 	}
 	
@@ -180,11 +180,11 @@ public class GLRenderpassBase {
 	/**
 	Sets a hint for the opngl server
 	
-	:param: name The name of the hint
-	:param: value The value for the hint
+	- parameter name: The name of the hint
+	- parameter value: The value for the hint
 	*/
 	public final func setHint (name: Int32, _ value: Int32?) {
-		var val : GLenum? = nil == value ? nil : GLenum(value!)
+		let val : GLenum? = nil == value ? nil : GLenum(value!)
 		setHint(GLenum(name), val)
 	}
 	
@@ -192,8 +192,8 @@ public class GLRenderpassBase {
 	/**
 	En or disables a server-side capability
 	
-	:param: cap The name of the capability
-	:param: enable
+	- parameter cap: The name of the capability
+	- parameter enable:
 	*/
 	public final func setCapabilityEnabled (cap: GLenum, _ enable: Bool = true) {
 		_caps[GLenum(cap)] = GLcap(cap, enable)
@@ -203,8 +203,8 @@ public class GLRenderpassBase {
 	/**
 	En or disables a server-side capability
 	
-	:param: cap The name of the capability
-	:param: enable
+	- parameter cap: The name of the capability
+	- parameter enable:
 	*/
 	public final func setCapabilityEnabled (cap: Int32, _ enable: Bool = true) {
 		setCapabilityEnabled(GLenum(cap), enable)
@@ -214,7 +214,7 @@ public class GLRenderpassBase {
 	/**
 	Enables a server-side GL capabilities
 	
-	:param: cap The capability name as Int32
+	- parameter cap: The capability name as Int32
 	*/
 	public final func enableCapabilities (caps: Int32...) {
 		for cap in caps {
@@ -226,7 +226,7 @@ public class GLRenderpassBase {
 	/**
 	Disables a server-side GL capabilities
 	
-	:param: cap The capability name as Int32
+	- parameter cap: The capability name as Int32
 	*/
 	public final func disableCapabilities (caps: Int32...) {
 		for cap in caps {

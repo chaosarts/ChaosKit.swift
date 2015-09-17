@@ -25,9 +25,9 @@ infix operator • {}
 /**
 Converts polar to cartesian coordinates
 
-:param: radius The radius of the sphere
-:param: theta The angel between the vector and the y-axis
-:param: phi The angel between the vector and the x-axis
+- parameter radius: The radius of the sphere
+- parameter theta: The angel between the vector and the y-axis
+- parameter phi: The angel between the vector and the x-axis
 */
 public func polar2cartesian (radius: GLfloat, theta: GLfloat, phi: GLfloat) -> vec3 {
 	return vec3(radius * sin(theta) * sin(phi), radius * cos(theta), radius * sin(theta) * cos(phi))
@@ -38,9 +38,9 @@ public func polar2cartesian (radius: GLfloat, theta: GLfloat, phi: GLfloat) -> v
 Converts cartesian coordinates into polar coordinates around the zero vector
 */
 public func cartesian2polar (position: vec3) -> (radius: GLfloat, theta: GLfloat, phi: GLfloat) {
-	var radius : GLfloat = position.magnitude
-	var theta : GLfloat = GLfloat(M_PI / 2) - atan(position.z / sqrt(position.x * position.x + position.y * position.y))
-	var phi : GLfloat = atan2(position.x, position.y)
+	let radius : GLfloat = position.magnitude
+	let theta : GLfloat = GLfloat(M_PI / 2) - atan(position.z / sqrt(position.x * position.x + position.y * position.y))
+	let phi : GLfloat = atan2(position.x, position.y)
 	
 	return (radius, theta, phi)
 }
@@ -76,7 +76,7 @@ public func rad2deg (value: Double) -> Double {
 /**
 Negates the vector
 
-:param: x The vector to negate
+- parameter x: The vector to negate
 :return: The negated vector
 */
 public prefix func -<T: Vector> (x: T) -> T {
@@ -94,8 +94,8 @@ public prefix func -<T: Vector> (x: T) -> T {
 /**
 Adds two vectors
 
-:param: x The first vector of the sum
-:param: y The second vector of the sum
+- parameter x: The first vector of the sum
+- parameter y: The second vector of the sum
 :return: The sum of both vectors
 */
 public func +<T: Vector> (x: T, y: T) -> T {
@@ -115,8 +115,8 @@ public func +<T: Vector> (x: T, y: T) -> T {
 /**
 Subtract two vectors
 
-:param: x The first vector of the diff
-:param: y The second vector of the diff
+- parameter x: The first vector of the diff
+- parameter y: The second vector of the diff
 :return: The diff of both vectors
 */
 public func +=<T: Vector> (x: T, y: T) -> T {
@@ -127,8 +127,8 @@ public func +=<T: Vector> (x: T, y: T) -> T {
 /**
 Subtract two vectors
 
-:param: x The first vector of the diff
-:param: y The second vector of the diff
+- parameter x: The first vector of the diff
+- parameter y: The second vector of the diff
 :return: The diff of both vectors
 */
 public func -<T: Vector> (x: T, y: T) -> T {
@@ -139,8 +139,8 @@ public func -<T: Vector> (x: T, y: T) -> T {
 /**
 Subtract two vectors
 
-:param: x The first vector of the diff
-:param: y The second vector of the diff
+- parameter x: The first vector of the diff
+- parameter y: The second vector of the diff
 :return: The diff of both vectors
 */
 public func -=<T: Vector> (x: T, y: T) -> T {
@@ -151,8 +151,8 @@ public func -=<T: Vector> (x: T, y: T) -> T {
 /**
 Multiplies two vectors
 
-:param: x The first vector of the product
-:param: y The second vector of the product
+- parameter x: The first vector of the product
+- parameter y: The second vector of the product
 :return: The component wise product of both vectors
 */
 public func *<T: Vector> (x: T, y: T) -> T {
@@ -172,8 +172,8 @@ public func *<T: Vector> (x: T, y: T) -> T {
 /**
 Multiplies a vector with a scalar
 
-:param: x The vector of the product
-:param: y The scalar of the product
+- parameter x: The vector of the product
+- parameter y: The scalar of the product
 :return: The component wise product
 */
 public func *<T: Vector> (x: T, y: GLfloat) -> T {
@@ -192,8 +192,8 @@ public func *<T: Vector> (x: T, y: GLfloat) -> T {
 /**
 Multiplies a vector with a scalar
 
-:param: x The vector of the product
-:param: y The scalar of the product
+- parameter x: The vector of the product
+- parameter y: The scalar of the product
 :return: The component wise product
 */
 public func *<T: Vector> (x: GLfloat, y: T) -> T {
@@ -222,7 +222,7 @@ public func gramschmidt<T: Vector>(a: T, vectors: T...) -> [T] {
 	for index in 0..<vectors.count {
 		var w : T = vectors[index]
 		for v in basis {
-			w -= dot(v, w) / dot(v, v) * v
+			w -= dot(v, r: w) / dot(v, r: v) * v
 		}
 		
 		basis.append(w)
@@ -234,7 +234,7 @@ public func gramschmidt<T: Vector>(a: T, vectors: T...) -> [T] {
 public func toString (mat: Matrix) -> String {
 	var maxlen : Int = 0
 	for element in mat.array {
-		maxlen = max(maxlen, count(element.description))
+		maxlen = max(maxlen, element.description.characters.count)
 	}
 	
 	maxlen++
@@ -242,10 +242,10 @@ public func toString (mat: Matrix) -> String {
 	var string : String = ""
 	for row in 0..<mat.rows {
 		let first : Float = mat[row, 0]
-		string += "|" * (maxlen - count(first.description) - 1) + first.description
+		string += "|" * (maxlen - first.description.characters.count - 1) + first.description
 		for col in 1..<mat.cols {
 			let element : Float = mat[row, col]
-			string += " " * (maxlen - count(element.description)) + element.description
+			string += " " * (maxlen - element.description.characters.count) + element.description
 		}
 		string += "|"
 	}
@@ -260,7 +260,7 @@ public func toString (mat: Matrix) -> String {
 */
 
 
-public protocol Matrix : ListType, Printable {
+public protocol Matrix : ListType, CustomStringConvertible {
 	
 	var rows : Int {get}
 	

@@ -31,7 +31,7 @@ public struct GLtbn {
 	/// Provides this tangent space orthonormalized
 	public var orthonormalized : GLtbn {
 		get {
-			let vectors : [vec3] = gramschmidt(n, t, b)
+			let vectors : [vec3] = gramschmidt(n, b: t, c: b)
 			return GLtbn(vectors[1], vectors[2], vectors[0])
 		}
 	}

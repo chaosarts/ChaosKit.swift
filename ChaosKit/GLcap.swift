@@ -39,8 +39,8 @@ public struct GLcap {
 	/**
 	Initializes the capability
 	
-	:param: type The capability type
-	:param: enable Indicates either to enable
+	- parameter type: The capability type
+	- parameter enable: Indicates either to enable
 	*/
 	public init (_ type: Int32, _ enable: Bool) {
 		self.init(GLenum(type), enable)

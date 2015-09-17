@@ -21,7 +21,7 @@ public struct GLvao {
 	/**
 	Initializes the vertex array with given id
 	
-	:param: id The vertex array id
+	- parameter id: The vertex array id
  	*/
 	public init (_ id: GLuint) {
 		self.id = id
@@ -32,7 +32,7 @@ public struct GLvao {
 	Initializes the vertex array and generates an id
 	*/
 	public init? () {
-		var vao : UnsafeMutablePointer<GLuint> = UnsafeMutablePointer<GLuint>.alloc(1)
+		let vao : UnsafeMutablePointer<GLuint> = UnsafeMutablePointer<GLuint>.alloc(1)
 		glGenVertexArrays(1, vao)
 		if vao.memory == 0 {return nil}
 		

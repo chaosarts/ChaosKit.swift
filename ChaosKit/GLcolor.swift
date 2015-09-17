@@ -26,7 +26,7 @@ public struct GLcolor<V: Vector> : GLAttribute {
 	/**
 	Initializes the color with given values
 	
-	:param: values The values to use
+	- parameter values: The values to use
 	*/
 	public init (_ values: [V]) {
 		self.values = values
@@ -52,7 +52,7 @@ public struct GLcolor<V: Vector> : GLAttribute {
 	/**
 	Returns the value of the vertex at given index as a list of float
 	
-	:param: atIndex The index of the vertex
+	- parameter atIndex: The index of the vertex
 	*/
 	public func getBufferData (atIndex index: Int) -> [GLfloat] {
 		return values[index].array

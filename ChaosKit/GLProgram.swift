@@ -76,7 +76,7 @@ public final class GLProgram: GLBase {
 		let id : GLuint = glCreateProgram()
 		self.init(id)
 		if id == 0 {
-			println("Could not create program.")
+			print("Could not create program.")
 			return nil
 		}
 	}
@@ -85,10 +85,10 @@ public final class GLProgram: GLBase {
 	/**
 	Short cut for glGetProgramiv(pname: GLenum)
 	
-	:param: pname The paramater name to fetch the value
+	- parameter pname: The paramater name to fetch the value
 	*/
 	public func iv (pname : Int32) -> GLint {
-		var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		let param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		glGetProgramiv(id, GLenum(pname), param)
 		return param.memory
 	}
@@ -97,12 +97,12 @@ public final class GLProgram: GLBase {
 	/**
 	Returns the info log
 	
-	:returns: The info log
+	- returns: The info log
 	*/
 	public func infoLog () -> String {
 		let num : Int = Int(iv(GL_INFO_LOG_LENGTH))
 		
-		var log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(num)
+		let log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(num)
 		glGetProgramInfoLog(id, iv(GL_INFO_LOG_LENGTH), nil, log)
 		
 		let string : String = String.fromCString(log)!
@@ -115,7 +115,7 @@ public final class GLProgram: GLBase {
 	/**
 	Attaches a shader to this program
 	
-	:param: The shader object to attach
+	- parameter The: shader object to attach
 	*/
 	public func attachShader (shader: GLuint) -> GLProgram {
 		glAttachShader(id, shader)
@@ -126,7 +126,7 @@ public final class GLProgram: GLBase {
 	/**
 	Attaches one or more shaders to this program
 	
-	:param: shaders A list of shader objects
+	- parameter shaders: A list of shader objects
 	:return: The program itself
  	*/
 	public func attachShaders (shaders: [GLuint]) -> GLProgram {
@@ -141,7 +141,7 @@ public final class GLProgram: GLBase {
 	/**
 	Attaches one or more shaders to this program
 	
-	:param: shaders A list of shader objects
+	- parameter shaders: A list of shader objects
 	:return: The program itself
 	*/
 	public func attachShaders (shaders: GLuint...) -> GLProgram {
@@ -152,7 +152,7 @@ public final class GLProgram: GLBase {
 	/**
 	Attaches the shader to the program
 	
-	:param: shader The shader to attach
+	- parameter shader: The shader to attach
 	*/
 	public func attachShader (shader: GLShader!) -> GLProgram {
 		return attachShader(shader.id)
@@ -162,7 +162,7 @@ public final class GLProgram: GLBase {
 	/**
 	Attaches one or more shaders to this program
 	
-	:param: shaders The shaders to attach to this program
+	- parameter shaders: The shaders to attach to this program
 	*/
 	public func attachShaders (shaders: [GLShader]) -> GLProgram {
 		for shader in shaders {
@@ -176,7 +176,7 @@ public final class GLProgram: GLBase {
 	/**
 	Attaches one or more shaders to this program
 	
-	:param: shaders The shaders to attach to this program
+	- parameter shaders: The shaders to attach to this program
 	*/
 	public func attachShaders (shaders: GLShader...) -> GLProgram {
 		return attachShaders(shaders)
@@ -187,7 +187,7 @@ public final class GLProgram: GLBase {
 	Links the program and flushes all previously added attribute and
 	uniform variable informations
 	
-	:returns:
+	- returns:
 	*/
 	public func link () -> GLenum {
 		if linked {return GLenum(GL_NO_ERROR)}
@@ -196,15 +196,15 @@ public final class GLProgram: GLBase {
 		_attribLocations.removeAll()
 		_uniformLocations.removeAll()
 
-		var error : GLenum = glGetError()
+		let error : GLenum = glGetError()
 		
 		if error != GLenum(GL_NO_ERROR) {
 			warn("Program could not be linked. Did you make OpenGL context current?")
 		}
 		
 		let log : String = infoLog()
-		if count(log) > 0 {
-			println(log)
+		if log.characters.count > 0 {
+			print(log)
 		}
 		
 		return error
@@ -214,7 +214,7 @@ public final class GLProgram: GLBase {
 	/**
 	Makes the program active
 	
-	:returns:
+	- returns:
 	*/
 	public func use () -> Bool {
 		link()
@@ -233,7 +233,7 @@ public final class GLProgram: GLBase {
 	/**
 	Uploads buffer data to opengl
 	
-	:param: buffers The buffers to upload
+	- parameter buffers: The buffers to upload
 	*/
 	public func upload (buffers: [GLBuffer]) {
 		for buffer in buffers {
@@ -245,12 +245,12 @@ public final class GLProgram: GLBase {
 	/**
 	Uploads data buffer to opengl
 	
-	:param: buffer The buffer to upload
+	- parameter buffer: The buffer to upload
 	*/
 	public func upload (buffer: GLBuffer) {
 		buffer.bind()
 		for block in buffer.blocks {
-			var attribute : GLattribloc? = getAttribLocation(block.url)
+			let attribute : GLattribloc? = getAttribLocation(block.url)
 			attribute?.enable()
 			attribute?.setVertexAttribPointer(block)
 		}
@@ -260,7 +260,7 @@ public final class GLProgram: GLBase {
 	/**
 	Disable all attributes that has been used for these buffers
 	
-	:param: buffers The buffers to unload
+	- parameter buffers: The buffers to unload
 	*/
 	public func unload (buffers: [GLBuffer]) {
 		for buffer in buffers {
@@ -272,12 +272,12 @@ public final class GLProgram: GLBase {
 	/**
 	Disable all attributes that has been used for this buffer
 	
-	:param: buffer The buffer to unload
+	- parameter buffer: The buffer to unload
 	*/
 	public func unload (buffer: GLBuffer) {
 		buffer.bind()
 		for block in buffer.blocks {
-			var attribute : GLattribloc? = getAttribLocation(block.url)
+			let attribute : GLattribloc? = getAttribLocation(block.url)
 			attribute?.disable()
 		}
 	}
@@ -286,16 +286,16 @@ public final class GLProgram: GLBase {
 	/** 
 	Retrieves information about an attribute variable in this shader program
 	
-	:param: varname the variable name in the vertex shader
+	- parameter varname: the variable name in the vertex shader
 	:return: The attribute location object
 	*/
 	public func getAttribLocation (varname: String) -> GLattribloc? {
 		if _attribLocations[varname] != nil {return _attribLocations[varname]}
 		
-		var location : GLint = glGetAttribLocation(id, varname)
+		let location : GLint = glGetAttribLocation(id, varname)
 		if location < 0 {warn("Attribute '\(varname)' not found in program."); return nil}
 		
-		var attribvar : GLattribloc = GLattribloc(index: GLuint(location), name: varname)
+		let attribvar : GLattribloc = GLattribloc(index: GLuint(location), name: varname)
 		
 		_attribLocations[varname] = attribvar
 		return attribvar
@@ -305,12 +305,12 @@ public final class GLProgram: GLBase {
 	/**
 	Returns the attribute location by given variable name
 	
-	:param: varname The varname string as it is used in the shader
+	- parameter varname: The varname string as it is used in the shader
 	:return: The attribute location struct
 	*/
 	public func getAttribLocation (url: GLurl) -> GLattribloc? {
-		var varname : String? = _attributeUrlMap[url]
-		if varname == nil {println("Could not resolve attribute url '\(url)'.Have you set it before?"); return nil}
+		let varname : String? = _attributeUrlMap[url]
+		if varname == nil {print("Could not resolve attribute url '\(url)'.Have you set it before?"); return nil}
 		return getAttribLocation(varname!)
 	}
 	
@@ -318,7 +318,7 @@ public final class GLProgram: GLBase {
 	/**
 	Associates a attribute url with a varname in the shader
 	
-	:param: url The attribute url
+	- parameter url: The attribute url
 	*/
 	public func setAttributeUrl (url: GLurl, forLocation varname: String) {
 		_attributeUrlMap[url] = varname
@@ -328,15 +328,15 @@ public final class GLProgram: GLBase {
 	/**
 	Retrieves information about an uniform variable in this shader program
 	
-	:param: varname the variable name in the shader program
+	- parameter varname: the variable name in the shader program
 	*/
 	public func getUniformLocation (varname: String) -> GLuniformloc? {
 		if _uniformLocations[varname] != nil {return _uniformLocations[varname]}
 		
-		var location : GLint = glGetUniformLocation(id, varname)
-		if location < 0 {println("Uniform '\(varname)' not found in program."); return nil}
+		let location : GLint = glGetUniformLocation(id, varname)
+		if location < 0 {print("Uniform '\(varname)' not found in program."); return nil}
 		
-		var uniformvar : GLuniformloc = GLuniformloc(index: GLuint(location), name: varname)
+		let uniformvar : GLuniformloc = GLuniformloc(index: GLuint(location), name: varname)
 		_uniformLocations[varname] = uniformvar
 		
 		return uniformvar
@@ -346,11 +346,11 @@ public final class GLProgram: GLBase {
 	/**
 	Returns a uniform location associated with the passed url
 	
-	:param: url The url, which is associated with the target uniform variable
+	- parameter url: The url, which is associated with the target uniform variable
 	*/
 	public func getUniformLocation (url: GLurl) -> GLuniformloc? {
-		var varname : String? = _uniformUrlMap[url]
-		if varname == nil {println("Could not resolve uniform url '\(url)'.Have you set it before?"); return nil}
+		let varname : String? = _uniformUrlMap[url]
+		if varname == nil {print("Could not resolve uniform url '\(url)'.Have you set it before?"); return nil}
 		return getUniformLocation(varname!)
 	}
 	
@@ -358,8 +358,8 @@ public final class GLProgram: GLBase {
 	/**
 	Sets a uniform url to associate with a uniform variable in this program
 	
-	:param: url The url vor the associated uniform variable
-	:param: varname The variablename
+	- parameter url: The url vor the associated uniform variable
+	- parameter varname: The variablename
 	*/
 	public func setUniformUrl (url: GLurl, forLocation varname: String) {
 		_uniformUrlMap[url] = varname

@@ -60,14 +60,14 @@ public struct GLparallelepiped : GLGeometry {
 	Initializes the parallelogram with three vectors. The resulting geometry consists
 	of the points at p, p + s,  p +s + t and p + t
 	
-	:param: p The position to start the parallelogram from
-	:param: s
-	:param: t
+	- parameter p: The position to start the parallelogram from
+	- parameter s:
+	- parameter t:
 	*/
 	public init? (_ p: vec3, _ a: vec3, _ b: vec3, _ c: vec3) {
-		let normal : vec3 = cross(a, b).normalized
+		let normal : vec3 = cross(a, r: b).normalized
 		
-		let inverse : Bool = dot(normal, c.normalized) < 0
+		let inverse : Bool = dot(normal, r: c.normalized) < 0
 		let x : vec3 = a
 		let y : vec3 = b
 		let z : vec3
@@ -110,7 +110,7 @@ public struct GLparallelepiped : GLGeometry {
 	
 	
 	public init? (_ a: vec3, _ b: vec3, _ c: vec3) {
-		var p : vec3 = -0.5 * (a + b + c)
+		let p : vec3 = -0.5 * (a + b + c)
 		self.init(p, a, b, c)
 	}
 	
@@ -121,8 +121,8 @@ public struct GLparallelepiped : GLGeometry {
 	/**
 	Returns the buffer data for vertex at given index
 	
-	:param: atIndex The index of the vertex as array
-	:returns:
+	- parameter atIndex: The index of the vertex as array
+	- returns:
 	*/
 	public func getBufferData(atIndex index: Int) -> [GLfloat] {
 		return values[index].array
@@ -138,6 +138,6 @@ public struct GLparallelepiped : GLGeometry {
 	
 	
 	public func indexOf(value: vec3) -> Int? {
-		return find(values, value)
+		return values.indexOf(value)
 	}
 }

@@ -56,7 +56,7 @@ public struct vec2 : Vector {
 	
 	/** Provides the normalized version of this vector */
 	public var normalized : vec2 {
-		var m : GLfloat = magnitude
+		let m : GLfloat = magnitude
 		return vec2(x / m, y / m)
 	}
 	
@@ -77,8 +77,8 @@ public struct vec2 : Vector {
 	/** 
 	Initializes the vector with x and y arguments 
 	
-	:param: x
-	:param: y
+	- parameter x:
+	- parameter y:
 	*/
 	public init (_ x: GLfloat, _ y: GLfloat) {
 		_vec = (x, y)
@@ -156,7 +156,7 @@ public func ==(l: vec2, r: vec2) -> Bool {
 	return l.x == r.x && l.y == r.y
 }
 
-extension vec2 : Printable {
+extension vec2 : CustomStringConvertible {
 	public var description : String {
 		get {return "(\(x), \(y))"}
 	}
@@ -195,6 +195,6 @@ public func *(l: vec2, r: GLfloat) -> vec2 {
 
 public func gramschmidt (a: vec2, b: vec2) -> [vec2] {
 	let x : vec2 = a
-	let y : vec2 = b - (dot(x, b) / dot(x, x)) * x
+	let y : vec2 = b - (dot(x, r: b) / dot(x, r: x)) * x
 	return [x, y]
 }

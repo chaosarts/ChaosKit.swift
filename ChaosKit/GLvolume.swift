@@ -45,19 +45,19 @@ public struct GLvolume {
 	/// Provides the width of the view volume
 	public var width : GLfloat {
 		get {return abs(right - left)}
-		set {var half : GLfloat = newValue / 2; left = center.x - half; right = center.x + half}
+		set {let half : GLfloat = newValue / 2; left = center.x - half; right = center.x + half}
 	}
 	
 	/// Provides the height of the view volume
 	public var height : GLfloat {
 		get {return abs(top - bottom)}
-		set {var half : GLfloat = newValue / 2; bottom = center.y - half; top = center.y + half}
+		set {let half : GLfloat = newValue / 2; bottom = center.y - half; top = center.y + half}
 	}
 	
 	/// Provides the depth of the view volume
 	public var depth : GLfloat {
 		get {return abs(far - near)}
-		set {var half : GLfloat = newValue / 2; near = center.z - half; far = center.z + half}
+		set {let half : GLfloat = newValue / 2; near = center.z - half; far = center.z + half}
 	}
 	
 	/// Provides the width-height-aspect
@@ -96,7 +96,7 @@ public struct GLvolume {
 extension GLvolume : ArrayLiteralConvertible {
 	public init (arrayLiteral elements: GLfloat...) {
 		var defaults : [GLfloat] = [-1, 1, -1, 1, 1, 3]
-		var count : Int = min(defaults.count, elements.count)
+		let count : Int = min(defaults.count, elements.count)
 		for i in 0..<count {
 			defaults[i] = elements[i]
 		}
@@ -148,10 +148,10 @@ public func glKeepWholeScene (winWidth: GLfloat, winHeight: GLfloat, baseVolume:
 	let winAspect : GLfloat = winWidth / winHeight
 	
 	if winAspect > baseVolume.width / baseVolume.height {
-		volume = glKeepVolumeHeight(winWidth, winHeight, baseVolume, currentVolume)
+		volume = glKeepVolumeHeight(winWidth, winHeight: winHeight, baseVolume: baseVolume, currentVolume: currentVolume)
 	}
 	else {
-		volume = glKeepVolumeWidth(winWidth, winHeight, baseVolume, currentVolume)
+		volume = glKeepVolumeWidth(winWidth, winHeight: winHeight, baseVolume: baseVolume, currentVolume: currentVolume)
 	}
 	return volume
 }

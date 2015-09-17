@@ -82,7 +82,7 @@ public class GLTexture {
 	/**
 	Initializes the texture with passed target
 	
-	:param: target Texture target like GL_TEXTURE_2D
+	- parameter target: Texture target like GL_TEXTURE_2D
 	*/
 	internal init (_ target: GLenum) {
 		self.target = target
@@ -109,14 +109,14 @@ public class GLTexture {
 	/**
 	Returns texture parameter values
 	
-	:param: params
+	- parameter params:
 	:return: The value of the texture paramater
 	*/
 	public func getParameteri (pname: GLenum) -> GLint {
-		var params : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		let params : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		glGetTexParameteriv(target, pname, params)
 		
-		var mem : GLint = params.memory
+		let mem : GLint = params.memory
 		params.destroy()
 		params.dealloc(1)
 		
@@ -127,14 +127,14 @@ public class GLTexture {
 	/**
 	Returns texture parameter values
 	
-	:param: params
+	- parameter params:
 	:return: The value of the texture paramater
 	*/
 	public func getParameterf (pname: GLenum) -> GLfloat {
-		var params : UnsafeMutablePointer<GLfloat> = UnsafeMutablePointer<GLfloat>.alloc(1)
+		let params : UnsafeMutablePointer<GLfloat> = UnsafeMutablePointer<GLfloat>.alloc(1)
 		glGetTexParameterfv(target, pname, params)
 		
-		var mem : GLfloat = params.memory
+		let mem : GLfloat = params.memory
 		params.destroy()
 		params.dealloc(1)
 		
@@ -145,8 +145,8 @@ public class GLTexture {
 	/** 
 	Sets an paramter for the texture
 	
-	:param: pname The name of the parameter to set
-	:param: param The parameter value
+	- parameter pname: The name of the parameter to set
+	- parameter param: The parameter value
 	*/
 	public func setParameteri (pname: GLenum, _ param: GLint) {
 		glTexParameteri(target, pname, param)
@@ -156,8 +156,8 @@ public class GLTexture {
 	/**
 	Sets an paramter for the texture
 	
-	:param: pname The name of the paramater
-	:param: param The value of the parameter
+	- parameter pname: The name of the paramater
+	- parameter param: The value of the parameter
 	*/
 	public func setParameterf (pname: GLenum, _ param: GLfloat) {
 		glTexParameterf(target, pname, param)
@@ -167,8 +167,8 @@ public class GLTexture {
 	/**
 	Sets pixel storage modes
 	
-	:param: pname Specifies the symbolic name of the parameter to be set. GL_PACK_ALIGNMENT affects the packing of pixel data into memory. GL_UNPACK_ALIGNMENT affects the unpacking of pixel data from memory.
-	:param: param Specifies the value that pname is set to.
+	- parameter pname: Specifies the symbolic name of the parameter to be set. GL_PACK_ALIGNMENT affects the packing of pixel data into memory. GL_UNPACK_ALIGNMENT affects the unpacking of pixel data from memory.
+	- parameter param: Specifies the value that pname is set to.
 	*/
 	public func setPixelStorei (pname: GLenum, _ param: GLint) {
 		glPixelStorei(pname, param)
@@ -178,8 +178,8 @@ public class GLTexture {
 	/**
 	Sets pixel storage modes
 	
-	:param: pname Specifies the symbolic name of the parameter to be set. GL_PACK_ALIGNMENT affects the packing of pixel data into memory. GL_UNPACK_ALIGNMENT affects the unpacking of pixel data from memory.
-	:param: param Specifies the value that pname is set to.
+	- parameter pname: Specifies the symbolic name of the parameter to be set. GL_PACK_ALIGNMENT affects the packing of pixel data into memory. GL_UNPACK_ALIGNMENT affects the unpacking of pixel data from memory.
+	- parameter param: Specifies the value that pname is set to.
 	*/
 	public func setPixelStoref (pname: GLenum, _ param: GLfloat) {
 		glPixelStoref(pname, param)
@@ -189,14 +189,14 @@ public class GLTexture {
 	/**
 	Returns information about the current bound texture
 	
-	:param: pname The paramater name
+	- parameter pname: The paramater name
 	:return: The value of the parameter
  	*/
 	public func iv (pname: Int32) -> GLint {
-		var params : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		let params : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		glGetTexParameteriv(target, GLenum(pname), params)
 		
-		var mem : GLint = params.memory
+		let mem : GLint = params.memory
 		params.destroy()
 		params.dealloc(1)
 		return mem

@@ -64,8 +64,8 @@ public struct vec1 : Vector {
 	/**
 	Initializes the vector with x and y arguments
 	
-	:param: x
-	:param: y
+	- parameter x:
+	- parameter y:
 	*/
 	public init (_ x: GLfloat) {
 		self.x = x
@@ -130,7 +130,7 @@ public func ==(l: vec1, r: vec1) -> Bool {
 	return l.x == r.x
 }
 
-extension vec1 : Printable {
+extension vec1 : CustomStringConvertible {
 	public var description : String {
 		get {return "(\(x))"}
 	}

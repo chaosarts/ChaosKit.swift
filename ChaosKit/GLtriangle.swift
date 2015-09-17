@@ -35,7 +35,7 @@ public struct GLtriangle : GLPrimitive {
 	
 	/// Provides the normal of the triangle (righthand)
 	public var normal : vec3 {
-		get {return cross(b - a, c - a)}
+		get {return cross(b - a, r: c - a)}
 	}
 	
 	
@@ -57,7 +57,7 @@ public struct GLtriangle : GLPrimitive {
 	public static func fromGeometry (geom: GLGeometry) -> [GLtriangle] {
 		var triangles : [GLtriangle] = []
 		var queue : Queue = Queue(geom.indexlist)
-		do {
+		repeat {
 			let a : vec3 = geom.values[queue.dequeue()!]
 			let b : vec3 = geom.values[queue.dequeue()!]
 			let c : vec3 = geom.values[queue.dequeue()!]

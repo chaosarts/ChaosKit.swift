@@ -36,8 +36,8 @@ public class GLShader {
 	/// Provides the info log about the shader
 	public var infolog : String {
 		get {
-			var bufSize : GLint = iv(GL_INFO_LOG_LENGTH)
-			var log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(Int(bufSize))
+			let bufSize : GLint = iv(GL_INFO_LOG_LENGTH)
+			let log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(Int(bufSize))
 			glGetShaderInfoLog(id, bufSize, nil, log)
 			
 			let string : String? = String.fromCString(log)
@@ -52,8 +52,8 @@ public class GLShader {
 	/**
 	Initiliazes a shader of given type
 	
-	:param: type The type of the shader
-	:param: sources A list of shader source objects
+	- parameter type: The type of the shader
+	- parameter sources: A list of shader source objects
 	*/
 	public init (type: GLenum, sources: [GLsrcfile]) {
 		self.id = glCreateShader(type)
@@ -64,8 +64,8 @@ public class GLShader {
 	/**
 	Initiliazes a shader of given type and with given source
 	
-	:param: type The type of the shader
-	:param: source A list of shader source objects
+	- parameter type: The type of the shader
+	- parameter source: A list of shader source objects
 	*/
 	public convenience init (type: GLenum, source: GLsrcfile) {
 		self.init(type: type, sources: [source])
@@ -75,7 +75,7 @@ public class GLShader {
 	/**
 	Initializes the shader with no sources
 	
-	:param: type The type of the shader
+	- parameter type: The type of the shader
 	*/
 	public convenience init (type: GLenum) {
 		let sources : [GLsrcfile] = []
@@ -85,8 +85,8 @@ public class GLShader {
 	/**
 	Initializes the shader with the one source string
 	
-	:param: type The shader type like GL_VERTEX_SHADER
-	:param: source The source code as string
+	- parameter type: The shader type like GL_VERTEX_SHADER
+	- parameter source: The source code as string
 	*/
 	public convenience init (type : GLenum, source : String) {
 		let sources : [GLsrcfile] = [GLsrcfile(content: source)]
@@ -97,8 +97,8 @@ public class GLShader {
 	/**
 	Initializes the shader with the one or more source strings
 	
-	:param: type The shader type like GL_VERTEX_SHADER
-	:param: sources The source codes as string
+	- parameter type: The shader type like GL_VERTEX_SHADER
+	- parameter sources: The source codes as string
 	*/
 	public convenience init (type : GLenum, sources : [String]) {
 		let sources : [GLsrcfile] = sources.map({element in return GLsrcfile(content: element)})
@@ -109,12 +109,12 @@ public class GLShader {
 	/**
 	Initializes the shader with one or more files
 	
-	:param: type The shader type like GL_VERTEX_SHADER
-	:param: files The files, that contains the sources
+	- parameter type: The shader type like GL_VERTEX_SHADER
+	- parameter files: The files, that contains the sources
 	*/
 	public convenience init (type: GLenum, files: [String], encoding: NSStringEncoding = NSUTF8StringEncoding) {
 		var sources : [String] = []
-		var fileManager : NSFileManager = NSFileManager.defaultManager()
+		let fileManager : NSFileManager = NSFileManager.defaultManager()
 		
 		for file in files {
 			if !fileManager.fileExistsAtPath(file) {
@@ -122,7 +122,7 @@ public class GLShader {
 				continue
 			}
 			
-			var fileContent : String = NSString(contentsOfFile: file, encoding: encoding, error: nil)! as String
+			let fileContent : String = (try! NSString(contentsOfFile: file, encoding: encoding)) as String
 			sources.append(fileContent)
 		}
 		
@@ -133,8 +133,8 @@ public class GLShader {
 	/**
 	Initializes the shader with a file
 	
-	:param: type The shader type like GL_VERTEX_SHADER
-	:param: file The file, that contains the source
+	- parameter type: The shader type like GL_VERTEX_SHADER
+	- parameter file: The file, that contains the source
 	*/
 	public convenience init (type: GLenum, file: String, encoding: NSStringEncoding = NSUTF8StringEncoding) {
 		self.init(type: type, files: [file], encoding: encoding)
@@ -144,15 +144,15 @@ public class GLShader {
 	/**
 	Initializes the shader with one or more resource files
 	
-	:param: type The shader type like GL_VERTEX_SHADER
-	:param: resources The resource files, that contains the sources
+	- parameter type: The shader type like GL_VERTEX_SHADER
+	- parameter resources: The resource files, that contains the sources
 	*/
 	public convenience init (type: GLenum, resources: [String], encoding: NSStringEncoding = NSUTF8StringEncoding) {
 		var files : [String] = []
-		var bundle : NSBundle = NSBundle.mainBundle()
+		let bundle : NSBundle = NSBundle.mainBundle()
 		
 		for resource in resources {
-			var file : String? = bundle.pathForResource(resource, ofType: nil)
+			let file : String? = bundle.pathForResource(resource, ofType: nil)
 			if nil == file {
 				error("GLShader resource \(file) not found.")
 				continue
@@ -166,8 +166,8 @@ public class GLShader {
 	/**
 	Initializes the shader with a resource file
 	
-	:param: type The shader type like GL_VERTEX_SHADER
-	:param: resource The resource file, that contains the source
+	- parameter type: The shader type like GL_VERTEX_SHADER
+	- parameter resource: The resource file, that contains the source
 	*/
 	public convenience init (type: GLenum, resource: String, encoding: NSStringEncoding = NSUTF8StringEncoding) {
 		self.init(type: type, resources: [resource], encoding: encoding)
@@ -177,11 +177,11 @@ public class GLShader {
 	/**
 	A shortcut for glShaderiv. Returns information about the shader
 	
-	:param: pname A paramater value for glShaderiv like GL_COMPILE_STATUS
-	:returns: The unsafe mutable pointer that has been passed to glShaderiv within this method. Contains the result of the request
+	- parameter pname: A paramater value for glShaderiv like GL_COMPILE_STATUS
+	- returns: The unsafe mutable pointer that has been passed to glShaderiv within this method. Contains the result of the request
 	*/
 	public func iv (pname : GLenum) -> GLint {
-		var param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
+		let param : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		glGetShaderiv(id, GLenum(pname), param)
 		
 		let val : GLint = param.memory
@@ -194,8 +194,8 @@ public class GLShader {
 	/**
 	A shortcut for glShaderiv. Returns information about the shader
 	
-	:param: pname A paramater value for glShaderiv like GL_COMPILE_STATUS
-	:returns: The unsafe mutable pointer that has been passed to glShaderiv within this method. Contains the result of the request
+	- parameter pname: A paramater value for glShaderiv like GL_COMPILE_STATUS
+	- returns: The unsafe mutable pointer that has been passed to glShaderiv within this method. Contains the result of the request
 	*/
 	public func iv (pname : Int32) -> GLint {
 		return iv(GLenum(pname))
@@ -205,7 +205,7 @@ public class GLShader {
 	/**
 	Appends a source to the shader
 	
-	:param: source The shader source object
+	- parameter source: The shader source object
 	*/
 	public func append (source: GLsrcfile) {
 		sources.append(source)
@@ -215,10 +215,10 @@ public class GLShader {
 	/**
 	Appends a source to the shader
 	
-	:param: source The shader source object
+	- parameter source: The shader source object
 	*/
 	public func extend (sources: [GLsrcfile]) {
-		self.sources.extend(sources)
+		self.sources.appendContentsOf(sources)
 	}
 	
 	
@@ -226,8 +226,8 @@ public class GLShader {
 	Compiles the shader
 	*/
 	public func compile () {
-		var cstrings : UnsafeMutablePointer<UnsafePointer<GLchar>> = UnsafeMutablePointer<UnsafePointer<GLchar>>.alloc(sources.count)
-		var lengths : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(sources.count)
+		let cstrings : UnsafeMutablePointer<UnsafePointer<GLchar>> = UnsafeMutablePointer<UnsafePointer<GLchar>>.alloc(sources.count)
+		let lengths : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(sources.count)
 		for index in 0..<sources.count {
 			let cstring : Cstring? = sources[index].cstring
 			if nil == cstring {continue}
@@ -247,7 +247,7 @@ public class GLShader {
 		lengths.dealloc(sources.count)
 		
 		if (iv(GL_COMPILE_STATUS) != GL_TRUE) {
-			println(infolog)
+			print(infolog)
 		}
 
 	}

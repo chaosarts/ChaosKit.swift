@@ -73,8 +73,8 @@ public struct GLgeom : GLGeometry, ArrayLiteralConvertible {
 	/** 
 	Returns the vertex at given index according to indexlist
 	
-	:param: index The index of the vertex to fetch
-	:returns: The vertex position
+	- parameter index: The index of the vertex to fetch
+	- returns: The vertex position
 	*/
 	public subscript (index: Int) -> vec3 {
 		get {return values[indexlist[index]]}
@@ -91,8 +91,8 @@ public struct GLgeom : GLGeometry, ArrayLiteralConvertible {
 	/**
 	Returns the index of the position in the geometry
 	
-	:param: value The position vector to get the index from
-	:returns: The index
+	- parameter value: The position vector to get the index from
+	- returns: The index
 	*/
 	public subscript (value: vec3) -> Int? {
 		get {return indexOf(value)}
@@ -115,7 +115,7 @@ public struct GLgeom : GLGeometry, ArrayLiteralConvertible {
 	/**
 	Initializer from ArrayLiteralConvertiable protocol
 	
-	:param: arrayLiteral
+	- parameter arrayLiteral:
 	*/
 	public init(arrayLiteral elements: vec3...) {
 		self.init(elements)
@@ -140,7 +140,7 @@ public struct GLgeom : GLGeometry, ArrayLiteralConvertible {
 	/**
 	Returns the value according to the
 	
-	:param: index The index of the value to fetch
+	- parameter index: The index of the value to fetch
 	:return: The vector at given index
 	*/
 	public func getBufferData (atIndex index: Int) -> [GLfloat] {
@@ -151,7 +151,7 @@ public struct GLgeom : GLGeometry, ArrayLiteralConvertible {
 	/**
 	Appends a new value to the geometry
 	
-	:param: value The value to append
+	- parameter value: The value to append
  	*/
 	public mutating func append (value: vec3) -> Int {
 		var index : Int? = _indexmap[value.description]
@@ -171,7 +171,7 @@ public struct GLgeom : GLGeometry, ArrayLiteralConvertible {
 	/**
 	Adds one or mor values to the geometry
 	
-	:param: values The list of values to add
+	- parameter values: The list of values to add
 	*/
 	public mutating func extend (values : [vec3]) {
 		for value in values {

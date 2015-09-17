@@ -14,7 +14,7 @@ public protocol TreeTraverseStrategy {}
 
 public final class TreeNode<T> : Hierarchy, Valuable {
 	
-	typealias Element = T
+	public typealias Element = T
 	
 	typealias Type = TreeNode<Element>
 	

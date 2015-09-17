@@ -60,7 +60,7 @@ public struct GLnormal : GLAttribute, ArrayLiteralConvertible {
 	/** 
 	Initializes the attribute by deriving the normals from geometry
 	
-	:param: geom The geometry to use to generate the attribute values
+	- parameter geom: The geometry to use to generate the attribute values
 	*/
 	public init (_ geom: GLGeometry) {		
 		if geom.sharedVertice {
@@ -78,7 +78,7 @@ public struct GLnormal : GLAttribute, ArrayLiteralConvertible {
 			let triangles : [GLtriangle] = geom.triangles
 			for triangle in triangles {
 				let normal : vec3 = triangle.normal
-				values.extend([normal, normal, normal])
+				values.appendContentsOf([normal, normal, normal])
 			}
 		}
 	}
@@ -90,8 +90,8 @@ public struct GLnormal : GLAttribute, ArrayLiteralConvertible {
 	/**
 	Returns the attribute for a vertex at given index as float array
 	
-	:param: atIndex The index of the attribute value to obtain
-	:returns: The attribute value of the vertex at given index
+	- parameter atIndex: The index of the attribute value to obtain
+	- returns: The attribute value of the vertex at given index
 	*/
 	public func getBufferData(atIndex index: Int) -> [GLfloat] {
 		return values[index].array

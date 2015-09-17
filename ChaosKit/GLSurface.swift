@@ -83,7 +83,7 @@ public class GLSurface : GLAttributeContainer {
 	/// 
 	public var attributeContainers : [GLAttributeContainer] {
 		get {
-			var containers : [GLAttributeContainer] = []
+			let containers : [GLAttributeContainer] = []
 			return containers
 		}
 	}

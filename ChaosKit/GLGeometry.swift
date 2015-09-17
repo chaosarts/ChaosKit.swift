@@ -43,8 +43,8 @@ public protocol GLGeometry : GLAttribute {
 	/** 
 	Appends a new value to the geometry
 	
-	:param: value The value to append
-	:returns: The index of the new value or -1 if it has not been added
+	- parameter value: The value to append
+	- returns: The index of the new value or -1 if it has not been added
 	*/
 	mutating func append (value: vec3) -> Int
 	
@@ -52,7 +52,7 @@ public protocol GLGeometry : GLAttribute {
 	/**
 	Adds one or more values to the geometry
 	
-	:param: values A list of value to add to the geometry
+	- parameter values: A list of value to add to the geometry
 	*/
 	mutating func extend (values: [vec3])
 	
@@ -66,13 +66,13 @@ public protocol GLGeometry : GLAttribute {
 /**
 Reutrns a list of line primitves according to given geometry
 
-:param: geom The geometry to get the line primitves from
-:returns: A list of line primitives
+- parameter geom: The geometry to get the line primitves from
+- returns: A list of line primitives
 */
 public func getLines (geom: GLGeometry) -> [GLline]{
 	var lines : [GLline] = []
 	var queue : Queue = Queue(geom.indexlist)
-	do {
+	repeat {
 		let a : vec3 = geom.values[queue.dequeue()!]
 		let b : vec3 = geom.values[queue.dequeue()!]
 		lines.append(GLline(a, b))
@@ -85,9 +85,9 @@ public func getLines (geom: GLGeometry) -> [GLline]{
 /**
 Returns the line in geometry with given index
 
-:param: geom The geometry of the line primitive
-:param: index The index of the line to obtain
-:returns: The line primitve with given index
+- parameter geom: The geometry of the line primitive
+- parameter index: The index of the line to obtain
+- returns: The line primitve with given index
 */
 public func getLine (geom: GLGeometry, index: Int) -> GLline? {
 	let startIndex : Int = index * 2
@@ -102,11 +102,11 @@ public func getLine (geom: GLGeometry, index: Int) -> GLline? {
 /**
 Returns all lines, to which the given point belongs to
 
-:param: forPoint The point for which to fetch the lines
+- parameter forPoint: The point for which to fetch the lines
 :return: A list of all lines including the passed point
 */
 public func getLines (geom: GLGeometry, point: vec3) -> [GLline] {
-	let index : Int? = find(geom.values, point)
+	let index : Int? = geom.values.indexOf(point)
 	if nil == index {return []}
 	
 	var lines : [GLline] = []
@@ -128,8 +128,8 @@ public func getLines (geom: GLGeometry, point: vec3) -> [GLline] {
 /**
 Returns the triangle with given index
 
-:param: geom The geometry to fetch the triangle from
-:param: index The index of the triangle
+- parameter geom: The geometry to fetch the triangle from
+- parameter index: The index of the triangle
 :return: The triangle
 */
 public func getTriangle (geom: GLGeometry, index: Int) -> GLtriangle? {
@@ -147,11 +147,11 @@ public func getTriangle (geom: GLGeometry, index: Int) -> GLtriangle? {
 /**
 Returns all lines, to which the given point belongs to
 
-:param: forPoint The point for which to fetch the lines
+- parameter forPoint: The point for which to fetch the lines
 :return: A list of all lines including the passed point
 */
 public func getTriangles (geom: GLGeometry, point: vec3) -> [GLtriangle] {
-	let index : Int! = find(geom.values, point)
+	let index : Int! = geom.values.indexOf(point)
 	if nil == index {return []}
 	
 	var triangles : [GLtriangle] = []

@@ -8,7 +8,7 @@
 
 import Cocoa
 
-@objc
+
 public class GLContainer: GLDisplayObject {
 	
 	/*
@@ -68,12 +68,12 @@ public class GLContainer: GLDisplayObject {
 	/** 
 	Adds a new child to the container 
 	
-	:param: child The child object to add
+	- parameter child: The child object to add
 	*/
 	public func addChild (child: GLDisplayObject) {
 		if let container = child as? GLContainer {
 			if container.isAncestorOf(self) {
-				return println("Ancestor cannot be child of its own descendants.")
+				return print("Ancestor cannot be child of its own descendants.")
 			}
 		}
 		
@@ -91,7 +91,7 @@ public class GLContainer: GLDisplayObject {
 	/** 
 	Returns the index of the child within this container, if it exists
 	
-	:param: child The child to get the index of
+	- parameter child: The child to get the index of
 	:return: Some int value
 	*/
 	public func getChildIndex (child: GLDisplayObject) -> Int? {
@@ -108,11 +108,11 @@ public class GLContainer: GLDisplayObject {
 	/**
 	Removes the child from container
 	
-	:param: child The child object to remove
+	- parameter child: The child object to remove
 	:return: The index of the child
 	*/
 	public func removeChild (child: GLDisplayObject) -> Int? {
-		var index : Int? = getChildIndex(child)
+		let index : Int? = getChildIndex(child)
 		if nil == index {return -1}
 		
 		removeChildAt(index!)
@@ -123,13 +123,13 @@ public class GLContainer: GLDisplayObject {
 	/**
 	Removes the child at given index
 	
-	:param: index The index of the child to remove
+	- parameter index: The index of the child to remove
 	:return: The display object child
 	*/
 	public func removeChildAt (index: Int) -> GLDisplayObject? {
 		if index < 0 || index >= children.count {return nil}
 		
-		var child : GLDisplayObject = children[index]
+		let child : GLDisplayObject = children[index]
 		children.removeAtIndex(index)
 		child._parent = nil
 		
@@ -145,7 +145,7 @@ public class GLContainer: GLDisplayObject {
 	public func isAncestorOf (displayObject: GLDisplayObject) -> Bool {
 		var queue : Queue<GLDisplayObject> = Queue(children)
 		while !queue.isEmpty {
-			var obj : GLDisplayObject = queue.dequeue()!
+			let obj : GLDisplayObject = queue.dequeue()!
 			
 			if obj === displayObject {return true}
 			
@@ -173,7 +173,7 @@ public class GLContainer: GLDisplayObject {
 			}
 			
 			if let container = child as? GLContainer {
-				_shapeCache!.extend(container.shapes)
+				_shapeCache!.appendContentsOf(container.shapes)
 			}
 		}
 	}

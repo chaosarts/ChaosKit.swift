@@ -414,7 +414,7 @@ public struct vec4 : Vector {
 	}
 	
 	public var magnitude : GLfloat {
-		return sqrt(dot(self, self))
+		return sqrt(dot(self, r: self))
 	}
 	
 	public var normalized : vec4 {
@@ -496,7 +496,7 @@ extension vec4 : ArrayLiteralConvertible {
 }
 
 
-extension vec4 : Printable {
+extension vec4 : CustomStringConvertible {
 	public var description : String {get {return "(\(x), \(y), \(z), \(w))"}}
 }
 
@@ -551,13 +551,13 @@ public func dot(l: vec4, r: vec4) -> GLfloat {
 
 public func gramschmidt (a: vec4, b: vec4, c: vec4, d: vec4) -> [vec4] {
 	let x : vec4 = a
-	let xdot : Float = dot(x, x)
+	let xdot : Float = dot(x, r: x)
 	
-	let y : vec4 = b - (dot(x, b) / xdot) * x
-	let ydot : Float = dot(y, y)
+	let y : vec4 = b - (dot(x, r: b) / xdot) * x
+	let ydot : Float = dot(y, r: y)
 	
-	let z : vec4 = c - (dot(x, c) / xdot) * x - (dot(y, c) / ydot) * y
+	let z : vec4 = c - (dot(x, r: c) / xdot) * x - (dot(y, r: c) / ydot) * y
 	
-	let w : vec4 = d - (dot(x, d) / xdot) * x - (dot(y, d) / ydot) * y - (dot(z, d) / dot(z, z)) * z
+	let w : vec4 = d - (dot(x, r: d) / xdot) * x - (dot(y, r: d) / ydot) * y - (dot(z, r: d) / dot(z, r: z)) * z
 	return [x, y, z, w]
 }

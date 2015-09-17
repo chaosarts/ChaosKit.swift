@@ -59,7 +59,7 @@ public struct Stack<T> : Collection, CountLimited {
 	
 	
 	public mutating func removeAll() -> [T] {
-		var array = _array
+		let array = _array
 		_array = []
 		return array
 	}

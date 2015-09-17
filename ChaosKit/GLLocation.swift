@@ -18,7 +18,7 @@ import OpenGL
 /**
 Base class for shader program locations
 */
-public protocol GLLocation : Printable {
+public protocol GLLocation : CustomStringConvertible {
 	
 	/// The varname string in the shader program
 	var name : String {get}

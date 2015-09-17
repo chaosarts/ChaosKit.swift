@@ -11,10 +11,10 @@ import Foundation
 public func log (message: String, _ type: LogType = .Info) {
 	let date : NSDate = NSDate()
 	let calendar : NSCalendar = NSCalendar.currentCalendar()
-	let components : NSDateComponents = calendar.components(.CalendarUnitHour | .CalendarUnitMinute | .CalendarUnitSecond, fromDate: date)
+	let components : NSDateComponents = calendar.components([.Hour, .Minute, .Second], fromDate: date)
 	let m : String = "\(components.hour):\(components.minute):\(components.second)"
 		+ " [\(type.rawValue)]: \(message)"
-	println(m)
+	print(m)
 }
 
 

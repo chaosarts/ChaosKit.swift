@@ -26,7 +26,7 @@ public struct GLvarattrib<V: Vector> : GLAttribute, ArrayLiteralConvertible {
 	/**
 	Initializes the attribute with given values
 	
-	:param: values The values to us for the attribute
+	- parameter values: The values to us for the attribute
 	*/
 	public init (_ values: [V]) {
 		self.values = values
@@ -44,7 +44,7 @@ public struct GLvarattrib<V: Vector> : GLAttribute, ArrayLiteralConvertible {
 	/**
 	Initializer for array literals
 	
-	:param: arrayLiteral
+	- parameter arrayLiteral:
 	*/
 	public init (arrayLiteral elements: V...) {
 		self.init(elements)
@@ -54,7 +54,7 @@ public struct GLvarattrib<V: Vector> : GLAttribute, ArrayLiteralConvertible {
 	/**
 	Returns the value for one vertex of given index for buffering
 	
-	:param: atIndex the index of the vertex to fetch data from
+	- parameter atIndex: the index of the vertex to fetch data from
 	*/
 	public func getBufferData (atIndex index: Int) -> [GLfloat] {
 		return values[index].array

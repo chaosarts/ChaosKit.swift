@@ -88,12 +88,12 @@ public final class GLCamera {
 	
 	/// Provides the direction in which the camera is looking at
 	public var direction : vec3 {
-		get {return polar2cartesian(1, ry - Float(M_PI_2), rx)}
+		get {return polar2cartesian(1, theta: ry - Float(M_PI_2), phi: rx)}
 	}
 	
 	/// Provides the up vector of the camera
 	public var up : vec3 {
-		get {return mat3.makeRotation(rad: rz, axis: direction) * polar2cartesian(1, ry, rx)}
+		get {return mat3.makeRotation(rad: rz, axis: direction) * polar2cartesian(1, theta: ry, phi: rx)}
 	}
 	
 	/// Provides the uniforms
@@ -112,7 +112,7 @@ public final class GLCamera {
 	/**
 	Initializes the camera with a given projection
 	
-	:param: projection
+	- parameter projection:
 	*/
 	public init (projection: GLCameraProjection) {
 		self.projection = projection

@@ -43,7 +43,7 @@ public struct GLOrthographicProjection : GLCameraProjection {
 	/**
 	Initializes the projection with given view volume
 	
-	:param: viewVolume The view colume object
+	- parameter viewVolume: The view colume object
 	*/
 	public init (_ volume: GLvolume = GLvolume()) {
 		self.volume = volume
@@ -74,7 +74,7 @@ public struct GLPerspectiveProjection : GLCameraProjection {
 	/**
 	Initializes the projection with given view volume
 	
-	:param: viewVolume The view colume object
+	- parameter viewVolume: The view colume object
 	*/
 	public init (_ viewVolume: GLvolume = GLvolume()) {
 		self.volume = viewVolume

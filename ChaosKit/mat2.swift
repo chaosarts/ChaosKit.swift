@@ -62,7 +62,7 @@ public struct mat2 : QuadraticMatrix {
 	/**
 	Returns the row at given index.
 	
-	:param: row The zero based row index to access. Must be either 0 or 1
+	- parameter row: The zero based row index to access. Must be either 0 or 1
 	*/
 	public subscript (row index: Int) -> vec2 {
 		get {
@@ -81,7 +81,7 @@ public struct mat2 : QuadraticMatrix {
 	/**
 	Returns the column at given index.
 	
-	:param: row The zero based column index to access. Must be either 0 or 1
+	- parameter row: The zero based column index to access. Must be either 0 or 1
 	*/
 	public subscript (col index: Int) -> vec2 {
 		get {
@@ -100,8 +100,8 @@ public struct mat2 : QuadraticMatrix {
 	/**
 	Returns the value of the component of the matrix at given row and column index (zero based)
 	
-	:param: row The row index
-	:param: col The column index
+	- parameter row: The row index
+	- parameter col: The column index
 	:return: The value of the according component
 	*/
 	public subscript (row: Int, col: Int) -> GLfloat {
@@ -125,7 +125,7 @@ public struct mat2 : QuadraticMatrix {
 	Initializes the matrix with an array. Values with greater 
 	index that 3 will be ignored. Missing indices will be set to zero
 	
-	:param: array
+	- parameter array:
 	*/
 	public init(_ array: [GLfloat]) {
 		for index in 0...3 {
@@ -137,7 +137,7 @@ public struct mat2 : QuadraticMatrix {
 	/**
 	Initializes a diagonal matrix with given value on the (i, i) index
 	
-	:param: value The value to use for the diagonal components
+	- parameter value: The value to use for the diagonal components
 	*/
 	public init (_ value: GLfloat) {
 		array = [value, 0.0, 0.0, value]
@@ -163,12 +163,12 @@ extension mat2 : ArrayLiteralConvertible {
 	}
 }
 
-extension mat2 : Printable {
+extension mat2 : CustomStringConvertible {
 	public var description : String {
 		get {
 			var maxlen : Int = 0
 			for index in 0..<array.count {
-				maxlen = max(maxlen, count(array[index].description))
+				maxlen = max(maxlen, array[index].description.characters.count)
 			}
 			
 			maxlen++
@@ -178,8 +178,8 @@ extension mat2 : Printable {
 			for r in 0...1 {
 				output += "|"
 				for c in 0...1 {
-					var fillLen : Int = maxlen - count(self[r, c].description)
-					var white : String = " " * UInt32(fillLen)
+					let fillLen : Int = maxlen - self[r, c].description.characters.count
+					let white : String = " " * UInt32(fillLen)
 					output += white + self[r, c].description
 				}
 				output += "|\n"
