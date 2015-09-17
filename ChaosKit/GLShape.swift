@@ -26,6 +26,9 @@ public class GLShape : GLDisplayObject, GLAttributeContainer {
 	// STORED PROPERTIES
 	// +++++++++++++++++
 	
+	
+	private var _vaos : [GLuint : GLvao] = [GLuint : GLvao]()
+	
 	/// Provides a list of buffer objects, which are to use when configuring this vertex array
 	private var _buffers : [GLBuffer]?
 	
@@ -110,7 +113,7 @@ public class GLShape : GLDisplayObject, GLAttributeContainer {
 			/// the dictionary, store it in a local variable. May save a little
 			/// time.
 			let attributes : [GLurl : GLAttribute] = self.attributes
-			let count : Int = geometry.count
+			let count : Int = geometry.indexlist.count
 			
 			/// It can be assumed, that after _configureBuffer call, that
 			/// buffers are available
@@ -162,6 +165,29 @@ public class GLShape : GLDisplayObject, GLAttributeContainer {
 	
 	// METHODS
 	// +++++++
+	
+	
+	public func draw (#program: GLProgram) -> GLvao! {
+		var vao : GLvao? = _vaos[program.id]
+		
+		if nil == vao {
+			vao = GLvao()
+			vao?.bind()
+			program.upload(buffers)
+			_vaos[program.id] = vao
+		}
+		
+		vao?.bind()
+		
+		if geometry.sharedVertice {
+			glDrawElements(mode, GLsizei(geometry.indexlist.count), GLenum(GL_UNSIGNED_INT), geometry.indexlist)
+		}
+		else {
+			glDrawArrays(mode, 0, GLsizei(geometry.indexlist.count))
+		}
+		vao?.unbind()
+		return vao
+	}
 	
 	
 	/**

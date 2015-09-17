@@ -53,35 +53,6 @@ public struct GLtriangle : GLPrimitive {
 	// METHODS
 	// +++++++
 	
-	/**
-	Returns the tangent space of the triangl according to given texcoordinates
-	*/
-	public func getTangentSpace (texCoord1: vec2, _ texCoord2: vec2, _ texCoord3: vec2) -> GLtangentspace? {
-		let ds1 : Float = texCoord2.x - texCoord1.x
-		let dt1 : Float = texCoord2.y - texCoord1.y
-		let ds2 : Float = texCoord3.x - texCoord1.x
-		let dt2 : Float = texCoord3.y - texCoord1.y
-		
-		let quotient : Float = 1.0 / (ds1 * dt2 - ds2 * dt1)
-		
-		let q1 : vec3 = b - a
-		let q2 : vec3 = c - a
-		
-		let tangent : vec3 = vec3(
-			dt2 * q1.x - dt1 * q2.x,
-			dt2 * q1.y - dt1 * q2.y,
-			dt2 * q1.z - dt1 * q2.z
-		) * quotient
-		
-		let bitangent : vec3 = vec3(
-			-ds2 * q1.x + ds1 * q2.x,
-			-ds2 * q1.y + ds1 * q2.y,
-			-ds2 * q1.z + ds1 * q2.z
-		) * quotient
-		
-		return GLtangentspace(tangent: tangent, bitangent: bitangent, normal: normal)
-	}
-	
 	
 	public static func fromGeometry (geom: GLGeometry) -> [GLtriangle] {
 		var triangles : [GLtriangle] = []

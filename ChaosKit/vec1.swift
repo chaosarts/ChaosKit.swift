@@ -12,10 +12,13 @@ public typealias scalar = vec1
 
 public struct vec1 : Vector {
 	
-	public static let rows : Int = 1
+	/// Provides the count of rows
+	public static var rows : Int {get {return 1}}
 	
-	public static let cols : Int = 1
+	/// Provides the count of cols
+	public static var cols : Int {get {return 1}}
 	
+	// Provides the size of the vector in bytes
 	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
 	
 	/** The size of a vector */
@@ -24,6 +27,11 @@ public struct vec1 : Vector {
 	/** The x component of the vector */
 	public var x: GLfloat = 0
 	
+	/// Provides the count of rows
+	public var rows : Int {get {return 1}}
+	
+	/// Provides the count of cols
+	public var cols : Int {get {return 1}}
 	
 	/** Provides the vector as array */
 	public var array : [GLfloat] {
@@ -37,8 +45,13 @@ public struct vec1 : Vector {
 	
 	/** Provides the normalized version of this vector */
 	public var normalized : vec1 {
-		var m : GLfloat = magnitude
-		return vec1(x / m)
+		return vec1(x / magnitude)
+	}
+	
+	
+	public subscript (row: Int, col: Int) -> Float {
+		get {return x}
+		set {x = newValue}
 	}
 	
 	

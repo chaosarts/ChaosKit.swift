@@ -18,10 +18,10 @@ public class GLSurface : GLAttributeContainer {
 	private var _uniforms : [GLurl : GLUniform]?
 	
 	/// Provides a map of url domain to surface texture
-	public private(set) var _textures : [GLUrlDomain : GLTextureMap] = [GLUrlDomain : GLTextureMap]()
+	public private(set) var _textureMaps2D : [GLUrlDomain : GLTextureMap2D] = [GLUrlDomain : GLTextureMap2D]()
 	
 	/// Returns the count of textures this surface uses
-	public var textureCount : Int {get {return _textures.count}}
+	public var texMap2DCount : Int {get {return _textureMaps2D.count}}
 	
 	/// Provides the refelction factor
 	public var reflection : GLfloat = 0.5
@@ -33,51 +33,51 @@ public class GLSurface : GLAttributeContainer {
 	public var normal : GLnormal?
 	
 	/// Provides the surface texture for bump mapping
-	public var colormap : GLTextureMap? {
-		get {return _textures[.ColorMap]}
-		set {_textures[.ColorMap] = newValue; _uniforms = nil}
+	public var colormap : GLTextureMap2D? {
+		get {return _textureMaps2D[.ColorMap]}
+		set {_textureMaps2D[.ColorMap] = newValue; _uniforms = nil}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var bumpmap : GLTextureMap? {
-		get {return _textures[.BumpMap]}
-		set {_textures[.BumpMap] = newValue}
+	public var bumpmap : GLTextureMap2D? {
+		get {return _textureMaps2D[.BumpMap]}
+		set {_textureMaps2D[.BumpMap] = newValue}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var normalmap : GLTextureMap? {
-		get {return _textures[.NormalMap]}
-		set {_textures[.NormalMap] = newValue}
+	public var normalmap : GLTextureMap2D? {
+		get {return _textureMaps2D[.NormalMap]}
+		set {_textureMaps2D[.NormalMap] = newValue}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var heightmap : GLTextureMap? {
-		get {return _textures[.HeightMap]}
-		set {_textures[.HeightMap] = newValue}
+	public var heightmap : GLTextureMap2D? {
+		get {return _textureMaps2D[.HeightMap]}
+		set {_textureMaps2D[.HeightMap] = newValue}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var displacementmap : GLTextureMap? {
-		get {return _textures[.DisplacementMap]}
-		set {_textures[.DisplacementMap] = newValue}
+	public var displacementmap : GLTextureMap2D? {
+		get {return _textureMaps2D[.DisplacementMap]}
+		set {_textureMaps2D[.DisplacementMap] = newValue}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var glowmap : GLTextureMap? {
-		get {return _textures[.GlowMap]}
-		set {_textures[.GlowMap] = newValue}
+	public var glowmap : GLTextureMap2D? {
+		get {return _textureMaps2D[.GlowMap]}
+		set {_textureMaps2D[.GlowMap] = newValue}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var diffusemap : GLTextureMap? {
-		get {return _textures[.DiffuseMap]}
-		set {_textures[.DiffuseMap] = newValue}
+	public var diffusemap : GLTextureMap2D? {
+		get {return _textureMaps2D[.DiffuseMap]}
+		set {_textureMaps2D[.DiffuseMap] = newValue}
 	}
 	
 	/// Provides the surface texture for bump mapping
-	public var specularmap : GLTextureMap? {
-		get {return _textures[.SpecularMap]}
-		set {_textures[.SpecularMap] = newValue}
+	public var specularmap : GLTextureMap2D? {
+		get {return _textureMaps2D[.SpecularMap]}
+		set {_textureMaps2D[.SpecularMap] = newValue}
 	}
 	
 	/// 
@@ -95,11 +95,12 @@ public class GLSurface : GLAttributeContainer {
 			if nil != color {attributes[GLUrlSurfaceColor] = color!}
 			if nil != normal {attributes[GLUrlVertexNormal] = normal!}
 			
-			for domain in _textures.keys {
-				attributes[GLurl(domain, .TexCoord)] = _textures[domain]!
+			for domain in _textureMaps2D.keys {
+				attributes[GLurl(domain, .TexCoord)] = _textureMaps2D[domain]!
 				
-				if _textures[domain]!.tangent != nil {
-					attributes[GLurl(domain, .Tangent)] = _textures[domain]!.tangent!
+				if _textureMaps2D[domain]!.tangent != nil {
+					attributes[GLurl(domain, .Tangent)] = _textureMaps2D[domain]!.tangent!
+					attributes[GLurl(domain, .Bitangent)] = _textureMaps2D[domain]!.bitangent!
 				}
 			}
 			return attributes
@@ -113,12 +114,12 @@ public class GLSurface : GLAttributeContainer {
 			if nil == _uniforms {
 				_uniforms = [GLurl : GLUniform]()
 				var index : Int = 0
-				for domain in _textures.keys {
+				for domain in _textureMaps2D.keys {
 					if GLint(index) > GL.MAX_COMBINED_TEXTURE_IMAGE_UNITS {
 						warn("Max combined texture units exceeded.")
 						break
 					}
-					_uniforms![GLurl(domain, .Sampler)] = GLUniformTexture(_textures[domain]!.texture, index)
+					_uniforms![GLurl(domain, .Sampler)] = GLUniformTexture(_textureMaps2D[domain]!.texture, index)
 					index++
 				}
 				_uniforms![GLUrlSurfaceReflection] = GLuniform1f(reflection)

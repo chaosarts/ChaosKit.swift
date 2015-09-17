@@ -12,6 +12,8 @@ import OpenGL
 internal var _currentProgram : GLProgram?
 
 public final class GLProgram: GLBase {
+	
+	public static private(set) var programs : [GLuint : GLProgram] = [GLuint : GLProgram]()
 		
 	/// Provides a list of uniforms
 	private var _uniformLocations : [String : GLuniformloc] = [String : GLuniformloc]()
@@ -31,6 +33,9 @@ public final class GLProgram: GLBase {
 	
 	/// Determines whether the program is valid or not
 	public var valid : Bool {get {glValidateProgram(id); return iv(GL_VALIDATE_STATUS) == GL_TRUE}}
+	
+	/// Determines if a name corresponds to a program object
+	public var isProgram : Bool {get {return glIsProgram(id) == GLboolean(GL_TRUE)}}
 	
 	/// Determines if the program is linked or not
 	public var linked : Bool {get {return iv(GL_LINK_STATUS) == GLint(GL_TRUE)}}
@@ -57,18 +62,23 @@ public final class GLProgram: GLBase {
 	
 	
 	/**
-	Initializes the object
-	*/
-	public convenience init () {
-		self.init(glCreateProgram())
-	}
-	
-	
-	/** 
 	Initializes the program with given program id from glCreateProgram
 	*/
 	public override init (_ program: GLuint) {
 		super.init(program)
+		GLProgram.programs[id] = self
+	}
+	
+	/**
+	Initializes the object
+	*/
+	public convenience init? () {
+		let id : GLuint = glCreateProgram()
+		self.init(id)
+		if id == 0 {
+			println("Could not create program.")
+			return nil
+		}
 	}
 	
 	
@@ -89,10 +99,17 @@ public final class GLProgram: GLBase {
 	
 	:returns: The info log
 	*/
-	public func infoLog () -> UnsafeMutablePointer<GLchar> {
-		var log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(Int(iv(GL_INFO_LOG_LENGTH)))
+	public func infoLog () -> String {
+		let num : Int = Int(iv(GL_INFO_LOG_LENGTH))
+		
+		var log : UnsafeMutablePointer<GLchar> = UnsafeMutablePointer<GLchar>.alloc(num)
 		glGetProgramInfoLog(id, iv(GL_INFO_LOG_LENGTH), nil, log)
-		return log
+		
+		let string : String = String.fromCString(log)!
+		log.dealloc(num)
+		log.destroy()
+		
+		return string
 	}
 	
 	/**
@@ -184,6 +201,12 @@ public final class GLProgram: GLBase {
 		if error != GLenum(GL_NO_ERROR) {
 			warn("Program could not be linked. Did you make OpenGL context current?")
 		}
+		
+		let log : String = infoLog()
+		if count(log) > 0 {
+			println(log)
+		}
+		
 		return error
 	}
 	

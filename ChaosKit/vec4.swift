@@ -9,9 +9,12 @@
 import Foundation
 
 public struct vec4 : Vector {
-	public static let rows : Int = 4
 	
-	public static let cols : Int = 1
+	public typealias Type = vec4
+	
+	public static var rows : Int {get {return 4}}
+	
+	public static var cols : Int {get {return 1}}
 	
 	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
 	
@@ -402,6 +405,10 @@ public struct vec4 : Vector {
 		get {return vec3(_vec.w, _vec.w, _vec.w)}
 	}
 	
+	public var rows : Int {get {return Type.rows}}
+	
+	public var cols : Int {get {return Type.cols}}
+	
 	public var array : [GLfloat] {
 		return [x, y, z, w]
 	}
@@ -413,6 +420,10 @@ public struct vec4 : Vector {
 	public var normalized : vec4 {
 		let m = magnitude
 		return vec4(x/m, y/m, z/m, w/m)
+	}
+	
+	public subscript (row: Int, col: Int) -> Float {
+		get {return col == 0 ? array[row] : array[col]}
 	}
 	
 	public init () {
@@ -524,6 +535,11 @@ public func *(l: vec4, r: GLfloat) -> vec4 {
 
 public func *(l: GLfloat, r: vec4) -> vec4 {
 	return r * l
+}
+
+
+public func /(l: vec4, r: GLfloat) -> vec4 {
+	return l * (1.0 / r)
 }
 
 public func dot(l: vec4, r: vec4) -> GLfloat {

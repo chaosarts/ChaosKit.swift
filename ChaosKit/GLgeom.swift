@@ -44,9 +44,8 @@ public struct GLgeom : GLGeometry, ArrayLiteralConvertible {
 	/// Indicates if the vertice are shared (element array) or not (array)
 	public var sharedVertice : Bool = false
 	
-	/// Provides the count of vertice, which are uploaded to the buffer, 
-	/// depending on `sharedVertice`
-	public var count : Int {get {return sharedVertice ? values.count : indexlist.count}}
+	/// Provides the count of vertice
+	public var count : Int {get {return indexlist.count}}
 	
 	
 	// DERIVED PROPERTIES

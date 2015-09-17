@@ -14,10 +14,10 @@ public struct mat4 : QuadraticMatrix {
 	// +++++++++++++++++
 	
 	/// Provides the count of elements per rows
-	public static let rows : Int = 4
+	public static var rows : Int {get {return 4}}
 	
 	/// Provides the count of elements per columns
-	public static var cols : Int {get {return rows}}
+	public static var cols : Int {get {return 4}}
 	
 	/// Provides the size of the matrix in byte
 	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
@@ -35,6 +35,12 @@ public struct mat4 : QuadraticMatrix {
 	
 	// DERIVED PROPERTIES
 	// ++++++++++++++++++
+	
+	/// Provides the count of elements per rows
+	public var rows : Int {get {return 4}}
+	
+	/// Provides the count of elements per columns
+	public var cols : Int {get {return 4}}
 	
 	/// Provides the determinant of the matrix
 	public var determinant : GLfloat {
@@ -85,16 +91,17 @@ public struct mat4 : QuadraticMatrix {
 	public subscript(col index: Int) -> vec4 {
 		get {
 		assert(valid(index), "Invalid mat4 index access.")
-		return vec4(array[index * 4], array[index * 4 + 1], array[index * 4 + 2], array[index * 4 + 3])
+		let base : Int = index * 4
+		return vec4(array[base], array[base + 1], array[base + 2], array[base + 3])
 		}
 		
 		set {
 			assert(valid(index), "Invalid mat4 index access.")
-			let i : Int = index * 4
-			array[i] = newValue.x
-			array[i + 1] = newValue.y
-			array[i + 2] = newValue.z
-			array[i + 3] = newValue.w
+			let base : Int = index * 4
+			array[base] = newValue.x
+			array[base + 1] = newValue.y
+			array[base + 2] = newValue.z
+			array[base + 3] = newValue.w
 		}
 	}
 	
@@ -475,30 +482,7 @@ public func ==(left: mat4, right: mat4) -> Bool {
 Printable
 */
 extension mat4 : Printable {
-	public var description : String {
-		get {
-			var maxlen : Int = 0
-			for index in 0...(array.count - 1) {
-				maxlen = max(maxlen, count(array[index].description))
-			}
-			
-			maxlen++
-			
-			var output : String = ""
-			let m : mat4 = self
-			
-			for r in 0...3 {
-				output += "|"
-				for c in 0...3 {
-					let fillLen : Int = maxlen - count(m[r, c].description)
-					let white : String = " " * fillLen
-					output += white + m[r, c].description
-				}
-				output += "|\n"
-			}
-			return output
-		}
-	}
+	public var description : String {get {return toString(self)}}
 }
 
 

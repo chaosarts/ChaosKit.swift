@@ -11,14 +11,16 @@ import Foundation
 /// Struct for vectors in 3d
 public struct vec3 : Vector {
 	
+	public typealias Type = vec3
+	
 	// STATIC PROPERTIES
 	// +++++++++++++++++
 	
 	/// Provides the count of elements per rows
-	public static let rows : Int = 3
+	public static var rows : Int {get {return 3}}
 	
 	/// Provides the count of elements per columns
-	public static let cols : Int = 1
+	public static var cols : Int {get {return 1}}
 	
 	/// Provides the size of the matrix in byte
 	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
@@ -36,6 +38,12 @@ public struct vec3 : Vector {
 	
 	// DERIVED PROPERTIES
 	// +++++++++++++++++
+	
+	/// Provides the count of elements per rows
+	public var rows : Int {get {return Type.rows}}
+	
+	/// Provides the count of elements per columns
+	public var cols : Int {get {return Type.cols}}
 	
 	/// The x component of the vector
 	public var x : GLfloat {
@@ -249,6 +257,14 @@ public struct vec3 : Vector {
 	}
 	
 	
+	// SUBSCRIPTS
+	// ++++++++++
+	
+	public subscript (row: Int, col: Int) -> Float {
+		get {return col == 0 ? array[row] : array[col]}
+	}
+	
+	
 	// INITIALIZERS AND METHODS
 	// ++++++++++++++++++++++++
 	
@@ -419,7 +435,7 @@ public func gramschmidt (a: vec3, b: vec3, c: vec3) -> [vec3] {
 	let xdot : Float = dot(x, x)
 	let y : vec3 = b - (dot(x, b) / xdot) * x
 	let z : vec3 = c - (dot(x, c) / xdot) * x - (dot(y, c) / dot(y, y)) * y
-	return [x, y, z]
+	return [x.normalized, y.normalized, z.normalized]
 }
 
 

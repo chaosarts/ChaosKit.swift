@@ -17,10 +17,10 @@ public struct mat2 : QuadraticMatrix {
 	// +++++++++++++++++
 	
 	/// Provides the row count of the matrix
-	public static let rows : Int = 2
+	public static var rows : Int {get {return 2}}
 	
 	/// Provides the col count of the matrix
-	public static var cols : Int {get {return rows}}
+	public static var cols : Int {get {return 2}}
 	
 	/// Provides the size of the matrix in bytes
 	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
@@ -32,12 +32,18 @@ public struct mat2 : QuadraticMatrix {
 	// STORED PROPERTIES
 	// +++++++++++++++++
 	
-	/// Provides the matrix as array
+	/// Provides the matrix as array column major
 	public private(set) var array : [GLfloat] = [0, 0, 0 ,0]
 	
 	
 	// DERIVED PROPERTIES
 	// ++++++++++++++++++
+	
+	/// Provides the count of rows
+	public var rows : Int {get {return mat2.rows}}
+	
+	/// Provides the count of cols
+	public var cols : Int {get {return mat2.cols}}
 	
 	/// Provides the determinant of the matrix
 	public var determinant : GLfloat {
@@ -58,16 +64,16 @@ public struct mat2 : QuadraticMatrix {
 	
 	:param: row The zero based row index to access. Must be either 0 or 1
 	*/
-	subscript (row index: Int) -> vec2 {
+	public subscript (row index: Int) -> vec2 {
 		get {
 			assert(valid(index), "Bad index access for mat2")
-			return vec2(array[2 * index], array[2 * index + 1])
+			return vec2(array[index], array[index + 2])
 		}
 		
 		set {
 			assert(valid(index), "Bad index access for mat2")
-			array[2 * index] = newValue.x
-			array[2 * index + 1] = newValue.y
+			array[index] = newValue.x
+			array[index + 2] = newValue.y
 		}
 	}
 	
@@ -77,16 +83,16 @@ public struct mat2 : QuadraticMatrix {
 	
 	:param: row The zero based column index to access. Must be either 0 or 1
 	*/
-	subscript (col index: Int) -> vec2 {
+	public subscript (col index: Int) -> vec2 {
 		get {
 			assert(valid(index), "Bad index access for mat2")
-			return vec2(array[index], array[2 + index])
+			return vec2(array[index * 2], array[index * 2 + 1])
 		}
 		
 		set {
 			assert(valid(index), "Bad index access for mat2")
-			array[index] = newValue.x
-			array[2 + index] = newValue.y
+			array[index * 2] = newValue.x
+			array[index * 2 + 1] = newValue.y
 		}
 	}
 	
@@ -98,15 +104,15 @@ public struct mat2 : QuadraticMatrix {
 	:param: col The column index
 	:return: The value of the according component
 	*/
-	subscript (row: Int, col: Int) -> GLfloat {
+	public subscript (row: Int, col: Int) -> GLfloat {
 		get {
 			assert(valid(row) && valid(col), "Bad index access for mat2")
-			return array[row * 2 + col]
+			return array[col * 2 + row]
 		}
 		
 		set {
 			assert(valid(row) && valid(col), "Bad index access for mat2")
-			array[row * 2 + col] = newValue
+			array[col * 2 + row] = newValue
 		}
 	}
 	
@@ -114,6 +120,18 @@ public struct mat2 : QuadraticMatrix {
 	Initializes the matrix as zero matrix
 	*/
 	public init () {}
+	
+	/**
+	Initializes the matrix with an array. Values with greater 
+	index that 3 will be ignored. Missing indices will be set to zero
+	
+	:param: array
+	*/
+	public init(_ array: [GLfloat]) {
+		for index in 0...3 {
+			self.array[index] = array.count > index ? array[index] : 0
+		}
+	}
 	
 	
 	/**
@@ -134,26 +152,14 @@ public struct mat2 : QuadraticMatrix {
 
 extension mat2 {
 	public static var identity : mat2 {
-		get {return [1, 0, 0, 1]}
+		get {return mat2(1.0)}
 	}
 }
 
 
 extension mat2 : ArrayLiteralConvertible {
 	public init(arrayLiteral elements: GLfloat...) {
-		let maximum : Int = min(mat2.elementCount, elements.count)
-		array = [GLfloat](count: maximum, repeatedValue: 0.0)
-		for index in 0..<maximum {
-			array[index] = elements[index]
-		}
-	}
-}
-
-extension mat2 : ArrayRepresentable {
-	public init(_ array: [GLfloat]) {
-		for index in 0...3 {
-			self.array[index] = array.count > index ? array[index] : 0
-		}
+		self.init(elements)
 	}
 }
 
@@ -161,21 +167,20 @@ extension mat2 : Printable {
 	public var description : String {
 		get {
 			var maxlen : Int = 0
-			for index in 0...(array.count - 1) {
+			for index in 0..<array.count {
 				maxlen = max(maxlen, count(array[index].description))
 			}
 			
 			maxlen++
 			
 			var output : String = ""
-			let m : mat2 = self
 			
 			for r in 0...1 {
 				output += "|"
 				for c in 0...1 {
-					var fillLen : Int = maxlen - count(m[r, c].description)
+					var fillLen : Int = maxlen - count(self[r, c].description)
 					var white : String = " " * UInt32(fillLen)
-					output += white + m[r, c].description
+					output += white + self[r, c].description
 				}
 				output += "|\n"
 			}

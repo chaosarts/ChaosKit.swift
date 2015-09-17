@@ -54,18 +54,7 @@ public class GLScreenRenderpass : GLRenderpassBase, GLRenderpass {
 				uniform.assign(location!)
 			}
 			
-			program.upload(shape.buffers)
-			
-			var geometry : GLGeometry = shape.geometry
-			var count : GLsizei = GLsizei(geometry.indexlist.count)
-			if geometry.sharedVertice {
-				glDrawElements(shape.mode, count, GLenum(GL_UNSIGNED_INT), geometry.indexlist)
-			}
-			else {
-				glDrawArrays(shape.mode, 0, count)
-			}
-			
-			program.unload(shape.buffers)
+			shape.draw(program: program)
 		}
 		
 		glFlush()

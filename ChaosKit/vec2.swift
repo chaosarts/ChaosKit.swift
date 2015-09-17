@@ -11,9 +11,11 @@ import Foundation
 
 public struct vec2 : Vector {
 	
-	public static let rows : Int = 2
+	public typealias Type = vec2
 	
-	public static let cols : Int = 1
+	public static var rows : Int {get {return 2}}
+	
+	public static var cols : Int {get {return 1}}
 	
 	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
 	
@@ -32,6 +34,10 @@ public struct vec2 : Vector {
 	public var y: GLfloat {
 		get {return _vec.y} set {_vec.y = newValue}
 	}
+	
+	public var rows : Int {get {return 2}}
+	
+	public var cols : Int {get {return 1}}
 	
 	/** Provides the vector as array */
 	public var array : [GLfloat] {
@@ -54,6 +60,9 @@ public struct vec2 : Vector {
 		return vec2(x / m, y / m)
 	}
 	
+	public subscript (row: Int, col: Int) -> Float {
+		get {return col == 0 ? array[row] : array[col]}
+	}
 	
 	/** 
 	Initializes the vector with x and y equals zero 

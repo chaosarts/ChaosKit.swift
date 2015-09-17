@@ -14,10 +14,10 @@ public struct mat3 : QuadraticMatrix {
 	// +++++++++++++++++
 	
 	/// Provides the count of elements per rows
-	public static let rows : Int = 3
+	public static var rows : Int {get {return 3}}
 	
 	/// Provides the count of elements per columns
-	public static var cols : Int {get {return rows}}
+	public static var cols : Int {get {return 3}}
 	
 	/// Provides the size of the matrix in byte
 	public static var byteSize : Int {get {return elementCount * sizeof(GLfloat)}}
@@ -29,20 +29,25 @@ public struct mat3 : QuadraticMatrix {
 	// STORED PROPERTIES
 	// +++++++++++++++++
 	
-	// Provides a list of matrix components in major-row represenstation
+	// Provides a list of matrix components in column-major represenstation
 	public private(set) var array : [GLfloat] = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 	
 	
 	// DERIVED PROPERTIES
 	// ++++++++++++++++++
 	
+	/// Provides the count of elements per rows
+	public var rows : Int {get {return 3}}
+	
+	/// Provides the count of elements per columns
+	public var cols : Int {get {return 3}}
+	
 	/// Provides the mdterminant of the matrix
 	public var determinant : GLfloat {
-		let m : mat3 = self
 		
-		let a : GLfloat = m[0, 0] * m[1, 1] * m[2, 2] - m[0, 2] * m[1, 1] * m[2, 0]
-		let b : GLfloat = m[0, 1] * m[1, 2] * m[2, 0] - m[0, 0] * m[1, 2] * m[2, 1]
-		let c : GLfloat = m[0, 2] * m[1, 0] * m[2, 1] - m[0, 1] * m[1, 0] * m[2, 2]
+		let a : GLfloat = self[0, 0] * self[1, 1] * self[2, 2] - self[0, 2] * self[1, 1] * self[2, 0]
+		let b : GLfloat = self[0, 1] * self[1, 2] * self[2, 0] - self[0, 0] * self[1, 2] * self[2, 1]
+		let c : GLfloat = self[0, 2] * self[1, 0] * self[2, 1] - self[0, 1] * self[1, 0] * self[2, 2]
 		
 		return a + b + c
 	}
@@ -79,14 +84,16 @@ public struct mat3 : QuadraticMatrix {
 	public subscript (col index: Int) -> vec3 {
 		get {
 			assert(valid(index), "Bad index access for mat3")
-			return vec3(array[index * 3], array[index * 3 + 1], array[index * 3 + 2])
+			let base : Int = index * 3
+			return vec3(array[base], array[base + 1], array[base + 2])
 		}
 		
 		set {
 			assert(valid(index), "Bad index access for mat3")
-			array[index * 3] = newValue.x
-			array[index * 3 + 1] = newValue.y
-			array[index * 3 + 2] = newValue.z
+			let base : Int = index * 3
+			array[base] = newValue.x
+			array[base + 1] = newValue.y
+			array[base + 2] = newValue.z
 		}
 	}
 	
@@ -107,7 +114,33 @@ public struct mat3 : QuadraticMatrix {
 	// INITIALIZERS AND METHODS
 	// ++++++++++++++++++++++++
 	
+	
+	/**
+	Initializes the zero matrix
+	*/
 	public init () {}
+	
+	
+	/**
+	Initializes the matrix by setting the diaginal with given value.
+	
+	:param: value
+	*/
+	public init (_ value: Float) {
+		array = [value, 0, 0, 0, value, 0, 0, 0, value]
+	}
+	
+	
+	/**
+	Initializes the matrix with given array
+	
+	:param: array
+	*/
+	public init(_ array: [GLfloat]) {
+		for index in 0..<mat3.elementCount {
+			self.array[index] = array.count > index ? array[index] : 0
+		}
+	}
 	
 	
 	/**
@@ -303,7 +336,7 @@ public struct mat3 : QuadraticMatrix {
 
 extension mat3 {
 	public static var identity : mat3 {
-		get {return [1, 0, 0, 0, 1, 0, 0, 0, 1]}
+		get {return mat3(1.0)}
 	}
 	
 	
@@ -332,49 +365,13 @@ extension mat3 {
 
 extension mat3 : ArrayLiteralConvertible {
 	public init(arrayLiteral elements: GLfloat...) {
-		let maximum : Int = min(mat3.elementCount, elements.count)
-		array = [GLfloat](count: maximum, repeatedValue: 0.0)
-		for index in 0..<maximum {
-			array[index] = elements[index]
-		}
-	}
-}
-
-
-extension mat3 : ArrayRepresentable {
-	public init(_ array: [GLfloat]) {
-		for index in 0..<mat3.elementCount {
-			self.array[index] = array.count > index ? array[index] : 0
-		}
+		self.init(elements)
 	}
 }
 
 
 extension mat3 : Printable {
-	public var description : String {
-		get {
-			var maxlen : Int = 0
-			for index in 0...(array.count - 1) {
-				maxlen = max(maxlen, count(array[index].description))
-			}
-			
-			maxlen++
-			
-			var output : String = ""
-			let m : mat3 = self
-			
-			for r in 0...2 {
-				output += "|"
-				for c in 0...2 {
-					var fillLen : Int = maxlen - count(m[r, c].description)
-					var white : String = " " * UInt32(fillLen)
-					output += white + m[r, c].description
-				}
-				output += "|\n"
-			}
-			return output
-		}
-	}
+	public var description : String {get {return toString(self)}}
 }
 
 

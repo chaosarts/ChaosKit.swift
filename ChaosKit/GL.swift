@@ -26,6 +26,11 @@ public class GL {
 	/// Returns the max amount of texture units
 	public static let MAX_TEXTURE_UNITS : GLint = {return GL.getIntegerv(GL_MAX_TEXTURE_UNITS)}()
 	
+	/// Provides the minor version of the currently used opengl version
+	public static let minorVersion : GLint = {return GL.getIntegerv(GL_MINOR_VERSION)}()
+	
+	/// Provides the major version of the currently used opengl version
+	public static let majorVersion : GLint = {return GL.getIntegerv(GL_MAJOR_VERSION)}()
 	
 	/**
 	Just like glGetIntegerv

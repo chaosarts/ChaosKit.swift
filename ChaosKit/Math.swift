@@ -230,6 +230,29 @@ public func gramschmidt<T: Vector>(a: T, vectors: T...) -> [T] {
 	return basis
 }
 
+
+public func toString (mat: Matrix) -> String {
+	var maxlen : Int = 0
+	for element in mat.array {
+		maxlen = max(maxlen, count(element.description))
+	}
+	
+	maxlen++
+	
+	var string : String = ""
+	for row in 0..<mat.rows {
+		let first : Float = mat[row, 0]
+		string += "|" * (maxlen - count(first.description) - 1) + first.description
+		for col in 1..<mat.cols {
+			let element : Float = mat[row, col]
+			string += " " * (maxlen - count(element.description)) + element.description
+		}
+		string += "|"
+	}
+	
+	return string
+}
+
 /*
 |--------------------------------------------------------------------------
 | Protocols
@@ -238,9 +261,15 @@ public func gramschmidt<T: Vector>(a: T, vectors: T...) -> [T] {
 
 
 public protocol Matrix : ListType, Printable {
-	static var rows : Int {get}
-	static var cols : Int {get}
+	
+	var rows : Int {get}
+	
+	var cols : Int {get}
+	
+	subscript (row: Int, col: Int) -> Float {get}
+	
 	init (_ list: [GLfloat])
+	
 	init ()
 }
 
@@ -252,9 +281,4 @@ public protocol QuadraticMatrix : Matrix {
 
 public protocol Vector : Matrix {
 	var magnitude : GLfloat {get}
-//	subscript (index: Int) -> GLfloat {get}
-//	init (_ vec: vec1)
-//	init (_ vec: vec2)
-//	init (_ vec: vec3)
-//	init (_ vec: vec4)
 }
