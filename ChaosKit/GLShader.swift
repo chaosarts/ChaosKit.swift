@@ -101,7 +101,7 @@ public class GLShader {
 	- parameter sources: The source codes as string
 	*/
 	public convenience init (type : GLenum, sources : [String]) {
-		let sources : [GLsrcfile] = sources.map({element in return GLsrcfile(content: element)})
+		let sources : [GLsrcfile] = sources.map({(element) in return GLsrcfile(content: element)})
 		self.init(type: type, sources: sources)
 	}
 	

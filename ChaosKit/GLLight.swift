@@ -31,9 +31,36 @@ public let OFF : GLLightState = false
 |--------------------------------------------------------------------------
 */
 
-public class GLLight {
+public protocol GLLight {
 	
+}
+
+
+public struct GLAmbientLight : GLLight {
 	
+	public var intensity : vec3 = vec3(1.0)
+	
+	public var coefficient : Float = 0.2
+	
+	public var uniforms : [GLurl : GLUniform] {
+		get {return [GLUrlLightAmbientCoefficient : GLuniform1f(coefficient)]}
+	}
+}
+
+
+public struct GLPointLight : GLLight {
+	
+	public var intensity : vec3 = vec3(1.0)
+	
+	public var position : vec3 = vec3(0.0)
+	
+	public var diffuse : Bool = true
+	
+	public var specular : Float?
+	
+	public var uniforms : [GLurl : GLUniform] {
+		get {return [GLUrlLightAmbientCoefficient : GLuniform1f(specular!)]}
+	}
 	
 	public init () {}
 }

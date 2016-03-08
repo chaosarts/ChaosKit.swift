@@ -220,7 +220,7 @@ Returns a orthonormal basis from three independent vectors
 public func gramschmidt<T: Vector>(a: T, vectors: T...) -> [T] {
 	var basis : [T] = [a]
 	for index in 0..<vectors.count {
-		var w : T = vectors[index]
+		let w : T = vectors[index]
 		for v in basis {
 			w -= dot(v, r: w) / dot(v, r: v) * v
 		}

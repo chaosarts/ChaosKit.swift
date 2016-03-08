@@ -69,9 +69,9 @@ public struct Queue<T> : Collection, CountLimited {
 }
 
 
-extension Queue : ArrayLiteralConvertible {
-	public init(arrayLiteral elements: T...) {
-		_array = elements
-		max = Int.max
-	}
-}
+//extension Queue : ArrayLiteralConvertible {
+//	public init(arrayLiteral elements: Element...) {
+//		_array = elements
+//		max = Int.max
+//	}
+//}

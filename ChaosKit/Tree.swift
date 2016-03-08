@@ -16,7 +16,7 @@ public final class TreeNode<T> : Hierarchy, Valuable {
 	
 	public typealias Element = T
 	
-	typealias Type = TreeNode<Element>
+	public typealias Type = TreeNode<Element>
 	
 	public var value : Element
 	
@@ -32,9 +32,9 @@ public final class TreeNode<T> : Hierarchy, Valuable {
 
 public class Tree<T> {
 	
-	typealias Element = T
+	public typealias Element = T
 	
-	typealias Node = TreeNode<T>
+	public typealias Node = TreeNode<T>
 	
 	public var root : Node
 	

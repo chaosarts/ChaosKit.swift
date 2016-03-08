@@ -168,6 +168,7 @@ public func ==(left: GLurl, right: GLurl) -> Bool {
 }
 
 
+
 public enum GLUrlDomain : String {
 	case Default = "default"
 	
@@ -177,9 +178,7 @@ public enum GLUrlDomain : String {
 	case Camera = "camera"
 	case Surface = "surface"
 	
-	case AmbientLight = "ambientlight"
-	case DiffuseLight = "diffuselight"
-	case SpecularLight = "specularlight"
+	case Light = "light"
 	
 	case ColorMap = "colormap"
 	case DiffuseMap = "diffusemap"
@@ -208,13 +207,18 @@ public enum GLUniformType : String {
 	case Sampler = "sampler"
 	case Enabled = "enabled"
 	
+	case AmbientCoefficient = "ambientcoefficient"
 	case Intensity = "intensity"
-	case Reflection = "reflection"
 	case PhongExp = "phongexp"
 	case Direction = "direction"
+	case Reflection = "reflection"
+	case Enable = "enable"
 }
 
-
+public let GL_VPOSITION : String = "vertex.position"
+public let GL_VNORMAL : String = "vertex.normal"
+public let GL_VCOLOR : String = "vertex.color"
+public let GL_VREFLECTION : String = "vertex.reflection"
 
 public let GLUrlVertexPosition : GLurl = GLurl(.Vertex, .Position)
 public let GLUrlVertexNormal : GLurl = GLurl(.Vertex, .Normal)
@@ -266,12 +270,12 @@ public let GLUrlDisplacementMapEnabled : GLurl = GLurl(.DisplacementMap, .Enable
 public let GLUrlSpecularMapEnabled : GLurl = GLurl(.SpecularMap, .Enabled)
 public let GLUrlGlowMapEnabled : GLurl = GLurl(.GlowMap, .Enabled)
 
-public let GLUrlAmbientLightIntensity : GLurl = GLurl(.AmbientLight, .Intensity)
-public let GLUrlDiffuseLightIntensity : GLurl = GLurl(.DiffuseLight, .Intensity)
-public let GLUrlDiffuseLightPosition : GLurl = GLurl(.DiffuseLight, .Position)
-public let GLUrlSpecularLightIntensity : GLurl = GLurl(.SpecularLight, .Intensity)
-public let GLUrlSpecularLightPosition : GLurl = GLurl(.SpecularLight, .Position)
-public let GLUrlSpecularLightPhongExp : GLurl = GLurl(.SpecularLight, .PhongExp)
+public let GLUrlLightIntensity : GLurl = GLurl(.Light, .Intensity)
+public let GLUrlLightPosition : GLurl = GLurl(.Light, .Position)
+public let GLUrlLightAmbientCoefficient : GLurl = GLurl(.Light, .AmbientCoefficient)
+public let GLUrlLightSpecularEnable : GLurl = GLurl(.Light, .Specular, .Enabled)
+public let GLUrlLightPhongExp : GLurl = GLurl(.Light, .PhongExp)
+
 
 public let GLUrlModelViewMatrix : GLurl = GLurl(.Model, .Transformation)
 public let GLUrlNormalViewMatrix : GLurl = GLurl(.Normal, .Transformation)

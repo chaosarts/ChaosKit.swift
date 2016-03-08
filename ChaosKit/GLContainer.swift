@@ -169,7 +169,7 @@ public class GLContainer: GLDisplayObject {
 			if !child.visible {continue}
 			
 			if let shape = child as? GLShape {
-				_shapeCache!.append(child as! GLShape)
+				_shapeCache!.append(shape)
 			}
 			
 			if let container = child as? GLContainer {

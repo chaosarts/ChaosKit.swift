@@ -66,9 +66,9 @@ public struct Stack<T> : Collection, CountLimited {
 }
 
 
-extension Stack : ArrayLiteralConvertible {
-	public init(arrayLiteral elements: T...) {
-		_array = elements
-		max = Int.max
-	}
-}
+//extension Stack : ArrayLiteralConvertible {
+//	public init(arrayLiteral elements: Element...) {
+//		_array = elements
+//		max = Int.max
+//	}
+//}

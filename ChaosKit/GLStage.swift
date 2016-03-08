@@ -19,6 +19,7 @@ Stage class to place display objects
 */
 public class GLStage : GLContainer {
 	
+	public var lights : [GLLight] = []
 	
 	public var uniforms : [GLurl : GLUniform] {
 		get {

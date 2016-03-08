@@ -70,7 +70,6 @@ public struct GLattribloc : GLLocation {
 	- parameter block: The buffer block that holds the information for the attribute within the accroding buffer
 	*/
 	public func setVertexAttribPointer (block: GLBufferBlock) {
-		var floatSize : Int = sizeof(GLfloat)
 		setVertexAttribPointer(block.size, block.type, block.normalized, block.stride, block.offset)
 	}
 	

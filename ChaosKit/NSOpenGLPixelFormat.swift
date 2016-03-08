@@ -42,12 +42,12 @@ public extension NSOpenGLPixelFormat {
 		UInt32(NSOpenGLPFAVirtualScreenCount)
 	]
 	
-	public convenience init (attributes: [NSOpenGLPixelFormatAttribute]) {
-		let pointer : UnsafeMutablePointer<NSOpenGLPixelFormatAttribute> = UnsafeMutablePointer<NSOpenGLPixelFormatAttribute>(attributes)
-		self.init(attributes: pointer)
-	}
+//	public convenience init? (attributes: [NSOpenGLPixelFormatAttribute]) {
+//		let pointer : UnsafeMutablePointer<NSOpenGLPixelFormatAttribute> = UnsafeMutablePointer<NSOpenGLPixelFormatAttribute>(attributes)
+//		self.init(attributes: pointer)
+//	}
 	
-	public convenience init (pixelFormat: NSOpenGLPixelFormat, attributeMap: [NSOpenGLPixelFormatAttribute : NSOpenGLPixelFormatAttribute]) {
+	public convenience init? (pixelFormat: NSOpenGLPixelFormat, attributeMap: [NSOpenGLPixelFormatAttribute : NSOpenGLPixelFormatAttribute]) {
 		
 		let valuePointer : UnsafeMutablePointer<GLint> = UnsafeMutablePointer<GLint>.alloc(1)
 		var attributes : [NSOpenGLPixelFormatAttribute] = []

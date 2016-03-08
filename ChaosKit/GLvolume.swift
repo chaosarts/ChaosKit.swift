@@ -143,15 +143,15 @@ public func glKeepVolumeHeight (winWidth: GLfloat, winHeight: GLfloat, baseVolum
 }
 
 
-public func glKeepWholeScene (winWidth: GLfloat, winHeight: GLfloat, baseVolume: GLvolume, currentVolume: GLvolume) -> GLvolume {
+public func glKeepWholeScene (winWidth width: GLfloat, winHeight height: GLfloat, baseVolume: GLvolume, currentVolume: GLvolume) -> GLvolume {
 	var volume = baseVolume
-	let winAspect : GLfloat = winWidth / winHeight
+	let winAspect : GLfloat = width / height
 	
 	if winAspect > baseVolume.width / baseVolume.height {
-		volume = glKeepVolumeHeight(winWidth, winHeight: winHeight, baseVolume: baseVolume, currentVolume: currentVolume)
+		volume = glKeepVolumeHeight(width, winHeight: height, baseVolume: baseVolume, currentVolume: currentVolume)
 	}
 	else {
-		volume = glKeepVolumeWidth(winWidth, winHeight: winHeight, baseVolume: baseVolume, currentVolume: currentVolume)
+		volume = glKeepVolumeWidth(width, winHeight: height, baseVolume: baseVolume, currentVolume: currentVolume)
 	}
 	return volume
 }

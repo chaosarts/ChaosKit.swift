@@ -37,7 +37,7 @@ public class GLTexImage2D : GLTexture {
 	}
 	
 	
-	public func useImage (image: CGImage) {
+	public func useImage (image: CGImage!) {
 		let width : Int = CGImageGetWidth(image)
 		let height : Int = CGImageGetHeight(image)
 		let bitmap : NSBitmapImageRep = NSBitmapImageRep(CGImage: image)
@@ -46,7 +46,7 @@ public class GLTexImage2D : GLTexture {
 	}
 	
 	
-	public func loadFromSourceRef (source: CGImageSourceRef) {
+	public func loadFromSourceRef (source: CGImageSourceRef!) {
 		useImage(CGImageSourceCreateImageAtIndex(source, 0, nil))
 	}
 	

@@ -56,7 +56,7 @@ public struct GLsrcfile : StringLiteralConvertible, CustomStringConvertible {
 		let content : String?
 		do {
 			content = try String(contentsOfFile: path, encoding: encoding)
-		} catch var error as NSError {
+		} catch let error as NSError {
 			pointer = error
 			content = nil
 		}
@@ -69,20 +69,9 @@ public struct GLsrcfile : StringLiteralConvertible, CustomStringConvertible {
 	Initializes the source with given path
 	
 	- parameter path: The source path to read
-	- parameter encoding: The encoding to use for reading the path
 	*/
-	public init? (path: String, encoding: NSStringEncoding) {
-		try? self.init(path: path, encoding: encoding)
-	}
-	
-	
-	/**
-	Initializes the source with given path
-	
-	- parameter path: The source path to read
-	*/
-	public init? (path: String) {
-		try? self.init(path: path, encoding: NSUTF8StringEncoding)
+	public init (path: String) throws {
+		try self.init(path: path, encoding: NSUTF8StringEncoding)
 	}
 	
 	
@@ -94,23 +83,11 @@ public struct GLsrcfile : StringLiteralConvertible, CustomStringConvertible {
 	- parameter pointer: A pointer for errors
 	*/
 	public init (resource: String, encoding: NSStringEncoding) throws {
-		var pointer: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
+		let pointer: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
 		let path : String? = NSBundle.mainBundle().pathForResource(resource, ofType: nil)
 		if nil == path {throw pointer}
 		try self.init (path: path!, encoding: encoding)
 	}
-	
-	
-	/**
-	Initializes the source with given resource
-	
-	- parameter resource: The resource path to read
-	- parameter encoding: The encoding to use for reading the path
-	*/
-	public init? (resource: String, encoding: NSStringEncoding) {
-		try? self.init(resource: resource, encoding: encoding)
-	}
-	
 	
 	/**
 	Initializes the source with given resource

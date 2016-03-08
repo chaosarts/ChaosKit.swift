@@ -70,17 +70,7 @@ public struct GLparallelepiped : GLGeometry {
 		let inverse : Bool = dot(normal, r: c.normalized) < 0
 		let x : vec3 = a
 		let y : vec3 = b
-		let z : vec3
-		let origin : vec3
-		
-		if inverse {
-			z = -c
-			origin = p + c
-		}
-		else {
-			z = c
-			origin = p
-		}
+		let z : vec3 = inverse ? -c : c
 		
 		let leftBottomFar : vec3 = inverse ? p - c : p
 		let rightBottomFar : vec3 = leftBottomFar + x
